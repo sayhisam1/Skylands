@@ -1,25 +1,19 @@
---------------------------------------
---// STANDARD SERVICE DECLARATION \\--
---// TEMPLATE					  \\--
---------------------------------------
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 
-local Service = require("ServiceObject"):New(script.Name)
-local DEPENDENCIES = {}
+local DEPENDENCIES = {"Map"}
 Service:AddDependencies(DEPENDENCIES)
 
----------------------------
---// TEMPLATE FINISHED \\--
----------------------------
--- This is a script you would create in ServerScriptService, for example.
-local ServerScriptService = game:GetService("ServerScriptService")
-local HOOKS = script:WaitForChild("Hooks")
-local Cmdr = require(ServerScriptService.Repository.Vendor.Cmdr.Server.Cmdr)
-Cmdr:RegisterDefaultCommands() -- This loads the default set of commands that Cmdr comes with. (Optional)
-Cmdr:RegisterHooksIn(HOOKS)
+local CMDR_PATH = game.ServerScriptService.Repository.Vendor.Cmdr.Server.Cmdr
+
 function Service:Load()
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+    local Cmdr = require(CMDR_PATH)
+    Cmdr:RegisterHooksIn(script.Hooks)
+    Cmdr:RegisterTypesIn(script.Types)
+    Cmdr:RegisterDefaultCommands() -- This loads the default set of commands that Cmdr comes with. (Optional)
+    Cmdr:RegisterCommandsIn(script.Commands)
 end
 
 function Service:Unload()

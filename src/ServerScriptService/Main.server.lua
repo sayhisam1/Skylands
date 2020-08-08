@@ -1,31 +1,26 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local ServerScriptService = game:GetService("ServerScriptService")
+
 local DEBUGMODE = RunService:IsStudio()
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
-
-local ServerScriptService = game:GetService("ServerScriptService")
 local SERVICE_DIR = ServerScriptService:WaitForChild("Services")
-local ServiceLoader = require("ServiceLoaderObject"):New(SERVICE_DIR)
+local ServiceLoader = require(ReplicatedStorage.Objects.Shared.Services.ServiceLoader).new(SERVICE_DIR)
 
 _G.Services = ServiceLoader.ServiceTable
-_G.Clock = require("Clock")
+_G.Clock = require(ReplicatedStorage.Objects.Shared.Clock)
 
--- local TEST_ITEM = ReplicatedStorage.Assets.Tools["Pickaxe"]
--- TEST_ITEM:Clone().Parent = game.StarterPack
 ServiceLoader:PrefetchServices()
 ServiceLoader:LoadAllServices()
 
+local GameLoaded = Instance.new("BoolValue")
+GameLoaded.Name = "GameLoaded"
+GameLoaded.Value = true
+GameLoaded.Parent = ReplicatedStorage
+
 if DEBUGMODE then
-    local TestRunner = require(ReplicatedStorage.Tests.TestRunner)
-    TestRunner:RunAll()
+    print("RUNNING TESTS")
+    local TestEZ = require(ReplicatedStorage.Lib.TestEZ)
+    local Tests = ReplicatedStorage:WaitForChild("Tests")
+    TestEZ.TestBootstrap:run(Tests:GetChildren())
 end
-
--- 
--- local BotPlayerFactory = require("ServerBotPlayer")
--- local b = BotPlayerFactory:New("bot")
-
--- b:LoadCharacter()
-
--- local AIController = require("TestNPCAI"):New(b)
--- AIController:Start()

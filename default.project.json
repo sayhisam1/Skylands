@@ -2,36 +2,43 @@
   "name": "project",
   "tree": {
     "$className": "DataModel",
-
+    "ReplicatedFirst": {
+      "$className": "ReplicatedFirst",
+      "$ignoreUnknownInstances": true,
+      "$path": "src/ReplicatedFirst"
+    },
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "$ignoreUnknownInstances": true,
-      "$path": "src/ReplicatedStorage"
+      "$path": "src/ReplicatedStorage",
+      "Lib": {
+        "$ignoreUnknownInstances": true,
+        "$path": "module"
+      }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "$ignoreUnknownInstances": true,
       "$path": "src/ServerScriptService",
       "Repository": {
-				"$ignoreUnknownInstances": true,
-				"$className": "Folder",
-				"Vendor": {
-					"$className": "Folder",
-					"$ignoreUnknownInstances": true,
-					"Cmdr": {
-						"$className": "Folder",
-						"$ignoreUnknownInstances": true,
-						"Server": {
-							"$className": "Folder",
-							"$ignoreUnknownInstances": true,
-							"Cmdr": {
-								"$path": "module/Cmdr/Cmdr"
-							}
-						}
-					}
-				}
-			}
-      
+        "$ignoreUnknownInstances": true,
+        "$className": "Folder",
+        "Vendor": {
+          "$className": "Folder",
+          "$ignoreUnknownInstances": true,
+          "Cmdr": {
+            "$className": "Folder",
+            "$ignoreUnknownInstances": true,
+            "Server": {
+              "$className": "Folder",
+              "$ignoreUnknownInstances": true,
+              "Cmdr": {
+                "$path": "Cmdr/Cmdr"
+              }
+            }
+          }
+        }
+      }
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",
@@ -40,6 +47,16 @@
         "$ignoreUnknownInstances": true,
         "$path": "src/StarterPlayer/StarterPlayerScripts"
       },
+      "StarterCharacterScripts": {
+        "$className": "StarterCharacterScripts",
+        "$ignoreUnknownInstances": true,
+        "$path": "src/StarterPlayer/StarterCharacterScripts"
+      },
+      "$ignoreUnknownInstances": true
+    },
+    "StarterGui": {
+      "$className": "StarterGui",
+      "$path": "src/StarterGui",
       "$ignoreUnknownInstances": true
     }
   }

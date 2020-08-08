@@ -1,3 +1,24 @@
-[submodule ".\\module\\Cmdr"]
-	path = .\\module\\Cmdr
+[submodule ".\\module\\roact"]
+	path = .\\module\\roact
+	url = https://github.com/Roblox/roact
+[submodule ".\\module\\rodux"]
+	path = .\\module\\rodux
+	url = https://github.com/Roblox/rodux
+[submodule "module/Roblox"]
+	path = module/Roblox
+	url = https://github.com/Kampfkarren/Roblox/
+[submodule "module/RescaleModel"]
+	path = module/RescaleModel
+	url = https://github.com/sayhisam1/RescaleModel
+[submodule "Cmdr"]
+	path = Cmdr
 	url = https://github.com/evaera/Cmdr
+[submodule "module/testez"]
+	path = module/testez
+	url = https://github.com/Roblox/testez
+[submodule "module/Octree"]
+	path = module/Octree
+	url = https://github.com/sayhisam1/Octree
+[submodule "module/roact-rodux"]
+	path = module/roact-rodux
+	url = https://github.com/Roblox/roact-rodux
