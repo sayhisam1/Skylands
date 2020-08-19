@@ -3,7 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Enums = require(ReplicatedStorage.Enums)
 
-local Queue = require(ReplicatedStorage.Objects.Shared.Queue)
 local Octree = require(ReplicatedStorage.Lib.Octree)
 local Binder = require(ReplicatedStorage.Objects.Shared.Binder)
 local Ore = require(script.Ore)
@@ -66,8 +65,6 @@ function OreBinder:LookupInstance(instance)
     end
     return self:Get(instance)
 end
-
-
 
 OreBinder:Init()
 

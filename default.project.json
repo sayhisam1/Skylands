@@ -58,6 +58,11 @@
       "$className": "StarterGui",
       "$path": "src/StarterGui",
       "$ignoreUnknownInstances": true
+    },
+    "Workspace": {
+      "$className": "Workspace",
+      "$path": "src/Workspace",
+      "$ignoreUnknownInstances": true
     }
   }
 }

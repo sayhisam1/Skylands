@@ -117,6 +117,10 @@ function Maid:DoCleaning()
 			task:Disconnect()
 		elseif task.Destroy then
 			task:Destroy()
+		elseif task.destroy then
+			task:destroy()
+		elseif task.disconnect then
+			task:disconnect()
 		end
 		index, task = next(tasks)
 	end

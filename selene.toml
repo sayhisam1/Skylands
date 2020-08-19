@@ -1,0 +1,5 @@
+std = "roblox"
+
+[rules]
+#disable roact lints due to invalid warning
+roblox_incorrect_roact_usage = "warn"

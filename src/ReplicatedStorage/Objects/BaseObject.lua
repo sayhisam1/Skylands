@@ -28,20 +28,22 @@ function BaseObject:Destroy()
     self._maid:Destroy()
 end
 
+function BaseObject:GetLogPrefix()
+    if not self._logPrefix then
+        self._logPrefix = string.format("[%s:%s]", self.ClassName, self.Name)
+    end
+    return self._logPrefix
+end
 function BaseObject:Log(lvl, ...)
     lvl = lvl or 0
-    if (self._debugLevel <= lvl) then
-        if not self._logPrefix then
-            self._logPrefix = string.format("[%s:%s]", self.ClassName, self.Name)
-        end
-        local prefix = self._logPrefix
+    if self._debugLevel <= lvl then
         local args = {...} -- automatically unpack tables
         for key, val in ipairs(args) do
-            if (type(val) == "table") then
+            if type(val) == "table" then
                 args[key] = DataDump.dd(val)
             end
         end
-        print(self._logPrefix, unpack(args))
+        print(self:GetLogPrefix(), unpack(args))
     end
 end
 

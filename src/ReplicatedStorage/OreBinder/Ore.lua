@@ -1,4 +1,3 @@
-local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Services = require(ReplicatedStorage.Services)
@@ -12,12 +11,7 @@ Ore.ClassName = script.Name
 
 function Ore.new(instance)
     assert(type(instance) == "userdata" and instance:IsA("Model"), "Invalid Ore!")
-
     local self = setmetatable(InstanceWrapper.new(instance), Ore)
-
-    if not self:GetAttribute("Unmineable") then
-        CollectionService:AddTag(self:GetInstance(), self.Enums.Tags.Mineable)
-    end
 
     return self
 end
@@ -42,17 +36,7 @@ function Ore:Mine(plr, damage)
         return
     end
     local health = self:GetAttribute("Health")
-    self:Log(
-        1,
-        "Plr",
-        plr,
-        "Dealing",
-        damage,
-        "damage to ore",
-        self:GetInstance():GetFullName(),
-        "with health",
-        self:GetAttribute("Health")
-    )
+    self:Log(1, "Plr", plr, "Dealing", damage, "damage to ore", self:GetInstance():GetFullName(), "with health", self:GetAttribute("Health"))
     assert(type(plr) == "userdata", "Invalid player!")
     assert(type(damage) == "number", string.format("Invalid damage!", tostring(damage)))
     assert(type(health) == "number", string.format("Invalid ore health! (type:%s)", type(health)))

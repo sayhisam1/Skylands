@@ -6,8 +6,7 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"PlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
-local BackpackBinder = require(ReplicatedStorage.BackpackBinder)
-local BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
+local AssetFinder = require(ReplicatedStorage.AssetFinder)
 local Players = game:GetService("Players")
 local Enums = require(ReplicatedStorage.Enums)
 
@@ -18,21 +17,19 @@ function Service:Load()
     local function setupPlayer(plr)
         self:Log(2, "Setting up backpacks for", plr)
         local selectedBackpack = PlayerData:GetStore(plr, "SelectedBackpack")
-        local backpackChangedConnector =
-            selectedBackpack.changed:connect(
-            function(new, old)
-                local backpack = self:LookupBackpack(new)
-                self:SetPlayerBackpack(plr, backpack)
-            end
-        )
-        maid:GiveTask(plr.CharacterAdded:Connect(function()
-            local backpack = self:LookupBackpack(selectedBackpack:getState())
-            self:SetPlayerBackpack(plr, backpack)
-        end))
         maid:GiveTask(
-            function()
-                backpackChangedConnector:disconnect()
-            end
+            selectedBackpack.changed:connect(
+                function(new)
+                    self:SetPlayerBackpack(plr, AssetFinder.FindBackpack(new))
+                end
+            )
+        )
+        maid:GiveTask(
+            plr.CharacterAdded:Connect(
+                function()
+                    self:SetPlayerBackpack(plr, AssetFinder.FindBackpack(selectedBackpack:getState()))
+                end
+            )
         )
         self:ValidatePlayer(plr)
     end
@@ -49,7 +46,7 @@ function Service:Load()
 end
 
 local function removeBackpacks(plr)
-    for _,v in pairs(plr:GetChildren()) do
+    for _, v in pairs(plr:GetChildren()) do
         if CollectionService:HasTag(v, Enums.Tags.Backpack) then
             v:Destroy()
         end
@@ -57,7 +54,7 @@ local function removeBackpacks(plr)
 end
 
 local function addBackpack(plr, backpack)
-    local backpack = backpack:Clone()
+    backpack = backpack:Clone()
     backpack.Parent = plr
     CollectionService:AddTag(backpack, Enums.Tags.Backpack)
 end
@@ -68,14 +65,7 @@ function Service:SetPlayerBackpack(plr, backpack)
     addBackpack(plr, backpack)
 end
 
-function Service:LookupBackpack(name)
-    self:Log(1, "Looking up backpack", name)
-    local backpack = BACKPACKS:FindFirstChild(name)
-    return backpack
-end
-
 function Service:PromptPlayerBackpackFull(plr)
-    assert(plr and plr:IsA("Player"), "Invalid player!")
     self:GetNetworkChannel():PublishPlayer(plr, "BACKPACK_FULL")
 end
 

@@ -1,7 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
 local Roact = require(ReplicatedStorage.Lib.Roact)
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 
 local ViewportContainer = Roact.Component:extend("ViewportContainer")
 

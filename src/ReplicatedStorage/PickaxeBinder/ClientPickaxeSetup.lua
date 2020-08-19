@@ -14,7 +14,6 @@ return function(tool)
 	local maid = Maid.new()
 	tool._maid:GiveTask(maid)
 	tool._maid:GiveTask(toolInstance.Equipped:Connect(function()
-		tool:Log(3, "EQUIPPED PICKAXE")
 		local character = toolInstance.Parent
 		if character ~= game.Players.LocalPlayer.Character then
 			return
@@ -55,7 +54,6 @@ return function(tool)
 	end))
 
 	tool._maid:GiveTask(toolInstance.Unequipped:Connect(function()
-		tool:Log(3, "UNEQUIPPED PICKAXE")
 		pickaxeAttackContext:Disable()
 		maid:Destroy()
 	end))

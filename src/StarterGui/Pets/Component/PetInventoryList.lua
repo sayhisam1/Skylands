@@ -3,6 +3,7 @@ local Services = require(ReplicatedStorage.Services)
 local ClientPlayerData = Services.ClientPlayerData
 local PetStore = ClientPlayerData:GetStore("Pets")
 local Roact = require(ReplicatedStorage.Lib.Roact)
+local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 
 function PetInventoryButton()
@@ -33,10 +34,20 @@ function PetInventoryButton()
     )
 end
 
-local gui = Roact.Component:extend("PetInventoryList")
+local PetInventoryList = Roact.Component:extend("PetInventoryList")
 
-function gui:render()
-
+function PetInventoryList:render()
 end
 
-return gui
+PetInventoryList = RoactRodux.connect(
+    function(pets, props)
+        local petComponents = {}
+        for id, pet in pairs(pets) do
+
+        end
+    end
+)(PetInventoryList)
+
+return function()
+    return Roact.createElement(RoactRodux.StoreProvider, {store = PetStore}, {PetList = Roact.createElement(gui)})
+end

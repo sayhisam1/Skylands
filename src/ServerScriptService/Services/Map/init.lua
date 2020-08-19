@@ -4,8 +4,6 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"EffectsService"}
 Service:AddDependencies(DEPENDENCIES)
 
-local Ores = ReplicatedStorage:WaitForChild("Ores")
-
 local Quarry = require(ReplicatedStorage.Objects.Mining.Quarry)
 local QUARRY_BOTTOM_LEFT_POS = Vector3.new(0, 3.5, 0)
 local QUARRY_LENGTH = 10
@@ -27,7 +25,6 @@ table.sort(
 )
 
 function Service:Load()
-    local maid = self._maid
     local currId = self:GetLoadId()
     coroutine.wrap(function()
         while self:GetLoadId() == currId do

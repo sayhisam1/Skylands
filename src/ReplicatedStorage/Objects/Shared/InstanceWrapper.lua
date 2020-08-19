@@ -103,7 +103,10 @@ function InstanceWrapper:RunModule(module_name, ...)
             ...
         )
         if not success then
-            self:Log(3, "Critical! Failed to run module", module_name, "with err", res)
+            local be = Instance.new("BindableEvent")
+            be.Event:Connect(error)
+            be:Fire(self:GetLogPrefix().."Run module "..module_name.." failed with error:\n"..res)
+            be:Destroy()
         else
             return res
         end

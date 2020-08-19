@@ -71,7 +71,7 @@ function Quarry:GenerateOre(depth, x, z)
     end
     self._maid[new_instance] = new_instance
 
-    self:Log(1, "Spawning ore", new_instance, "at", depth, x, z, CollectionService:GetTags(new_instance))
+    self:Log(1, "Spawning ore", new_instance, "at", depth, x, z)
 
     new_instance.Parent = Workspace
     local ore = OreBinder:Bind(new_instance)

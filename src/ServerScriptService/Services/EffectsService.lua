@@ -6,8 +6,6 @@ local DEPENDENCIES = {"PlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
 local Players = game:GetService("Players")
-local StarterPlayer = game:GetService("StarterPlayer")
-local StarterPlayerScripts = StarterPlayer:WaitForChild("StarterPlayerScripts")
 
 local CLIENT_HOOKS = Instance.new("Folder")
 CLIENT_HOOKS.Parent = ReplicatedStorage
@@ -19,7 +17,6 @@ SHARED_INSTANCES.Name = "SHARED_INSTANCES"
 
 local registeredEffects = {}
 function Service:Load()
-    local maid = self._maid
     for _,v in pairs(CLIENT_HOOKS:GetChildren()) do
         if registeredEffects[v.Name] then
             v:Destroy()

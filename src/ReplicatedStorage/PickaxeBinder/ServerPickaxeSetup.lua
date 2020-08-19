@@ -15,7 +15,6 @@ return function(tool)
 	local maid = Maid.new()
 	tool._maid:GiveTask(maid)
 	tool._maid:GiveTask(toolInstance.Equipped:Connect(function()
-		tool:Log(3, "EQUIPPED PICKAXE")
 		-- Weld motor6d to hand
 		local char = toolInstance.Parent
 		local rightHand = char:FindFirstChild("RightHand")
@@ -27,7 +26,6 @@ return function(tool)
 	end))
 
 	tool._maid:GiveTask(toolInstance.Unequipped:Connect(function()
-		tool:Log(3, "UNEQUIPPED PICKAXE")
 		local handle = tool:FindFirstChild("PickaxeHandle")
 		handle.Anchored = true
 		maid:Destroy()
