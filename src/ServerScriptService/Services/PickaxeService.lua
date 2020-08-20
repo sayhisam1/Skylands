@@ -3,12 +3,10 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
-local DEPENDENCIES = {"PlayerData"}
+local DEPENDENCIES = {"PlayerData", "InitializeBinders"}
 Service:AddDependencies(DEPENDENCIES)
 
-local PickaxeBinder = require(ReplicatedStorage.PickaxeBinder)
 local PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
-local Players = game:GetService("Players")
 local Enums = require(ReplicatedStorage.Enums)
 
 function Service:Load()
@@ -18,30 +16,17 @@ function Service:Load()
     local function setupPlayer(plr)
         self:Log(2, "Setting up pickaxe for", plr)
         local selectedPickaxe = PlayerData:GetStore(plr, "SelectedPickaxe")
-        local pickaxeChangedConnector =
-            selectedPickaxe.changed:connect(
-            function(new, old)
-                local pickaxe = self:LookupPickaxe(new)
-                self:SetPlayerPickaxe(plr, pickaxe)
-            end
-        )
         maid:GiveTask(
-            function()
-                pickaxeChangedConnector:disconnect()
-            end
+            selectedPickaxe.changed:connect(
+                function(new)
+                    local pickaxe = self:LookupPickaxe(new)
+                    self:SetPlayerPickaxe(plr, pickaxe)
+                end
+            )
         )
         self:ValidatePlayer(plr)
     end
-    for _, plr in pairs(Players:GetPlayers()) do
-        setupPlayer(plr)
-    end
-    maid:GiveTask(
-        Players.PlayerAdded:Connect(
-            function(plr)
-                setupPlayer(plr)
-            end
-        )
-    )
+    self:HookPlayerAction(setupPlayer)
 end
 
 local function removePickaxes(plr)

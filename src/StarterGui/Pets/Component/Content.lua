@@ -1,10 +1,44 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Services = require(ReplicatedStorage.Services)
+local ClientPlayerData = Services.ClientPlayerData
+local PetStore = ClientPlayerData:GetStore("Pets")
+local MaxSelectedPetsStore = ClientPlayerData:GetStore("MaxSelectedPets")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 local PetInventoryList = require(script.Parent:WaitForChild("PetInventoryList"))
+local PetViewport = require(script.Parent:WaitForChild("PetViewport"))
 
-return function()
+local PetContentComponent = Roact.Component:extend("PetContent")
+
+function PetContentComponent:init()
+    self:setState(
+        {
+            renderedPet = nil
+        }
+    )
+end
+
+
+local function getNumSelectedPets()
+    local pets = PetStore:getState()
+    local selected = 0
+    for _, v in pairs(pets) do
+        if v.Selected then
+            selected = selected + 1
+        end
+    end
+    return selected
+end
+
+function PetContentComponent:render()
+    local function setPetViewport(petData)
+        self:setState(
+            {
+                renderedPet = petData
+            }
+        )
+    end
     return Roact.createFragment(
         {
             Content = Roact.createElement(
@@ -53,7 +87,7 @@ return function()
                                         "TextLabel",
                                         {
                                             Font = Enum.Font.GothamBold,
-                                            Text = "9999999",
+                                            Text = string.format("%d/%d", getNumSelectedPets(), MaxSelectedPetsStore:getState()),
                                             TextScaled = true,
                                             BackgroundTransparency = 1,
                                             TextColor3 = Color3.new(1, 1, 1),
@@ -107,11 +141,40 @@ return function()
                             UIGrid = Roact.createElement(
                                 "UIGridLayout",
                                 {
-                                    CellSize = UDim2.new(0, 50, 0, 50),
-                                    CellPadding = UDim2.new(0, 5, 0, 5)
+                                    CellSize = UDim2.new(0, 100, 0, 100),
+                                    CellPadding = UDim2.new(0, 5, 0, 5),
+                                    SortOrder = Enum.SortOrder.LayoutOrder
                                 }
                             ),
-                            PetList = Roact.createElement(PetInventoryList)
+                            PetList = Roact.createElement(
+                                PetInventoryList,
+                                {
+                                    setPetViewport = setPetViewport
+                                }
+                            )
+                        }
+                    ),
+                    PetViewport = Roact.createElement(
+                        "Frame",
+                        {
+                            Size = UDim2.new(.32, 0, .9, 0),
+                            Position = UDim2.new(.65, 0, .05, 0),
+                            BackgroundColor3 = Color3.fromRGB(97, 140, 177),
+                            BorderSizePixel = 0
+                        },
+                        {
+                            Viewport = Roact.createElement(
+                                PetViewport,
+                                {
+                                    Data = self.state.renderedPet
+                                }
+                            ),
+                            UICorner = Roact.createElement(
+                                "UICorner",
+                                {
+                                    CornerRadius = UDim.new(.1, 0)
+                                }
+                            ),
                         }
                     )
                 }
@@ -119,3 +182,5 @@ return function()
         }
     )
 end
+
+return PetContentComponent

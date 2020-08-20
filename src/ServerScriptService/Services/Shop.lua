@@ -118,7 +118,6 @@ function Service:BuyAsset(plr, instance)
     local assetGoldValue = instance:FindFirstChild("GoldCost", true).Value
     if assetGoldValue ~= math.huge and assetGoldValue >= 0 and goldStore:getState() >= assetGoldValue then
         -- can buy asset
-        local is_already_owned = false
         local owned_asset_list = nil
         if asset_type == self.Enums.Tags.Backpack then
             owned_asset_list = self.Services.PlayerData:GetStore(plr, "OwnedBackpacks")
@@ -142,7 +141,6 @@ end
 function Service:AddAsset(plr, instance)
     local asset_type = self:_identifyAssetType(instance)
     -- can buy asset
-    local is_already_owned = false
     local owned_asset_list = nil
     if asset_type == self.Enums.Tags.Backpack then
         owned_asset_list = self.Services.PlayerData:GetStore(plr, "OwnedBackpacks")
@@ -159,7 +157,6 @@ end
 
 function Service:SelectAsset(plr, instance)
     local asset_type = self:_identifyAssetType(instance)
-    local is_already_owned = false
     local owned_asset_list = nil
     local selected_asset_list = nil
     if asset_type == self.Enums.Tags.Backpack then

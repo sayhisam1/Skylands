@@ -1,9 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local Services = require(ReplicatedStorage.Services)
 
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
-local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
 local Pet = setmetatable({}, InstanceWrapper)
 
 Pet.__index = Pet

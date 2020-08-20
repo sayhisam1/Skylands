@@ -35,6 +35,7 @@ function Service:GetStore(key)
         self._stores[key] =
             Rodux.Store.new(
             function(currentState, action)
+                self:Log(1, "Update store for", key, action.Value)
                 if action.type == "UpdateValue" then
                     return action.Value
                 end

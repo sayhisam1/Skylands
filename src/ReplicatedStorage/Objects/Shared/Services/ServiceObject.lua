@@ -3,6 +3,7 @@
 ------------------------
 -- Responsible for representing a service - a singleton object which implements Service:Load and Service:Unload
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 
 local RunService = game:GetService("RunService")
 local IsServer = RunService:IsServer()
@@ -29,7 +30,7 @@ local Service =
 Service.ClassName = script.Name
 Service.__index = Service
 Service.__newindex = function(t, key, value)
-    if (key ~= nil and type(value) == "function" and key ~= "Load" and key ~= "Unload" and not Service[key]) then
+    if key ~= nil and type(value) == "function" and key ~= "Load" and key ~= "Unload" and not Service[key] then
         rawset(
             t,
             key,
@@ -68,12 +69,12 @@ function Service.new(name)
 end
 
 function Service:AddDependencies(dependencies)
-    if (type(dependencies) == "table") then
+    if type(dependencies) == "table" then
         for i, v in pairs(dependencies) do
             assert(type(v) == "string", "ERROR: Dependencies must be a string name corresponding to the dependency!")
             self.Dependencies[#self.Dependencies + 1] = v
         end
-    elseif (type(dependencies) == "string") then
+    elseif type(dependencies) == "string" then
         self.Dependencies[#self.Dependencies + 1] = dependencies
     end
 end
@@ -113,6 +114,13 @@ end
 
 function Service:GetLoadId()
     return self._loadId
+end
+
+function Service:HookPlayerAction(func)
+    for _, plr in pairs(Players:GetPlayers()) do
+        func(plr)
+    end
+    self._maid:GiveTask(Players.PlayerAdded:Connect(func))
 end
 ------------------------------
 --// OVERLOADED FUNCTIONS \\--

@@ -3,11 +3,10 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
-local DEPENDENCIES = {"PlayerData"}
+local DEPENDENCIES = {"PlayerData", "InitializeBinders"}
 Service:AddDependencies(DEPENDENCIES)
 
 local AssetFinder = require(ReplicatedStorage.AssetFinder)
-local Players = game:GetService("Players")
 local Enums = require(ReplicatedStorage.Enums)
 
 function Service:Load()
@@ -33,16 +32,7 @@ function Service:Load()
         )
         self:ValidatePlayer(plr)
     end
-    for _, plr in pairs(Players:GetPlayers()) do
-        setupPlayer(plr)
-    end
-    maid:GiveTask(
-        Players.PlayerAdded:Connect(
-            function(plr)
-                setupPlayer(plr)
-            end
-        )
-    )
+    self:HookPlayerAction(setupPlayer)
 end
 
 local function removeBackpacks(plr)

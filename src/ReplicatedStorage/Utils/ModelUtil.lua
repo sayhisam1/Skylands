@@ -23,7 +23,7 @@ function module.AutosetPrimaryPart(model)
             midpointPart = part
         end
     end
-    model.PrimaryPart = midpointPart
+    return midpointPart
 end
 
 function module.WeldTogether(model)
@@ -39,4 +39,19 @@ function module.WeldTogether(model)
     end
 end
 
+function module.SetAnchored(model, anchored)
+    for _,v in pairs(model:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Anchored = anchored
+        end
+    end
+end
+
+function module.SetCanCollide(model, cancollide)
+    for _,v in pairs(model:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.CanCollide = cancollide
+        end
+    end
+end
 return module

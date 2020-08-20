@@ -1,10 +1,13 @@
 -- PET MENU --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local Services = require(ReplicatedStorage.Services)
+local ClientPlayerData = Services.ClientPlayerData
+local GuiController = Services.GuiController
+local PetStore = ClientPlayerData:GetStore("Pets")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
+local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 local AnimatedComponent = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedComponent)
 
 local RootContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
@@ -15,13 +18,13 @@ local Content = require(script:WaitForChild("Content"))
 local gui = Roact.Component:extend("Shop")
 
 function gui:didMount()
-    -- Services.GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], false)
+    GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], false)
     UserInputService.ModalEnabled = true
 end
 
 function gui:willUnmount()
     UserInputService.ModalEnabled = false
-    -- Services.GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], true)
+    GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], true)
 end
 
 function gui:render()
@@ -29,11 +32,7 @@ function gui:render()
         RootContainer,
         {
             [AnimatedComponent.TweenInfoOnMount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
-            [AnimatedComponent.TweenInfoOnUnmount] = TweenInfo.new(
-                .3,
-                Enum.EasingStyle.Linear,
-                Enum.EasingDirection.Out
-            ),
+            [AnimatedComponent.TweenInfoOnUnmount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
             [AnimatedComponent.TweenTargetsOnMount] = {
                 Position = UDim2.new(.5, 0, .5, 0)
             },
@@ -117,23 +116,11 @@ function gui:render()
                             BorderSizePixel = 0,
                             Image = "rbxassetid://5585468882",
                             [Roact.Event.MouseEnter] = function(ref)
-                                ref:TweenSize(
-                                    UDim2.new(.22, 0, .62, 0),
-                                    Enum.EasingDirection.Out,
-                                    Enum.EasingStyle.Linear,
-                                    .1,
-                                    true
-                                )
+                                ref:TweenSize(UDim2.new(.22, 0, .62, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                                 ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
                             end,
                             [Roact.Event.MouseLeave] = function(ref)
-                                ref:TweenSize(
-                                    UDim2.new(.2, 0, .6, 0),
-                                    Enum.EasingDirection.Out,
-                                    Enum.EasingStyle.Linear,
-                                    .1,
-                                    true
-                                )
+                                ref:TweenSize(UDim2.new(.2, 0, .6, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                                 ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
                             end
                         },
@@ -144,16 +131,25 @@ function gui:render()
                                     CornerRadius = UDim.new(.2, 0)
                                 }
                             ),
-                            UIAspectRatio = Roact.createElement(
-                                "UIAspectRatioConstraint"
-                            )
+                            UIAspectRatio = Roact.createElement("UIAspectRatioConstraint")
                         }
                     )
                 }
             ),
-            Content = Roact.createElement(Content)
+            Content = Roact.createElement(Content),
+            CloseButton = Roact.createElement("TextButton", {
+                Size = UDim2.new(.2, 0, .2, 0),
+                Position = UDim2.new(.9, 0, -.1, 0),
+                ZIndex = 100,
+                Text = "X",
+                BackgroundTransparency = 1,
+                TextScaled = true,
+                [Roact.Event.MouseButton1Down] = function(ref)
+                    GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
+                end
+            })
         }
     )
 end
 
-return Roact.createElement(gui)
+return Roact.createElement(RoactRodux.StoreProvider, {store = PetStore}, {App = Roact.createElement(gui)})

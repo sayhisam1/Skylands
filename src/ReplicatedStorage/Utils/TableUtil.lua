@@ -151,6 +151,19 @@ newTable.merge = function(tbl, ...)
 	return ret
 end
 
+newTable.mergeDict = function(tbl, ...)
+	local ret = {}
+
+	for _, tbl in pairs({tbl, ...}) do
+		for key, value in pairs(tbl) do
+			assert(not ret[key], "Overwriting key in mergedict!")
+			ret[key] = value
+		end
+	end
+
+	return ret
+end
+
 return setmetatable(newTable, {
 	__index = table
 })

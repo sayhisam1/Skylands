@@ -3,6 +3,10 @@
     "Properties": {
         "IgnoreGuiInset": true,
         "Enabled": false,
-        "ResetOnSpawn": false
+        "ResetOnSpawn": false,
+        "ZIndexBehavior": {
+            "Type": "Enum",
+            "Value": 1
+        }
     }
 }

@@ -1,11 +1,8 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local Services = require(ReplicatedStorage.Services)
 
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
-local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
-local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 local Backpack = setmetatable({}, InstanceWrapper)
 
 Backpack.__index = Backpack

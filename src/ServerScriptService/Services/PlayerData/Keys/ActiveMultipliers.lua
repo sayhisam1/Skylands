@@ -1,3 +1,4 @@
+local TOTAL_MULTIPLIER = "TOTAL_MULTIPLIER"
 return {
     DEFAULT_VALUE = {},
     Reducer = function(currentState, action)
@@ -9,38 +10,52 @@ return {
             assert(action.Id, "Invalid multiplier id!")
             assert(typeof(action.Multiplier) == "number", "Invalid multiplier!")
             local multiplierCategory = action.Category
-            local muliplierId = action.Id
-            local multiplier = aciton.Multiplier
+            local multiplierId = action.Id
+            local multiplier = action.Multiplier
 
             local newState = {}
             for k, v in pairs(currentState) do
                 newState[k] = {}
+                local total = 1
                 for id, w in pairs(v) do
-                    if w.Id == multiplierId then
-                        return currentState
+                    if id ~= TOTAL_MULTIPLIER then
+                        if w.Id == multiplierId and w.Multiplier == multiplier then
+                            -- already exists!
+                            return currentState
+                        end
+                        newState[k][id] = w
+                        total = total * w.Multiplier
                     end
-                    newState[k][id] = w
                 end
+                newState[k][TOTAL_MULTIPLIER] = total
             end
             if not newState[multiplierCategory] then
-                newState[multiplierCategory] = {}
+                newState[multiplierCategory] = {
+                    [TOTAL_MULTIPLIER] = 1
+                }
             end
             newState[multiplierCategory][multiplierId] = {
-                Id = muliplierId,
+                Id = multiplierId,
                 Multiplier = multiplier
             }
+            newState[multiplierCategory][TOTAL_MULTIPLIER] = newState[multiplierCategory][TOTAL_MULTIPLIER] * multiplier
             return newState
         elseif action.type == "RemoveMultiplier" then
             assert(action.Id, "Invalid multiplier id!")
-            local muliplierId = action.Id
+            local multiplierId = action.Id
             local newState = {}
             for k, v in pairs(currentState) do
                 newState[k] = {}
+                local total = 1
                 for id, w in pairs(v) do
-                    if w.Id ~= multiplierId then
-                        newState[k][id] = w
+                    if id ~= TOTAL_MULTIPLIER then
+                        if w.Id ~= multiplierId then
+                            newState[k][id] = w
+                            total = total * w.Multiplier
+                        end
                     end
                 end
+                newState[k][TOTAL_MULTIPLIER] = total
             end
             return newState
         end

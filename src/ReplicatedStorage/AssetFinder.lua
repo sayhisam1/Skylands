@@ -1,10 +1,24 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
 
 local AssetFinder = {}
 
-local ORES = ReplicatedStorage:WaitForChild("Ores")
+local ORES, PICKAXES, BACKPACKS, PETS
+if RunService:IsRunning() then
+    ORES = ReplicatedStorage:WaitForChild("Ores")
+    PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
+    PETS = ReplicatedStorage:WaitForChild("Pets")
+    BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
+else
+    ORES = Workspace:WaitForChild("Ores")
+    PICKAXES = Workspace:WaitForChild("Pickaxes")
+    PETS = Workspace:WaitForChild("Pets")
+    BACKPACKS = Workspace:WaitForChild("Backpacks")
+end
+
 function AssetFinder.FindOre(name)
-    local asset = ORES:FindFirstChild(name)
+    local asset = ORES:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
         error("Couldn't find ore "..name)
     end
@@ -15,9 +29,8 @@ function AssetFinder.GetOres()
     return ORES
 end
 
-local PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
 function AssetFinder.FindPickaxe(name)
-    local asset = PICKAXES:FindFirstChild(name)
+    local asset = PICKAXES:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
         error("Couldn't find pickaxe "..name)
     end
@@ -28,9 +41,8 @@ function AssetFinder.GetPickaxes()
     return PICKAXES
 end
 
-local PETS = ReplicatedStorage:WaitForChild("Pets")
 function AssetFinder.FindPet(name)
-    local asset = PETS:FindFirstChild(name)
+    local asset = PETS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
         error("Couldn't find pet "..name)
     end
@@ -41,9 +53,8 @@ function AssetFinder.GetPets()
     return PETS
 end
 
-local BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
 function AssetFinder.FindBackpack(name)
-    local asset = BACKPACKS:FindFirstChild(name)
+    local asset = BACKPACKS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
         error("Couldn't find backpack "..name)
     end

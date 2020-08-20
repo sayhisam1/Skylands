@@ -1,16 +1,14 @@
 -- stores player inventories --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 local DEPENDENCIES = {"ClientPlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
-local Roact = require(ReplicatedStorage.Lib.Roact)
 local StarterGui = game:GetService("StarterGui")
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-local ASSETS = ReplicatedStorage:WaitForChild("Assets")
 local CoinRain = require(script.CoinRain)
-local Guis = script:WaitForChild("Guis")
 local ADMINS = require(ReplicatedStorage.AdminDictionary)
 
 Service.GUI_GROUPS = {
@@ -47,28 +45,33 @@ function Service:Load()
 
     local ClientPlayerData = self.Services.ClientPlayerData
     local coinStore = ClientPlayerData:GetStore("Gold")
-    local coinStoreChangeConnector =
+    maid:GiveTask(
         coinStore.changed:connect(
-        function(new, old)
-            if game.Players.LocalPlayer.Character then
-                CoinRain:Run(game.Players.LocalPlayer)
+            function(new, old)
+                if game.Players.LocalPlayer.Character then
+                    CoinRain:Run(game.Players.LocalPlayer)
+                end
             end
-        end
+        )
     )
 
     maid:GiveTask(
-        function()
-            coinStoreChangeConnector:disconnect()
-        end
+        Players.LocalPlayer.CharacterAdded:Connect(
+            function()
+                for _, v in pairs(self.GUI_GROUPS) do
+                    self:SetGuiGroupVisible(v, false)
+                end
+                self:SetGuiGroupVisible(self.GUI_GROUPS.Gameplay, true)
+            end
+        )
     )
 
     for _, v in pairs(self.GUI_GROUPS) do
         self:SetGuiGroupVisible(v, false)
     end
-
     self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
     if game.Players.LocalPlayer.Name == "sayhisam1" then
-        -- self:SetGuiGroupVisible(self.GUI_GROUPS["Shop"], true)
+    -- self:SetGuiGroupVisible(self.GUI_GROUPS["Pets"], true)
     end
 end
 
@@ -96,6 +99,9 @@ end
 
 function Service:SetGuiVisible(gui_name, visible)
     local maid = self:_getGuiMaid(gui_name)
+    if visible and maid['Close'] then
+        return
+    end
     maid:Destroy()
     if not visible then
         return
@@ -106,11 +112,9 @@ function Service:SetGuiVisible(gui_name, visible)
         maid:GiveTask(require(gui:FindFirstChild("Load"))())
     else
         gui.Enabled = true
-        maid:GiveTask(
-            function()
-                gui.Enabled = false
-            end
-        )
+        maid["Close"] = function()
+            gui.Enabled = false
+        end
     end
 end
 
