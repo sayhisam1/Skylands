@@ -48,20 +48,7 @@ function Service:Load()
     maid:GiveTask(
         coinStore.changed:connect(
             function(new, old)
-                if game.Players.LocalPlayer.Character then
-                    CoinRain:Run(game.Players.LocalPlayer)
-                end
-            end
-        )
-    )
-
-    maid:GiveTask(
-        Players.LocalPlayer.CharacterAdded:Connect(
-            function()
-                for _, v in pairs(self.GUI_GROUPS) do
-                    self:SetGuiGroupVisible(v, false)
-                end
-                self:SetGuiGroupVisible(self.GUI_GROUPS.Gameplay, true)
+                CoinRain:Run(game.Players.LocalPlayer)
             end
         )
     )
@@ -70,9 +57,19 @@ function Service:Load()
         self:SetGuiGroupVisible(v, false)
     end
     self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
-    if game.Players.LocalPlayer.Name == "sayhisam1" then
-    -- self:SetGuiGroupVisible(self.GUI_GROUPS["Pets"], true)
-    end
+
+    maid:GiveTask(
+        Players.LocalPlayer.CharacterAdded:Connect(
+            function()
+                for _, v in pairs(self.GUI_GROUPS) do
+                    self:SetGuiGroupVisible(v, false)
+                end
+                self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
+            end
+        )
+    )
+
+
 end
 
 function Service:Unload()

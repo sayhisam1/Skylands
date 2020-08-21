@@ -5,8 +5,6 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"PlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
-local Players = game:GetService("Players")
-
 local CLIENT_HOOKS = Instance.new("Folder")
 CLIENT_HOOKS.Parent = ReplicatedStorage
 CLIENT_HOOKS.Name = "CLIENT_HOOKS"
@@ -43,9 +41,8 @@ function Service:FirePlayerClientEffect(plr, effect_name, ...)
 end
 
 function Service:FireClientEffectForAllPlayers(effect_name, ...)
-    for _, plr in pairs(Players:GetPlayers()) do
-        self:FirePlayerClientEffect(plr, effect_name, ...)
-    end
+    local channel = self:GetNetworkChannel()
+    channel:Publish(effect_name, ...)
 end
 
 function Service:AddTemporarySharedInstance(instance, time)

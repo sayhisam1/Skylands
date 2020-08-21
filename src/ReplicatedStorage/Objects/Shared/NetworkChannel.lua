@@ -23,7 +23,6 @@ local IsClient = RunService:IsClient()
 local IsServer = RunService:IsServer()
 
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
-local fastSpawn = require(ReplicatedStorage.Utils.fastSpawn)
 
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local NetworkChannel = setmetatable({}, BaseObject)

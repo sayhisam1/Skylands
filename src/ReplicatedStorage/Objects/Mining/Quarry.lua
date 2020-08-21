@@ -1,12 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
-local ORES_DIR = ReplicatedStorage:WaitForChild("Ores")
-local WALL_MATERIAL = ORES_DIR:WaitForChild("Bedrock")
+local ORES = ReplicatedStorage:WaitForChild("Ores")
+local WALL_MATERIAL = ORES:WaitForChild("Bedrock")
 
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 
 local OreBinder = require(ReplicatedStorage.OreBinder)
-
+local SPAWNED_ORES = OreBinder:GetOresDirectory()
 local HttpService = game:GetService("HttpService")
 local CollectionService = game:GetService("CollectionService")
 
@@ -71,8 +70,7 @@ function Quarry:GenerateOre(depth, x, z)
     end
 
     self:Log(1, "Spawning ore", new_instance, "at", depth, x, z)
-
-    new_instance.Parent = Workspace
+    new_instance.Parent = SPAWNED_ORES
     local ore = OreBinder:Bind(new_instance)
     self._maid:GiveTask(ore)
     CollectionService:AddTag(new_instance, self._tag)

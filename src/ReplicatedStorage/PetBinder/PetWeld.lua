@@ -1,28 +1,20 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local Numerical = require(ReplicatedStorage.Utils.Numerical)
 local Spring = require(ReplicatedStorage.Objects.Shared.Spring)
 
 local MULT = 1
-return function(pet)
+local PET_COUNTER = 0
+return function(pet, character)
     local primaryPart = pet:GetInstance().PrimaryPart
-    local player = pet:GetInstance().Parent
-    if not player then
-        return
-    end
-    local character = player.Character
-    if not character and character.PrimaryPart then
-        return
-    end
-    local charaPart = character.PrimaryPart
+    local charaPart = character:WaitForChild("HumanoidRootPart")
     primaryPart.Massless = true
     primaryPart.Anchored = true
-
-    if not pet:GetInstance() then
-        return
-    end
-
-    local springTarget = Vector3.new(math.random() * 6 - 3, math.random() * 2 + 1, math.random() * 6 - 3)
+    PET_COUNTER = (PET_COUNTER + 1) % 100 + 1
+    local theta = Numerical.fibonacciSpiral(PET_COUNTER, 1)
+    local rand = Random.new()
+    local springTarget = Vector3.new(math.sin(theta) * rand:NextNumber(4, 6), rand:NextNumber(2, 3), math.cos(theta) * rand:NextNumber(4, 6))
     pet:GetInstance():SetPrimaryPartCFrame(CFrame.new(springTarget + charaPart.Position))
     local spring = Spring.new(charaPart.CFrame:PointToWorldSpace(springTarget))
     pet._maid:GiveTask(
@@ -30,7 +22,7 @@ return function(pet)
             function(step)
                 spring.Target =
                     charaPart.CFrame:PointToWorldSpace(
-                    springTarget + Vector3.new(math.random() * 10 - 5, math.random() * 20 - 5, math.random() * 10 - 5)
+                    springTarget + Vector3.new(rand:NextNumber(-5, 5), rand:NextNumber(-10, 10), rand:NextNumber(-5, 5))
                 )
                 local diff = (spring.Target - spring.Position)
                 local vel = diff * MULT * step
@@ -41,4 +33,5 @@ return function(pet)
             end
         )
     )
+    pet:GetInstance().Parent = character
 end

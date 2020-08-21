@@ -3,8 +3,8 @@ local PI = 3.14
 local PHI = 1.618
 
 -- Implements Runge-Kutta 4 stage ODE solver
--- @param y_n 	-- initial condition at timestep n 
--- @param dy_dt -- function that returns transformation at timestep t (from y_n), given initial condition 
+-- @param y_n 	-- initial condition at timestep n
+-- @param dy_dt -- function that returns transformation at timestep t (from y_n), given initial condition
 -- @param h		-- step size of time
 function module.RK4(y_n, dy_dt, h)
 	local k1 = h * dy_dt(0, y_n)
@@ -36,7 +36,9 @@ function module.randSpherical()
 	local u,v = math.random(), math.random()
 	local theta = 2 * PI * u
 	local phi = math.acos(2*v - 1)
-	
+
 	return Vector3.new(module.sphericalToCartesian(theta, phi))
 end
+
+
 return module

@@ -1,4 +1,3 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -9,10 +8,7 @@ Backpack.__index = Backpack
 Backpack.ClassName = script.Name
 
 function Backpack.new(instance)
-    if not instance:IsDescendantOf(game) then
-        return
-    end
-    assert(type(instance) == "userdata" and instance:IsA("Model") and instance:IsDescendantOf(Players), "Invalid Backpack!")
+    assert(type(instance) == "userdata" and instance:IsA("Model"), "Invalid Backpack!")
     local self = setmetatable(InstanceWrapper.new(instance), Backpack)
 
     local setup

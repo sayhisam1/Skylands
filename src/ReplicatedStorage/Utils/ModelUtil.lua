@@ -1,3 +1,5 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Welding = require(ReplicatedStorage.Utils.Welding)
 local module = {}
 
 function module.AutosetPrimaryPart(model)
@@ -30,11 +32,7 @@ function module.WeldTogether(model)
     assert(model:IsA("Model") and model.PrimaryPart, "Need to pass a model with primary part!")
     for _,v in pairs(model:GetDescendants()) do
         if v:IsA("BasePart") and v ~= model.PrimaryPart then
-            local wc = Instance.new("WeldConstraint")
-            wc.Part0 = model.PrimaryPart
-            wc.Part1 = v
-            wc.Name = v.Name
-            wc.Parent = model.PrimaryPart
+            Welding.weldTogether(model.PrimaryPart, v)
         end
     end
 end
