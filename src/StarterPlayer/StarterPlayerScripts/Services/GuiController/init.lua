@@ -99,7 +99,7 @@ end
 
 function Service:SetGuiVisible(gui_name, visible)
     local maid = self:_getGuiMaid(gui_name)
-    if visible and maid['Close'] then
+    if visible and maid["Close"] then
         return
     end
     maid:Destroy()

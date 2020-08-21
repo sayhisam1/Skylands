@@ -74,6 +74,7 @@ function Quarry:GenerateOre(depth, x, z)
 
     new_instance.Parent = Workspace
     local ore = OreBinder:Bind(new_instance)
+    self._maid:GiveTask(ore)
     CollectionService:AddTag(new_instance, self._tag)
 
     ore._quarry = self -- HACK: inject quarry ref into ore
