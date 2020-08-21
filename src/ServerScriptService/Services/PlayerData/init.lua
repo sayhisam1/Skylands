@@ -8,6 +8,8 @@ Service:AddDependencies(DEPENDENCIES)
 local Players = game:GetService("Players")
 local DataStore2 = require(ReplicatedStorage.Lib.DataStore2)
 
+local DATA_SAVE_TIMER = 60
+
 local Rodux = require(ReplicatedStorage.Lib.Rodux)
 
 local KeysDir = script.Keys
@@ -73,6 +75,7 @@ function Service:Load()
     self._maid:GiveTask(
         Players.PlayerRemoving:Connect(
             function(plr)
+                DataStore2.SaveAll(plr)
                 for _, v in pairs(playerData[plr.UserId]) do
                     v:destruct()
                 end
@@ -80,6 +83,16 @@ function Service:Load()
             end
         )
     )
+
+    local loadId = self:GetLoadId()
+    coroutine.wrap(function()
+        while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
+            for _, plr in pairs(Players:GetPlayers()) do
+                DataStore2.SaveAll(plr)
+                wait()
+            end
+        end
+    end)()
 end
 
 function Service:Unload()
