@@ -22,3 +22,9 @@
 [submodule "module/roact-rodux"]
 	path = module/roact-rodux
 	url = https://github.com/Roblox/roact-rodux
+[submodule "module/roblox-lua-promise"]
+	path = module/roblox-lua-promise
+	url = https://github.com/evaera/roblox-lua-promise
+[submodule "module/spr"]
+	path = module/spr
+	url = https://github.com/Fraktality/spr
