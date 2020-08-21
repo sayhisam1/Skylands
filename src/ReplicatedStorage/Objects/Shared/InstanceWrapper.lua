@@ -25,12 +25,14 @@ function InstanceWrapper:Destroy()
     self._destroyed = true
     self:RunModule("Destroyed")
     self._maid:Destroy()
-    if self._instance then
+    local instance = self._instance
+    self._instance = nil
+
+    if instance then
         pcall(function()
-            self._instance:Destroy()
+            instance:Destroy()
         end)
     end
-    self._instance = nil
 end
 
 function InstanceWrapper:SetCFrame(cframe)

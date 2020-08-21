@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local Services = require(ReplicatedStorage.Services)
 
+local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
 local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
 local Ore = setmetatable({}, InstanceWrapper)
@@ -60,10 +61,22 @@ function Ore:Mine(plr, damage)
             )
             if self:GetAttribute("Value") then
                 local plrBackpackGoldValue = Services.PlayerData:GetStore(plr, "BackpackGoldValue")
+                local value = self:GetAttribute("Value")
+                value = value * Multipliers.GetPlayerMultiplier(plr, "Gold")
                 plrBackpackGoldValue:dispatch(
                     {
                         type = "Increment",
-                        Amount = self:GetAttribute("Value")
+                        Amount = value
+                    }
+                )
+            end
+            if self:GetAttribute("GemValue") then
+                local plrGems = Services.PlayerData:GetStore(plr, "Gems")
+                local value = self:GetAttribute("GemValue")
+                plrGems:dispatch(
+                    {
+                        type = "Increment",
+                        Amount = value
                     }
                 )
             end

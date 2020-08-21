@@ -52,18 +52,22 @@ function Service:Load()
         )
     )
 
-    self._maid:GiveTask(
-        Players.PlayerAdded:Connect(
-            function(plr)
-                local lastVisitTime = self:GetStore(plr, "LastVisitTime")
-                lastVisitTime:dispatch(
-                    {
-                        type = "Set",
-                        Value = tick()
-                    }
-                )
+    self:HookPlayerAction(
+        function(plr)
+            self:Log(3, "Player joined", plr.Name)
+            local whitelist = require(script.Whitelist)
+            if not self.TableUtil.contains(whitelist, plr.Name) and not self.TableUtil.contains(require(ReplicatedStorage.AdminDictionary), plr.UserId) then
+                self:Log(3, "Player kicked", plr.Name)
+                plr:Kick("You are not a beta tester. Sorry!")
             end
-        )
+            local lastVisitTime = self:GetStore(plr, "LastVisitTime")
+            lastVisitTime:dispatch(
+                {
+                    type = "Set",
+                    Value = tick()
+                }
+            )
+        end
     )
 
     self._maid:GiveTask(

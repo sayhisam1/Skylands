@@ -1,9 +1,4 @@
-local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local Services = require(ReplicatedStorage.Services)
-local ClientPlayerData = Services.ClientPlayerData
-local PetStore = ClientPlayerData:GetStore("PetStore")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)

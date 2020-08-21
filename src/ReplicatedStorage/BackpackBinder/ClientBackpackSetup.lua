@@ -5,8 +5,13 @@ local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 return function(backpack)
 	assert(RunService:IsClient(), "Can only be called on client!")
 	local backpackInstance = backpack:GetInstance()
+	if not backpackInstance then
+		return
+	end
 	local player = backpackInstance.Parent
-	assert(player and player:IsA("Player"), "No player for backapck!")
+	if not player and player:IsA("Player") then
+		return
+	end
 	local maid = Maid.new()
 	backpack._maid:GiveTask(maid)
 

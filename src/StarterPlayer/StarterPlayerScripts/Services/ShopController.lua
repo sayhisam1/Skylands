@@ -1,4 +1,4 @@
-local CLOSE_REOPEN_DELAY = 3 -- can't open shop for this much time after close
+local CLOSE_REOPEN_DELAY = 5 -- can't open shop for this much time after close
 
 -- stores player inventories --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -16,7 +16,6 @@ local last_close_time = 0
 
 local debounce = false
 function Service:Load()
-    local maid = self._maid
     local shopPart = CollectionService:GetTagged(self.Enums.Tags.ShopPart)[1]
     self._maid:GiveTask(shopPart.Touched:Connect(function(part)
         if not debounce and tick() - last_close_time > CLOSE_REOPEN_DELAY and part:IsDescendantOf(game.Players.LocalPlayer.Character) then

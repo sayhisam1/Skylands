@@ -64,7 +64,7 @@ function Maid:GiveTask(task)
 	local taskId = #self._tasks+1
 	self[taskId] = task
 
-	if type(task) == "table" and (not task.Destroy) then
+	if type(task) == "table" and (not task.Destroy) and (not task.destroy) and (not task.disconnect) then
 		warn("[Maid.GiveTask] - Gave table task without .Destroy\n\n" .. debug.traceback())
 	end
 

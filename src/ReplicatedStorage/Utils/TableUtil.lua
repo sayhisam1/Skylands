@@ -164,6 +164,15 @@ newTable.mergeDict = function(tbl, ...)
 	return ret
 end
 
+newTable.filter = function(tbl, lambda)
+	local newtbl = {}
+	for k, v in pairs(tbl) do
+		if lambda(k, v) then
+			newtbl[k] = v
+		end
+	end
+	return newtbl
+end
 return setmetatable(newTable, {
 	__index = table
 })

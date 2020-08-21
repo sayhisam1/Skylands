@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = require(ReplicatedStorage.Services)
 local Roact = require(ReplicatedStorage.Lib.Roact)
 
-local gui = require(script.Parent:WaitForChild("Component"))
+local gui = require(script.Parent:WaitForChild("App"))
 local screenGui = script.Parent:WaitForChild("PetScreenGui")
 
 return function()

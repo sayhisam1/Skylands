@@ -24,7 +24,7 @@ return {
                             return currentState
                         end
                         newState[k][id] = w
-                        total = total * w.Multiplier
+                        total = total + (w.Multiplier - 1)
                     end
                 end
                 newState[k][TOTAL_MULTIPLIER] = total
@@ -38,7 +38,7 @@ return {
                 Id = multiplierId,
                 Multiplier = multiplier
             }
-            newState[multiplierCategory][TOTAL_MULTIPLIER] = newState[multiplierCategory][TOTAL_MULTIPLIER] * multiplier
+            newState[multiplierCategory][TOTAL_MULTIPLIER] = newState[multiplierCategory][TOTAL_MULTIPLIER] + (multiplier - 1)
             return newState
         elseif action.type == "RemoveMultiplier" then
             assert(action.Id, "Invalid multiplier id!")
@@ -51,7 +51,7 @@ return {
                     if id ~= TOTAL_MULTIPLIER then
                         if w.Id ~= multiplierId then
                             newState[k][id] = w
-                            total = total * w.Multiplier
+                            total = total + (w.Multiplier - 1)
                         end
                     end
                 end

@@ -8,6 +8,8 @@ local Roact = require(ReplicatedStorage.Lib.Roact)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 local PetInventoryList = require(script.Parent:WaitForChild("PetInventoryList"))
 local PetViewport = require(script.Parent:WaitForChild("PetViewport"))
+local PetIndicatorButton = require(script.Parent:WaitForChild("PetIndicatorButton"))
+local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 
 local PetContentComponent = Roact.Component:extend("PetContent")
 
@@ -18,7 +20,6 @@ function PetContentComponent:init()
         }
     )
 end
-
 
 local function getNumSelectedPets()
     local pets = PetStore:getState()
@@ -44,8 +45,8 @@ function PetContentComponent:render()
             Content = Roact.createElement(
                 "Frame",
                 {
-                    Position = UDim2.new(.03, 0, .17, 0),
-                    Size = UDim2.new(.94, 0, .79, 0),
+                    Position = self.props.Position,
+                    Size = self.props.Size,
                     BackgroundColor3 = Color3.fromRGB(110, 160, 204),
                     BorderSizePixel = 0,
                     ZIndex = 20
@@ -58,75 +59,27 @@ function PetContentComponent:render()
                         }
                     ),
                     SelectedPets = Roact.createElement(
-                        "Frame",
+                        PetIndicatorButton,
                         {
                             Size = UDim2.new(.25, 0, .21, 0),
                             Position = UDim2.new(0.01, 0, 0.01, 0),
                             BackgroundColor3 = Color3.fromRGB(110, 160, 204),
-                            BorderSizePixel = 1,
-                            ZIndex = 10
-                        },
-                        {
-                            UICorner = Roact.createElement(
-                                "UICorner",
-                                {
-                                    CornerRadius = UDim.new(.2, 0)
-                                }
-                            ),
-                            Roact.createElement(
-                                IconFrame,
-                                {
-                                    Size = UDim2.new(.7, 0, .7, 0),
-                                    Position = UDim2.new(0.5, 0, .5, 0),
-                                    AnchorPoint = Vector2.new(.5, .5),
-                                    Image = "http://www.roblox.com/asset/?id=5580190056",
-                                    ZIndex = 51
-                                },
-                                {
-                                    Slots = Roact.createElement(
-                                        "TextLabel",
-                                        {
-                                            Font = Enum.Font.GothamBold,
-                                            Text = string.format("%d/%d", getNumSelectedPets(), MaxSelectedPetsStore:getState()),
-                                            TextScaled = true,
-                                            BackgroundTransparency = 1,
-                                            TextColor3 = Color3.new(1, 1, 1),
-                                            Size = UDim2.new(1, 0, 1, 0),
-                                            ZIndex = 52
-                                        }
-                                    )
-                                }
-                            ),
-                            Roact.createElement(
-                                "ImageButton",
-                                {
-                                    ZIndex = 52,
-                                    Size = UDim2.new(.5, 0, .5, 0),
-                                    Position = UDim2.new(1, 0, .5, 0),
-                                    AnchorPoint = Vector2.new(0, .5),
-                                    BackgroundTransparency = 0,
-                                    BackgroundColor3 = Color3.fromRGB(135, 198, 254),
-                                    BorderSizePixel = 0,
-                                    Image = "rbxassetid://5585468882",
-                                    [Roact.Event.MouseEnter] = function(ref)
-                                        ref:TweenSize(UDim2.new(.53, 0, .53, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
-                                        ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
-                                    end,
-                                    [Roact.Event.MouseLeave] = function(ref)
-                                        ref:TweenSize(UDim2.new(.5, 0, .5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
-                                        ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
-                                    end
-                                },
-                                {
-                                    UICorner = Roact.createElement(
-                                        "UICorner",
-                                        {
-                                            CornerRadius = UDim.new(.2, 0)
-                                        }
+                            store = MaxSelectedPetsStore,
+                            Image = "http://www.roblox.com/asset/?id=5580190056",
+                            TextGetter = function(val)
+                                return string.format(
+                                    "%d/%d",
+                                    TableUtil.len(
+                                        TableUtil.filter(
+                                            PetStore:getState() or {},
+                                            function(k, v)
+                                                return v.Selected
+                                            end
+                                        )
                                     ),
-                                    UIAspectRatio = Roact.createElement("UIAspectRatioConstraint")
-                                }
-                            )
+                                    (type(val) == "number" and val) or 0
+                                )
+                            end
                         }
                     ),
                     PetList = Roact.createElement(
@@ -174,7 +127,7 @@ function PetContentComponent:render()
                                 {
                                     CornerRadius = UDim.new(.1, 0)
                                 }
-                            ),
+                            )
                         }
                     )
                 }

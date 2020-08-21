@@ -29,7 +29,7 @@ function Service:Load()
                             plrGold:dispatch(
                                 {
                                     type = "Increment",
-                                    Amount = totalBackpackValue:getState()
+                                    Amount = math.ceil(totalBackpackValue:getState())
                                 }
                             )
                             totalBackpackValue:dispatch(

@@ -1,4 +1,5 @@
 local module = {}
+local ORIGIN = Vector3.new(0, 0, 0)
 
 function module.GetCubeNeighbors(n, vec, mult)
 	mult = mult or 1
@@ -21,6 +22,26 @@ function module.GetHollowCubeNeighbors(n, vec, mult)
 			for z = -n, n do
 				if math.abs(x) == n or math.abs(y) == n or math.abs(z) == n then
 					list[#list + 1] = vec + Vector3.new(x, y, z) * mult
+				end
+			end
+		end
+	end
+	return list
+end
+
+function module.ManhattanDist(v1, v2)
+	return math.abs(v1.X - v2.X) + math.abs(v1.Y - v2.Y) + math.abs(v1.Z + v2.Z)
+end
+
+function module.GetManhattanDistanceNeighbors(n, vec, mult)
+	mult = mult or 1
+	local list = {}
+	for x = -n, n do
+		for y = -n, n do
+			for z = -n, n do
+				local newVec = Vector3.new(x, y, z)
+				if module.ManhattanDist(ORIGIN, newVec) <= n then
+					list[#list + 1] = vec + newVec * mult
 				end
 			end
 		end

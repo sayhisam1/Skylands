@@ -20,7 +20,6 @@ if IsServer then
 
     function module.AddPlayerMultiplier(player, category, multiplier)
         local store = PlayerData:GetStore(player, "ActiveMultipliers")
-        PlayerData:Log(3, "PlayerMultiplier", player, category, multiplier, store:getState())
         local id = HttpService:GenerateGUID(false)
         store:dispatch({
             type="AddMultiplier",

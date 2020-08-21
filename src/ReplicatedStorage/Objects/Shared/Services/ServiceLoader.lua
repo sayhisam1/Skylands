@@ -6,11 +6,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local RunService = game:GetService("RunService")
 local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
 
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local Queue = require(ReplicatedStorage.Objects.Shared.Queue)
-local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
 local REMOTE_DIR_NAME = "_serverRemotes"
 
@@ -20,7 +18,6 @@ if IsServer then
     dir.Parent = ReplicatedStorage
 end
 
-local REMOTE_DIR = ReplicatedStorage:WaitForChild(REMOTE_DIR_NAME)
 
 local ServiceLoader = setmetatable({}, BaseObject)
 ServiceLoader.__index = ServiceLoader
@@ -33,7 +30,7 @@ local function recursiveSearch(start_dir, name)
     while not dirs:IsEmpty() do
         local dir = dirs:Dequeue()
         for _, v in ipairs(dir:GetChildren()) do
-            if (v.Name == name) then
+            if v.Name == name then
                 return v
             end
             if v:IsA("Folder") then
