@@ -2,12 +2,10 @@
 local ATTACK_NAME = "Mining"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CollectionService = game:GetService("CollectionService")
 
 local Attack = require(ReplicatedStorage.Objects.Combat.Abstract.Attack)
 local AttackPhase = require(ReplicatedStorage.Objects.Combat.Abstract.AttackPhase)
 local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
-local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 local MiningUtil = require(ReplicatedStorage.Utils.MiningUtil)
 
 --2) Initializer function (should instantiate a new instance of the attack, given owner)

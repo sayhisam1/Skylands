@@ -1,9 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
-local MiningLib = require(ReplicatedStorage.Utils.MiningUtil)
 local Welding = require(ReplicatedStorage.Utils.Welding)
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 
