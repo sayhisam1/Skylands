@@ -1,6 +1,5 @@
 -- PET MENU --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 local Services = require(ReplicatedStorage.Services)
 local ClientPlayerData = Services.ClientPlayerData
 local GuiController = Services.GuiController
@@ -18,29 +17,20 @@ local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 
 local gui = Roact.Component:extend("Shop")
 
-function gui:didMount()
-    GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], false)
-    UserInputService.ModalEnabled = true
-end
-
-function gui:willUnmount()
-    UserInputService.ModalEnabled = false
-    GuiController:SetGuiGroupVisible(Services.GuiController.GUI_GROUPS["Gameplay"], true)
-end
-
 function gui:render()
     return Roact.createElement(
         AnimatedContainer,
         {
             [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .8,
             [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
-            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or {
-                Position = UDim2.new(.5, 0, .5, 0)
-            },
+            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or
+                {
+                    Position = UDim2.new(.5, 0, .5, 0)
+                },
             AnchorPoint = Vector2.new(.5, .5),
-            Size = UDim2.new(0.5, 0, 0.5, 0),
+            Size = UDim2.new(0.7, 0, 0.7, 0),
             Position = UDim2.new(0.5, 0, 1.5, 0),
-            BackgroundTransparency = 1,
+            BackgroundTransparency = 1
         },
         {
             UIAspectRatio = Roact.createElement(
@@ -96,13 +86,15 @@ function gui:render()
                     Image = "http://www.roblox.com/asset/?id=5589393189",
                     BackgroundTransparency = 1,
                     [Roact.Event.MouseButton1Down] = function()
-                        self:setState({
-                            [AnimatedContainer.Damping] = 1,
-                            [AnimatedContainer.Frequency] = 2,
-                            [AnimatedContainer.Targets] = {
-                                Position = UDim2.new(.5, 0, 1.5, 0)
-                            },
-                        })
+                        self:setState(
+                            {
+                                [AnimatedContainer.Damping] = 1,
+                                [AnimatedContainer.Frequency] = 2,
+                                [AnimatedContainer.Targets] = {
+                                    Position = UDim2.new(.5, 0, 1.5, 0)
+                                }
+                            }
+                        )
                         wait(.3)
                         GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
                     end

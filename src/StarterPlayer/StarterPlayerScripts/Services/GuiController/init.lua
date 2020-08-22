@@ -21,8 +21,9 @@ Service.GUI_GROUPS = {
         "Shop"
     },
     Pets = {
-        "Pets"
-    }
+        "Pets",
+    },
+    Core = {}
 }
 
 function Service:Load()
@@ -58,6 +59,7 @@ function Service:Load()
             self:SetGuiGroupVisible(v, false)
         end
         self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
+        self:SetGuiGroupVisible(self.GUI_GROUPS["Core"], true)
     end
     resetGuis()
     maid:GiveTask(Players.LocalPlayer.CharacterAdded:Connect(resetGuis))
@@ -110,16 +112,12 @@ function Service:SetGuiGroupVisible(group, visible)
     for _, v in pairs(group) do
         self:SetGuiVisible(v, visible)
     end
-    if group == self.GUI_GROUPS.Gameplay then
+    if group == self.GUI_GROUPS.Core then
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, visible)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, visible)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, visible)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, visible)
     end
-end
-
-function Service:SetCoreGuiEnabled(enabled)
-    StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, enabled)
 end
 
 return Service

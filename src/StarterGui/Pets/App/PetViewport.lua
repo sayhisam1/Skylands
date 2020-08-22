@@ -61,7 +61,7 @@ function PetViewport:render()
                     Font = Enum.Font.GothamBold,
                     BackgroundColor3 = Color3.fromRGB(135, 198, 254),
                     TextScaled = true,
-                    [Roact.Event.MouseButton1Down] = function(ref)
+                    [Roact.Event.MouseButton1Down] = function()
                         if data then
                             local petServiceNetworkChannel = Services.ClientPlayerData:GetServerNetworkChannel("PetService")
                             petServiceNetworkChannel:Publish((data.Selected and "UNSELECT_PET") or "SELECT_PET", data.Id)

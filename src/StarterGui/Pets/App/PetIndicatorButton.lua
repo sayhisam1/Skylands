@@ -84,11 +84,9 @@ function PetIndicatorButton:render()
                     Image = "rbxassetid://5585468882",
                     [Roact.Event.MouseEnter] = function(ref)
                         ref:TweenSize(UDim2.new(.22, 0, .62, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
-                        ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
                     end,
                     [Roact.Event.MouseLeave] = function(ref)
                         ref:TweenSize(UDim2.new(.2, 0, .6, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
-                        ref.ImageColor3 = Color3.fromRGB(255, 255, 255)
                     end
                 },
                 {

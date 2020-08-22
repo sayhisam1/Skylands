@@ -79,7 +79,7 @@ function BackpackMenu:render()
                         Text = "Back",
                         Font = Enum.Font.GothamBold
                     },
-                    Position = UDim2.new(0.05, 0, 0.1, 0),
+                    Position = UDim2.new(0.05, 0, 0.2, 0),
                     Size = UDim2.new(0, 0, .1, 0),
                     [Roact.Event.MouseButton1Click] = function()
                         selectNext()
