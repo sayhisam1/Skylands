@@ -5,7 +5,7 @@ local DEPENDENCIES = {"EffectsService"}
 Service:AddDependencies(DEPENDENCIES)
 
 local Quarry = require(ReplicatedStorage.Objects.Mining.Quarry)
-local QUARRY_BOTTOM_LEFT_POS = Vector3.new(0, 3.5, 0)
+local QUARRY_BOTTOM_LEFT_POS = Vector3.new(0, 50003.5, 0)
 local QUARRY_LENGTH = 10
 local QUARRY_WIDTH = 10
 

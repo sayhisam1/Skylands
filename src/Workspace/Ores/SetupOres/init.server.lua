@@ -33,6 +33,22 @@ setup:AddSetupTask(
 		end
 	end
 )
+local physics = PhysicalProperties.new(0, 0, 0, 0, 0)
+
+setup:AddSetupTask(
+	function(ore)
+		for _, v in pairs(ore:GetDescendants()) do
+			if v:IsA("BasePart") then
+				if not v == ore.PrimaryPart then
+					v.CanCollide = false
+				end
+				v.Massless = true
+				v.CustomPhysicalProperties = physics
+				v.CastShadow = false
+			end
+		end
+	end
+)
 
 setup:AddSetupTask(
 	function(ore)

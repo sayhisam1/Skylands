@@ -10,7 +10,7 @@ module.Metrics = {
 	end,
 	MANHATTAN = function(a, b)
 		local diff = a - b
-		return diff.X + diff.Y + diff.Z
+		return math.abs(diff.X) + math.abs(diff.Y) + math.abs(diff.Z)
 	end
 }
 

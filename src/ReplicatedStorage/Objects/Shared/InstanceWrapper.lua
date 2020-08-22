@@ -28,12 +28,9 @@ function InstanceWrapper:Destroy()
     local instance = self._instance
     self._instance = nil
 
-    if instance then
-        pcall(
-            function()
-                instance:Destroy()
-            end
-        )
+    RunService.Heartbeat:Wait()
+    if instance and instance.Parent then
+        instance:Destroy()
     end
 end
 

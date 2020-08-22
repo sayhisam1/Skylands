@@ -105,10 +105,10 @@ end
 
 function Quarry:MarkHasSpawned(ore, depth, x, z)
     if not self._spawnedCoords[depth] then
-        self._spawnedCoords[depth] = {}
+        self._spawnedCoords[depth] = table.create(self._length + 1)
     end
     if not self._spawnedCoords[depth][x] then
-        self._spawnedCoords[depth][x] = {}
+        self._spawnedCoords[depth][x] = table.create(self._width + 1)
     end
     self._spawnedCoords[depth][x][z] = ore
 end
