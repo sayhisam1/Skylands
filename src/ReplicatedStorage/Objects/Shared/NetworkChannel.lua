@@ -126,7 +126,6 @@ function NetworkChannel:Subscribe(topic, callback, cache_lookup_time)
         self._topicCallbacks[topic] = Event.new()
         self._maid:GiveTask(
             function()
-                warn("CLEARING TOPIC", topic)
                 self._topicCallbacks[topic]:Destroy()
                 self._topicCallbacks[topic] = nil
             end
