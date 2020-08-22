@@ -2,13 +2,12 @@
 local ATTACK_NAME = "Mining"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 
 local OreBinder = require(ReplicatedStorage.OreBinder)
 local Attack = require(ReplicatedStorage.Objects.Combat.Abstract.Attack)
 local AttackPhase = require(ReplicatedStorage.Objects.Combat.Abstract.AttackPhase)
-local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
+local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
 
 --2) Initializer function (should instantiate a new instance of the attack, given owner)
 return function(tool)
@@ -22,15 +21,17 @@ return function(tool)
     local humanoid = character:FindFirstChild("Humanoid")
     local communicationChannel = tool:GetNetworkChannel()
 
+    local speed = Multipliers.GetPlayerMultiplier(player, "Speed") * tool:GetAttribute("Speed")
+
     local AnimationChoiceYield =
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "ANIM",
-        1/tool:GetAttribute("Speed")/5,
+        1/speed/5,
         function(effect, caller, animation)
             assert(player == caller, "Called by unexpected player!")
             local animation_effect =
-                require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(animation, humanoid, nil, nil, tool:GetAttribute("Speed"))
+                require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(animation, humanoid, nil, nil, speed)
             animation_effect:Start()
             wait(animation_effect:GetTotalTime())
             effect:Yield()
@@ -43,7 +44,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "HIT",
-        1/tool:GetAttribute("Speed")/5,
+        1/speed/5,
         function(effect, caller, part, pos)
             assert(player == caller, "Called by unexpected player!")
             if not part then

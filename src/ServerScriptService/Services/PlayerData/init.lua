@@ -1,6 +1,7 @@
 -- stores player inventories --
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 local DEPENDENCIES = {}
 Service:AddDependencies(DEPENDENCIES)
@@ -60,7 +61,7 @@ function Service:Load()
             local whitelist = require(script.Whitelist)
             if not self.TableUtil.contains(whitelist, plr.Name) and not self.TableUtil.contains(require(ReplicatedStorage.AdminDictionary), plr.UserId) then
                 self:Log(3, "Player kicked", plr.Name)
-                plr:Kick("You are not a beta tester. Sorry!")
+                plr:Kick("Sorry, you are not a beta tester. Apply to be one on the discord!")
             end
             local lastVisitTime = self:GetStore(plr, "LastVisitTime")
             lastVisitTime:dispatch(
@@ -75,7 +76,9 @@ function Service:Load()
     self._maid:GiveTask(
         Players.PlayerRemoving:Connect(
             function(plr)
-                DataStore2.SaveAll(plr)
+                if not RunService:IsStudio() then
+                    DataStore2.SaveAll(plr)
+                end
                 for _, v in pairs(playerData[plr.UserId]) do
                     v:destruct()
                 end

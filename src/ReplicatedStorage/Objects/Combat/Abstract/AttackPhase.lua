@@ -4,12 +4,7 @@
 
 --]]
 --REQUIRED CLASSES--
-local DEBUGMODE = false
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local RunService = game:GetService("RunService")
-local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
 
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
 local State = require(ReplicatedStorage.Objects.Shared.FSM.State)
@@ -85,7 +80,7 @@ end
 
 function AttackPhaseObject:WithEffectFunction(func)
     assert(type(func) == "function", "Tried to set invalid effect function")
-    self:Log(1, "AttackPhase add effectfunction",animation)
+    self:Log(1, "AttackPhase add effect function")
     local new_effect = Effect.new()
     new_effect:SetFunction(func)
     return self:WithEffect(new_effect)

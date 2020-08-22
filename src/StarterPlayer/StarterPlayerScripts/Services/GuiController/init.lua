@@ -53,23 +53,14 @@ function Service:Load()
         )
     )
 
-    for _, v in pairs(self.GUI_GROUPS) do
-        self:SetGuiGroupVisible(v, false)
+    local function resetGuis()
+        for _, v in pairs(self.GUI_GROUPS) do
+            self:SetGuiGroupVisible(v, false)
+        end
+        self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
     end
-    self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
-
-    maid:GiveTask(
-        Players.LocalPlayer.CharacterAdded:Connect(
-            function()
-                for _, v in pairs(self.GUI_GROUPS) do
-                    self:SetGuiGroupVisible(v, false)
-                end
-                self:SetGuiGroupVisible(self.GUI_GROUPS["Gameplay"], true)
-            end
-        )
-    )
-
-
+    resetGuis()
+    maid:GiveTask(Players.LocalPlayer.CharacterAdded:Connect(resetGuis))
 end
 
 function Service:Unload()
@@ -106,7 +97,7 @@ function Service:SetGuiVisible(gui_name, visible)
     local gui = PlayerGui:WaitForChild(gui_name, 5)
     assert(gui, "Invalid gui_name " .. gui_name)
     if gui:FindFirstChild("Load") then
-        maid:GiveTask(require(gui:FindFirstChild("Load"))())
+        maid["Close"] = require(gui:FindFirstChild("Load"))()
     else
         gui.Enabled = true
         maid["Close"] = function()

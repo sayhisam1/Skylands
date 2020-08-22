@@ -7,5 +7,4 @@ return function (context, ore)
 	clone:SetPrimaryPartCFrame(context.Executor.Character.PrimaryPart.CFrame + Vector3.new(0, 3, 0))
 	clone.Parent = OreBinder:GetOresDirectory()
 	local ore = OreBinder:Bind(clone)
-	clone.Parent = workspace
 end

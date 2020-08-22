@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 
 local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
-
+local PET_MULTIPLIER_LIST = {"Gold", "Speed", "Critical"}
 return function(pet)
 	assert(RunService:IsServer(), "Can only be called on server!")
 	local petInstance = pet:GetInstance()
@@ -11,8 +11,10 @@ return function(pet)
 	assert(petPlayer, "No player for pet!")
 	local maid = Maid.new()
 	pet._maid:GiveTask(maid)
-	local goldMultiplier = pet:GetAttribute("GoldMultiplier")
-	if goldMultiplier then
-		maid:GiveTask(Multipliers.AddPlayerMultiplier(petPlayer, "Gold", goldMultiplier))
+	for _, m in pairs(PET_MULTIPLIER_LIST) do
+		local mult = pet:GetAttribute(string.format("%sMultiplier", m))
+		if mult then
+			maid:GiveTask(Multipliers.AddPlayerMultiplier(petPlayer, m, mult))
+		end
 	end
 end

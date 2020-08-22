@@ -7,6 +7,7 @@ local Attack = require(ReplicatedStorage.Objects.Combat.Abstract.Attack)
 local AttackPhase = require(ReplicatedStorage.Objects.Combat.Abstract.AttackPhase)
 local Effect = require(ReplicatedStorage.Objects.Combat.Abstract.Effect)
 local MiningUtil = require(ReplicatedStorage.Utils.MiningUtil)
+local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
 
 --2) Initializer function (should instantiate a new instance of the attack, given owner)
 return function(tool)
@@ -21,15 +22,15 @@ return function(tool)
     local communicationChannel = tool:GetNetworkChannel()
 
     local miningAnim =
-        (tool:GetAttribute("LastMiningAnim") == 2 and tool:FindFirstChild("MiningAnimation1")) or
-        tool:FindFirstChild("MiningAnimation2")
+        (tool:GetAttribute("LastMiningAnim") == 2 and tool:FindFirstChild("MiningAnimation1")) or tool:FindFirstChild("MiningAnimation2")
 
+    local speed = Multipliers.GetMultiplier("Speed") * tool:GetAttribute("Speed")
     local animation_effect =
-        require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(miningAnim, character_humanoid, nil, nil, tool:GetAttribute("Speed"))
+        require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(miningAnim, character_humanoid, nil, nil, speed)
     ActionPhase:WithEffect(animation_effect)
 
     ActionPhase:WithEffectFunction(
-        function(effect)
+        function()
             communicationChannel:Publish("ANIM", miningAnim)
             if tool:GetAttribute("LastMiningAnim") == 2 then
                 tool:SetAttribute("LastMiningAnim", 1)

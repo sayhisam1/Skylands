@@ -8,7 +8,6 @@ local GetPlayerCharacterWorkspace = require(ReplicatedStorage.Objects.Promises.G
 
 return function(backpack)
 	assert(RunService:IsClient(), "Can only be called on client!")
-	backpack:Log(3, "SETTING UP PET")
 	local promise = WaitforInstanceDescendantOf(backpack:GetInstance(), Players):andThen(
 		function(backpackInstance)
 			return GetPrimaryPart(backpackInstance)

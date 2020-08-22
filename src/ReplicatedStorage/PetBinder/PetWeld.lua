@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 local Numerical = require(ReplicatedStorage.Utils.Numerical)
 local Spring = require(ReplicatedStorage.Objects.Shared.Spring)
 
-local MULT = 1
+local MULT = 2
 local PET_COUNTER = 0
 return function(pet, character)
     local primaryPart = pet:GetInstance().PrimaryPart
