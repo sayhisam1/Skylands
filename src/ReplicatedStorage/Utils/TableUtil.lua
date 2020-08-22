@@ -1,9 +1,9 @@
 local newTable = {}
 
 newTable.contains = function(tbl, val)
-	for i,v in pairs(tbl) do
+	for k, v in pairs(tbl) do
 		if v == val then
-			return i
+			return k
 		end
 	end
 
@@ -173,6 +173,15 @@ newTable.filter = function(tbl, lambda)
 	end
 	return newtbl
 end
+
+newTable.map = function(tbl, lambda)
+	local newtbl = {}
+	for k, v in pairs(tbl) do
+		newtbl[k] = lambda(v)
+	end
+	return newtbl
+end
+
 return setmetatable(newTable, {
 	__index = table
 })
