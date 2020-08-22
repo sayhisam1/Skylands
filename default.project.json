@@ -12,7 +12,7 @@
       "$ignoreUnknownInstances": true,
       "$path": "src/ReplicatedStorage",
       "Lib": {
-        "$ignoreUnknownInstances": true,
+        "$ignoreUnknownInstances": false,
         "$path": "module"
       }
     },
@@ -21,17 +21,14 @@
       "$ignoreUnknownInstances": true,
       "$path": "src/ServerScriptService",
       "Repository": {
-        "$ignoreUnknownInstances": true,
+        "$ignoreUnknownInstances": false,
         "$className": "Folder",
         "Vendor": {
           "$className": "Folder",
-          "$ignoreUnknownInstances": true,
           "Cmdr": {
             "$className": "Folder",
-            "$ignoreUnknownInstances": true,
             "Server": {
               "$className": "Folder",
-              "$ignoreUnknownInstances": true,
               "Cmdr": {
                 "$path": "Cmdr/Cmdr"
               }
