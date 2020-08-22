@@ -26,7 +26,7 @@ function Queue.new()
 end
 
 function Queue:Destroy()
-    for i,v in pairs(self) do
+    for i, v in pairs(self) do
         self[i] = nil
     end
 end

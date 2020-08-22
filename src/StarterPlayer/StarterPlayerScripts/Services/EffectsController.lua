@@ -22,7 +22,6 @@ function Service:Load()
             end
         )
     )
-
 end
 
 function Service:Unload()
@@ -30,8 +29,8 @@ function Service:Unload()
 end
 
 function Service:RegisterEffect(effect_name, handler)
-    assert(type(effect_name) == 'string', "Invalid effect name!")
-    assert(type(handler) == 'function', "Invalid handler!")
+    assert(type(effect_name) == "string", "Invalid effect name!")
+    assert(type(handler) == "function", "Invalid handler!")
     if registeredEffects[effect_name] then
         return
     end

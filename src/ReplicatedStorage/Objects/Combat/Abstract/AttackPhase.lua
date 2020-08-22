@@ -6,6 +6,7 @@
 --REQUIRED CLASSES--
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Clock = require(ReplicatedStorage.Clock)
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
 local State = require(ReplicatedStorage.Objects.Shared.FSM.State)
 
@@ -28,54 +29,64 @@ function AttackPhaseObject.new(phase_name)
     self.TotalTime = 0
     self.StartTime = math.huge
     -- incase phase has no animation --
-    self._maid:GiveTask(self.Loaded:Connect(
-        function()
-            self.StartTime = _G.Clock:GetTime()
-            coroutine.wrap(
-                function()
-                    wait(self.TotalTime)
-                    if self.__loaded then
-                        self.Completed:Fire()
+    self._maid:GiveTask(
+        self.Loaded:Connect(
+            function()
+                self.StartTime = Clock:GetTime()
+                coroutine.wrap(
+                    function()
+                        wait(self.TotalTime)
+                        if self.__loaded then
+                            self.Completed:Fire()
+                        end
                     end
-                end
-            )()
-        end
-    ))
-    self._maid:GiveTask(self.Completed:Connect(
-        function()
-            self.TotalTime = _G.Clock:GetTime() - self.StartTime -- Now that we finished the phase, we can note down how much time the phase actually took
-        end
-    ))
+                )()
+            end
+        )
+    )
+    self._maid:GiveTask(
+        self.Completed:Connect(
+            function()
+                self.TotalTime = Clock:GetTime() - self.StartTime -- Now that we finished the phase, we can note down how much time the phase actually took
+            end
+        )
+    )
     return self
 end
 
 -- Adds an abstract effect to the attack phase - must be start/stoppable
 function AttackPhaseObject:WithEffect(effect)
     -- Handle yielding effects
-    self:Log(1, "AttackPhase add effect",effect.ClassName)
+    self:Log(1, "AttackPhase add effect", effect.ClassName)
     self._maid:GiveTask(effect)
     if type(effect.Yielded) == "table" then
         if effect.Preemptive then
-            self._maid:GiveTask(effect.Yielded:Connect(
-                function()
-                    self:Preempt()
-                end
-            ))
+            self._maid:GiveTask(
+                effect.Yielded:Connect(
+                    function()
+                        self:Preempt()
+                    end
+                )
+            )
         end
         self.TotalTime = math.max(effect:GetTotalTime(), self.TotalTime)
     end
 
     -- Handle effect starting
-    self._maid:GiveTask(self.Loaded:Connect(
-        function()
-            effect:Start()
-        end
-    ))
-    self._maid:GiveTask(self.Unloaded:Connect(
-        function()
-            effect:Stop()
-        end
-    ))
+    self._maid:GiveTask(
+        self.Loaded:Connect(
+            function()
+                effect:Start()
+            end
+        )
+    )
+    self._maid:GiveTask(
+        self.Unloaded:Connect(
+            function()
+                effect:Stop()
+            end
+        )
+    )
 end
 
 function AttackPhaseObject:WithEffectFunction(func)
@@ -91,13 +102,12 @@ function AttackPhaseObject:GetTotalTime()
 end
 
 function AttackPhaseObject:WithAnimation(char, animation, preemptive)
-    self:Log(1, "AttackPhase add animation",animation)
+    self:Log(1, "AttackPhase add animation", animation)
     preemptive = preemptive or true
     local effect = AnimationEffect.new(char, animation)
     effect:SetPreemptive(preemptive)
     return self:WithEffect(effect)
 end
-
 
 function AttackPhaseObject:Preempt()
     if self.Completed then

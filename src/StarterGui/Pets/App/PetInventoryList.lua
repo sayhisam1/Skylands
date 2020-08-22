@@ -29,18 +29,21 @@ function PetInventoryButton:render()
                 ZIndex = 22
             },
             {
-                Roact.createElement("TextLabel", {
-                    Text = (data.Selected and "SELECTED") or "",
-                    Size = UDim2.new(1, 0, 1, 0),
-                    AnchorPoint = Vector2.new(.5, .5),
-                    Position = UDim2.new(.5, 0, .5, 0),
-                    BackgroundTransparency = 1,
-                    TextColor3 = Color3.new(1, 1, 1),
-                    TextStrokeColor3 = Color3.new(1, 1, 1),
-                    TextStrokeTransparency = 1,
-                    Rotation = -45,
-                    TextScaled = true
-                })
+                Roact.createElement(
+                    "TextLabel",
+                    {
+                        Text = (data.Selected and "SELECTED") or "",
+                        Size = UDim2.new(1, 0, 1, 0),
+                        AnchorPoint = Vector2.new(.5, .5),
+                        Position = UDim2.new(.5, 0, .5, 0),
+                        BackgroundTransparency = 1,
+                        TextColor3 = Color3.new(1, 1, 1),
+                        TextStrokeColor3 = Color3.new(1, 1, 1),
+                        TextStrokeTransparency = 1,
+                        Rotation = -45,
+                        TextScaled = true
+                    }
+                )
             }
         )
     end
@@ -108,6 +111,9 @@ function PetInventoryList:render()
                 highlighted = (v.Id == self.state.selectedPetId)
             }
         )
+        if v.Id == self.state.selectedPetId then
+            self.props.setPetViewport(v)
+        end
     end
     return Roact.createFragment(petComponents)
 end
@@ -115,7 +121,6 @@ end
 PetInventoryList =
     RoactRodux.connect(
     function(pets, props)
-        -- ClientPlayerData:Log(3, "PET INVENTORY", pets)
         local petComponents = {}
         for id, pet in pairs(pets or {}) do
             petComponents[tostring(id)] = pet

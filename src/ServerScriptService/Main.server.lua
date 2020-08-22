@@ -8,7 +8,6 @@ local SERVICE_DIR = ServerScriptService:WaitForChild("Services")
 local ServiceLoader = require(ReplicatedStorage.Objects.Shared.Services.ServiceLoader).new(SERVICE_DIR)
 
 _G.Services = ServiceLoader.ServiceTable
-_G.Clock = require(ReplicatedStorage.Objects.Shared.Clock)
 
 ServiceLoader:PrefetchServices()
 ServiceLoader:LoadAllServices()

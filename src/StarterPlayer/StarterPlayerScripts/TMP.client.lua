@@ -8,6 +8,8 @@ local Primary = BlueSpawnerSign:WaitForChild("Primary")
 local SurfaceGui = Primary:WaitForChild("SurfaceGui")
 local ImageButton = SurfaceGui:WaitForChild("ImageButton")
 local re = ImageButton:WaitForChild("RemoteEvent")
-ImageButton.MouseButton1Click:Connect(function()
-	re:FireServer()
-end)
+ImageButton.MouseButton1Click:Connect(
+	function()
+		re:FireServer()
+	end
+)

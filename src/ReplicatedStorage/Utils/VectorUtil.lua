@@ -76,16 +76,23 @@ function module.MarkPoints(points)
 	p.Anchored = true
 	p.Size = Vector3.new(.2, .2, .2)
 	p.Color = Color3.new(1, 0, 0)
-	local partClones = TableUtil.map(points, function(pt)
-		local cloned = p:Clone()
-		cloned.CFrame = CFrame.new(pt)
-		cloned.Parent = Workspace
-		return cloned
-	end)
+	local partClones =
+		TableUtil.map(
+		points,
+		function(pt)
+			local cloned = p:Clone()
+			cloned.CFrame = CFrame.new(pt)
+			cloned.Parent = Workspace
+			return cloned
+		end
+	)
 	return function()
-		TableUtil.map(partClones, function(part)
-			part:Destroy()
-		end)
+		TableUtil.map(
+			partClones,
+			function(part)
+				part:Destroy()
+			end
+		)
 	end
 end
 

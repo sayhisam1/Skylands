@@ -36,7 +36,7 @@ function Channel:Publish(topic, ...)
     assert(type(topic) == "string", "ERROR: Topic needs to be a string!")
     local bound = self._topicCallbacks[topic]
     if bound then
-        for i, v in pairs(bound) do
+        for _, v in pairs(bound) do
             fastSpawn(v, ...)
         end
     end
@@ -55,13 +55,13 @@ function Channel:Subscribe(topic, callback)
     local arr = self._topicCallbacks[topic]
     arr[callback] = callback
     local disconnector = {}
-    function disconnector:Disconnect()
+    function disconnector.Disconnect()
         arr[callback] = nil
     end
-    function disconnector:Unsubscribe()
+    function disconnector.Unsubscribe()
         arr[callback] = nil
     end
-    function disconnector:Destroy()
+    function disconnector.Destroy()
         arr[callback] = nil
     end
     return disconnector
@@ -99,7 +99,7 @@ end
 
 --Remove all bound topics/functions
 function Channel:UnsubscribeAll()
-    for i, v in pairs(self._topicCallbacks) do
+    for i, _ in pairs(self._topicCallbacks) do
         self._topicCallbacks[i] = nil
     end
     self._topicCallbacks = {}

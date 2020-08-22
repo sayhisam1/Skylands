@@ -3,7 +3,7 @@
 -- February 26, 2018
 
 --[[
-	
+
 	CameraShakePresets.Bump
 	CameraShakePresets.Explosion
 	CameraShakePresets.Earthquake
@@ -11,16 +11,11 @@
 	CameraShakePresets.HandheldCamera
 	CameraShakePresets.Vibration
 	CameraShakePresets.RoughDriving
-	
+
 --]]
-
-
-
 local CameraShakeInstance = require(script.Parent.CameraShakeInstance)
 
 local CameraShakePresets = {
-	
-	
 	-- A high-magnitude, short, yet smooth shake.
 	-- Should happen once.
 	Bump = function()
@@ -28,9 +23,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0.15, 0.15, 0.15)
 		c.RotationInfluence = Vector3.new(1, 1, 1)
 		return c
-	end;
-	
-	
+	end,
 	-- An intense and rough shake.
 	-- Should happen once.
 	Explosion = function()
@@ -38,9 +31,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0.25, 0.25, 0.25)
 		c.RotationInfluence = Vector3.new(4, 1, 1)
 		return c
-	end;
-	
-	
+	end,
 	-- A continuous, rough shake
 	-- Sustained.
 	Earthquake = function()
@@ -48,9 +39,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0.25, 0.25, 0.25)
 		c.RotationInfluence = Vector3.new(1, 1, 4)
 		return c
-	end;
-	
-	
+	end,
 	-- A bizarre shake with a very high magnitude and low roughness.
 	-- Sustained.
 	BadTrip = function()
@@ -58,9 +47,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0, 0, 0.15)
 		c.RotationInfluence = Vector3.new(2, 1, 4)
 		return c
-	end;
-	
-	
+	end,
 	-- A subtle, slow shake.
 	-- Sustained.
 	HandheldCamera = function()
@@ -68,9 +55,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0, 0, 0)
 		c.RotationInfluence = Vector3.new(1, 0.5, 0.5)
 		return c
-	end;
-	
-	
+	end,
 	-- A very rough, yet low magnitude shake.
 	-- Sustained.
 	Vibration = function()
@@ -78,9 +63,7 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0, 0.15, 0)
 		c.RotationInfluence = Vector3.new(1.25, 0, 4)
 		return c
-	end;
-	
-	
+	end,
 	-- A slightly rough, medium magnitude shake.
 	-- Sustained.
 	RoughDriving = function()
@@ -88,18 +71,18 @@ local CameraShakePresets = {
 		c.PositionInfluence = Vector3.new(0, 0, 0)
 		c.RotationInfluence = Vector3.new(1, 1, 1)
 		return c
-	end;
-	
-	
+	end
 }
 
-
-return setmetatable({}, {
-	__index = function(t, i)
-		local f = CameraShakePresets[i]
-		if (type(f) == "function") then
-			return f()
+return setmetatable(
+	{},
+	{
+		__index = function(t, i)
+			local f = CameraShakePresets[i]
+			if (type(f) == "function") then
+				return f()
+			end
+			error('No preset found with index "' .. i .. '"')
 		end
-		error("No preset found with index \"" .. i .. "\"")
-	end;
-})
+	}
+)

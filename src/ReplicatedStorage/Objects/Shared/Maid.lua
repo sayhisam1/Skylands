@@ -61,7 +61,7 @@ end
 function Maid:GiveTask(task)
 	assert(task, "Task cannot be false or nil")
 
-	local taskId = #self._tasks+1
+	local taskId = #self._tasks + 1
 	self[taskId] = task
 
 	if type(task) == "table" and (not task.Destroy) and (not task.destroy) and (not task.disconnect) then
@@ -73,9 +73,9 @@ end
 
 -- Shorthand for giving multiple tasks
 function Maid:GiveTasks(...)
-    for _,task in pairs({...}) do
-        self:GiveTask(task)
-    end
+	for _, task in pairs({...}) do
+		self:GiveTask(task)
+	end
 end
 
 function Maid:GivePromise(promise)
@@ -87,9 +87,11 @@ function Maid:GivePromise(promise)
 	local id = self:GiveTask(newPromise)
 
 	-- Ensure GC
-	newPromise:Finally(function()
-		self[id] = nil
-	end)
+	newPromise:Finally(
+		function()
+			self[id] = nil
+		end
+	)
 
 	return newPromise
 end
@@ -108,7 +110,8 @@ function Maid:DoCleaning()
 	end
 
 	-- Clear out tasks table completely, even if clean up tasks add more tasks to the maid
-	local index, task = next(tasks)
+	local index,
+		task = next(tasks)
 	while task ~= nil do
 		tasks[index] = nil
 		if type(task) == "function" then
@@ -122,7 +125,8 @@ function Maid:DoCleaning()
 		elseif task.disconnect then
 			task:disconnect()
 		end
-		index, task = next(tasks)
+		index,
+			task = next(tasks)
 	end
 end
 

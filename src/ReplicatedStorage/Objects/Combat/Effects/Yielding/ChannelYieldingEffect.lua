@@ -1,10 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local RunService = game:GetService("RunService")
-local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
-
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 local YieldingEffect = require(ReplicatedStorage.Objects.Combat.Abstract.YieldingEffect)
 
 local ChannelYieldingEffect = setmetatable({}, YieldingEffect)
@@ -38,7 +33,7 @@ function ChannelYieldingEffect:Wait()
     self._maid:GiveTask(task)
 
     local start_t = tick()
-    while (tick() - start_t < MAX_YIELD_TIME and self._running and completed == false) do
+    while tick() - start_t < MAX_YIELD_TIME and self._running and completed == false do
         wait()
     end
 

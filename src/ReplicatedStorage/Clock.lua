@@ -6,7 +6,6 @@
 
 local RunService = game:GetService("RunService")
 local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
 
 local MasterClock = {}
 MasterClock.__index = MasterClock
@@ -18,7 +17,7 @@ function MasterClock.new(remoteEvent, remoteFunction)
 	self._remoteEvent = remoteEvent or error("No remoteEvent")
 	self._remoteFunction = remoteFunction or error("No remoteFunction")
 
-	self._remoteFunction.OnServerInvoke = function(player, timeThree)
+	self._remoteFunction.OnServerInvoke = function(_, timeThree)
 		return self:_handleDelayRequest(timeThree)
 	end
 	self._remoteEvent.OnServerEvent:Connect(
@@ -152,7 +151,9 @@ end
 
 --- Return a singleton
 local function buildClock()
-	local remoteEvent, remoteFunction, clockDir
+	local remoteEvent,
+		remoteFunction,
+		clockDir
 	if IsServer then
 		clockDir = Instance.new("Folder")
 		clockDir.Name = "_clockRemote"

@@ -59,7 +59,10 @@ function Service:Load()
         function(plr)
             self:Log(3, "Player joined", plr.Name)
             local whitelist = require(script.Whitelist)
-            if not self.TableUtil.contains(whitelist, plr.Name) and not self.TableUtil.contains(require(ReplicatedStorage.AdminDictionary), plr.UserId) then
+            if
+                not self.TableUtil.contains(whitelist, plr.Name) and
+                    not self.TableUtil.contains(require(ReplicatedStorage.AdminDictionary), plr.UserId)
+             then
                 self:Log(3, "Player kicked", plr.Name)
                 plr:Kick("Sorry, you are not a beta tester. Apply to be one on the discord!")
             end
@@ -88,14 +91,16 @@ function Service:Load()
     )
 
     local loadId = self:GetLoadId()
-    coroutine.wrap(function()
-        while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
-            for _, plr in pairs(Players:GetPlayers()) do
-                DataStore2.SaveAll(plr)
-                wait()
+    coroutine.wrap(
+        function()
+            while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
+                for _, plr in pairs(Players:GetPlayers()) do
+                    DataStore2.SaveAll(plr)
+                    wait()
+                end
             end
         end
-    end)()
+    )()
 end
 
 function Service:Unload()

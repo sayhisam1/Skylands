@@ -15,20 +15,22 @@ SHARED_INSTANCES.Name = "SHARED_INSTANCES"
 
 local registeredEffects = {}
 function Service:Load()
-    for _,v in pairs(CLIENT_HOOKS:GetChildren()) do
+    for _, v in pairs(CLIENT_HOOKS:GetChildren()) do
         if registeredEffects[v.Name] then
             v:Destroy()
             return
         end
         registeredEffects[v.Name] = v
     end
-    CLIENT_HOOKS.ChildAdded:Connect(function(v)
-        if registeredEffects[v.Name] then
-            v:Destroy()
-            return
+    CLIENT_HOOKS.ChildAdded:Connect(
+        function(v)
+            if registeredEffects[v.Name] then
+                v:Destroy()
+                return
+            end
+            registeredEffects[v.Name] = v
         end
-        registeredEffects[v.Name] = v
-    end)
+    )
 end
 
 function Service:Unload()
@@ -47,10 +49,12 @@ end
 
 function Service:AddTemporarySharedInstance(instance, time)
     instance.Parent = SHARED_INSTANCES
-    coroutine.wrap(function()
-        wait(time)
-        instance:Destroy()
-    end)()
+    coroutine.wrap(
+        function()
+            wait(time)
+            instance:Destroy()
+        end
+    )()
 end
 
 return Service

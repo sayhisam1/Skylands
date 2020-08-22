@@ -4,7 +4,10 @@ local Workspace = game:GetService("Workspace")
 
 local AssetFinder = {}
 
-local ORES, PICKAXES, BACKPACKS, PETS
+local ORES,
+    PICKAXES,
+    BACKPACKS,
+    PETS
 if RunService:IsRunning() then
     ORES = ReplicatedStorage:WaitForChild("Ores")
     PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
@@ -20,7 +23,7 @@ end
 function AssetFinder.FindOre(name)
     local asset = ORES:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
-        error("Couldn't find ore "..name)
+        error("Couldn't find ore " .. name)
     end
     return asset
 end
@@ -32,7 +35,7 @@ end
 function AssetFinder.FindPickaxe(name)
     local asset = PICKAXES:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
-        error("Couldn't find pickaxe "..name)
+        error("Couldn't find pickaxe " .. name)
     end
     return asset
 end
@@ -44,7 +47,7 @@ end
 function AssetFinder.FindPet(name)
     local asset = PETS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
-        error("Couldn't find pet "..name)
+        error("Couldn't find pet " .. name)
     end
     return asset
 end
@@ -56,7 +59,7 @@ end
 function AssetFinder.FindBackpack(name)
     local asset = BACKPACKS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
-        error("Couldn't find backpack "..name)
+        error("Couldn't find backpack " .. name)
     end
     return asset
 end

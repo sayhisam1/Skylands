@@ -21,14 +21,16 @@ end
 
 local channel = NetworkChannel.new("PARTICLE", ParticleEvent)
 
-if IsClient then
-	channel:Subscribe("Emit", function(sound, options)
-		ParticleUtil.PlaySound(sound, options)
-	end)
-end
-
 local ParticleUtil = {}
 
+if IsClient then
+	channel:Subscribe(
+		"Emit",
+		function(sound, options)
+			ParticleUtil.PlaySound(sound, options)
+		end
+	)
+end
 
 local base_part = Instance.new("Part")
 base_part.Anchored = true
@@ -39,18 +41,18 @@ base_attach.Parent = base_part
 base_attach.Name = "PARTICLE_ATTACH"
 
 function ParticleUtil.EmitParticleAtPosition(particle, position, options)
-    options = options or {}
-	assert(type(options) == 'table', "Invalid options specified!")
-	assert(type(position) == 'userdata', "Invalid position!")
-	assert(particle:IsA("ParticleEmitter"),"Tried to emit unknown particle "..tostring(particle))
+	options = options or {}
+	assert(type(options) == "table", "Invalid options specified!")
+	assert(type(position) == "userdata", "Invalid position!")
+	assert(particle:IsA("ParticleEmitter"), "Tried to emit unknown particle " .. tostring(particle))
 
 	local total_emit_time = options.TotalEmitTime
 	options.TotalEmitTime = nil
 
-    local particleClone = particle:Clone()
+	local particleClone = particle:Clone()
 	game.Debris:AddItem(particleClone, particleClone.Lifetime.Max + 5)
 
-	for option,value in pairs(options) do
+	for option, value in pairs(options) do
 		particleClone[option] = value
 	end
 
@@ -72,12 +74,14 @@ function ParticleUtil.EmitParticleAtPosition(particle, position, options)
 	particleMaid:GiveTask(new_part)
 
 	if total_emit_time then
-		coroutine.wrap(function()
-			wait(total_emit_time)
-			particleClone.Enabled = false
-			wait(particleClone.Lifetime.Max + 1)
-			particleMaid:Destroy()
-		end)()
+		coroutine.wrap(
+			function()
+				wait(total_emit_time)
+				particleClone.Enabled = false
+				wait(particleClone.Lifetime.Max + 1)
+				particleMaid:Destroy()
+			end
+		)()
 		particleClone.Enabled = true
 	end
 
@@ -90,13 +94,12 @@ if IsServer then
 		channel:PublishPlayer(plr, "Emit", sound, options)
 	end
 	function ParticleUtil.ReplicateParticleForPlayersExcept(ignored_plr, ...)
-		for _,plr in pairs(Players:GetPlayers()) do
+		for _, plr in pairs(Players:GetPlayers()) do
 			if ignored_plr ~= plr then
 				ParticleUtil.ReplicateParticleForPlayer(plr, ...)
 			end
 		end
 	end
-
 end
 
 return ParticleUtil

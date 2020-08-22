@@ -120,14 +120,9 @@ function PickaxeButtons:render()
                         ScaleType = Enum.ScaleType.Slice
                     },
                     TextProps = {
-                        Text = string.format(
-                            "%s %s",
-                            ((data.Selected and "[SELECTED]") or (data.Owned and "[OWNED]") or ""),
-                            data.DisplayName
-                        ),
+                        Text = string.format("%s %s", ((data.Selected and "[SELECTED]") or (data.Owned and "[OWNED]") or ""), data.DisplayName),
                         TextColor3 = (data.Highlighted and Color3.fromRGB(0, 0, 0)) or Color3.fromRGB(255, 255, 255),
-                        ShadowTextColor3 = (data.Highlighted and Color3.fromRGB(255, 255, 255)) or
-                            Color3.fromRGB(0, 0, 0),
+                        ShadowTextColor3 = (data.Highlighted and Color3.fromRGB(255, 255, 255)) or Color3.fromRGB(0, 0, 0),
                         Font = Enum.Font.GothamBold,
                         Position = UDim2.new(.5, 0, .5, 0),
                         AnchorPoint = Vector2.new(.5, .5),
@@ -151,13 +146,7 @@ function PickaxeButtons:render()
                         if data.Highlighted then
                             return
                         end
-                        ref:TweenSize(
-                            UDim2.new(1.3, 0, .2, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Linear,
-                            .1,
-                            true
-                        )
+                        ref:TweenSize(UDim2.new(1.3, 0, .2, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                         ref.Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
                         ref.MainText.TextColor3 = Color3.fromRGB(0, 0, 0)
                         ref.ShadowText.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -166,13 +155,7 @@ function PickaxeButtons:render()
                         if data.Highlighted then
                             return
                         end
-                        ref:TweenSize(
-                            UDim2.new(1, 0, .2, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Linear,
-                            .1,
-                            true
-                        )
+                        ref:TweenSize(UDim2.new(1, 0, .2, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                         ref.Icon.ImageColor3 = Color3.fromRGB(0, 0, 0)
                         ref.MainText.TextColor3 = Color3.fromRGB(255, 255, 255)
                         ref.ShadowText.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -195,12 +178,10 @@ function PickaxeButtons:render()
                         TextProps = {
                             Text = string.format(
                                 "%s",
-                                (data.Selected and "SELECTED") or (data.Owned and "SELECT") or (data.Buyable and "BUY") or
-                                    "NOT BUYABLE"
+                                (data.Selected and "SELECTED") or (data.Owned and "SELECT") or (data.Buyable and "BUY") or "NOT BUYABLE"
                             ),
                             TextColor3 = (data.Selected and Color3.fromRGB(0, 0, 0)) or Color3.fromRGB(255, 255, 255),
-                            ShadowTextColor3 = (data.Selected and Color3.fromRGB(255, 255, 255)) or
-                                Color3.fromRGB(0, 0, 0),
+                            ShadowTextColor3 = (data.Selected and Color3.fromRGB(255, 255, 255)) or Color3.fromRGB(0, 0, 0),
                             Font = Enum.Font.GothamBold,
                             Position = UDim2.new(.5, 0, .5, 0),
                             AnchorPoint = Vector2.new(.5, .5),
@@ -226,13 +207,7 @@ function PickaxeButtons:render()
                             if data.Selected then
                                 return
                             end
-                            ref:TweenSize(
-                                UDim2.new(.33, 0, .2, 0),
-                                Enum.EasingDirection.Out,
-                                Enum.EasingStyle.Linear,
-                                .1,
-                                true
-                            )
+                            ref:TweenSize(UDim2.new(.33, 0, .2, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                             ref.Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
                             ref.MainText.TextColor3 = Color3.fromRGB(0, 0, 0)
                             ref.ShadowText.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -241,13 +216,7 @@ function PickaxeButtons:render()
                             if data.Selected then
                                 return
                             end
-                            ref:TweenSize(
-                                UDim2.new(.3, 0, .2, 0),
-                                Enum.EasingDirection.Out,
-                                Enum.EasingStyle.Linear,
-                                .1,
-                                true
-                            )
+                            ref:TweenSize(UDim2.new(.3, 0, .2, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                             ref.Icon.ImageColor3 = Color3.fromRGB(0, 0, 0)
                             ref.MainText.TextColor3 = Color3.fromRGB(255, 255, 255)
                             ref.ShadowText.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -330,7 +299,7 @@ function PickaxeButtons:render()
                                 IconFrame,
                                 {
                                     Image = "rbxassetid://5013823501",
-                                    LayoutOrder = 3,
+                                    LayoutOrder = 3
                                 },
                                 {
                                     Roact.createElement(
@@ -372,7 +341,7 @@ function PickaxeButtons:render()
                                 IconFrame,
                                 {
                                     Image = "rbxassetid://5063940411",
-                                    LayoutOrder = 2,
+                                    LayoutOrder = 2
                                 },
                                 {
                                     Roact.createElement(

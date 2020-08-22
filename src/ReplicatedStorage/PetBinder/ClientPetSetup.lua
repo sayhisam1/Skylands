@@ -9,7 +9,8 @@ local GetPlayerCharacterWorkspace = require(ReplicatedStorage.Objects.Promises.G
 return function(pet)
 	assert(RunService:IsClient(), "Can only be called on client!")
 	pet:Log(3, "SETTING UP PET")
-	local promise = WaitforInstanceDescendantOf(pet:GetInstance(), Players):andThen(
+	local promise =
+		WaitforInstanceDescendantOf(pet:GetInstance(), Players):andThen(
 		function(petInstance)
 			return GetPrimaryPart(petInstance)
 		end

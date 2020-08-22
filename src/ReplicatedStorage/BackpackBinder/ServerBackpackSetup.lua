@@ -13,14 +13,20 @@ return function(backpack)
 
 	local capacityStore = Services.PlayerData:GetStore(backpackPlayer, "BackpackCapacity")
 	local capacity = backpack:GetAttribute("Capacity") or 0
-	capacityStore:dispatch({
-		type = "Set",
-		Value = capacity
-	})
-	maid:GiveTask(function()
-		capacityStore:dispatch({
-			type="Set",
-			Value = 0
-		})
-	end)
+	capacityStore:dispatch(
+		{
+			type = "Set",
+			Value = capacity
+		}
+	)
+	maid:GiveTask(
+		function()
+			capacityStore:dispatch(
+				{
+					type = "Set",
+					Value = 0
+				}
+			)
+		end
+	)
 end

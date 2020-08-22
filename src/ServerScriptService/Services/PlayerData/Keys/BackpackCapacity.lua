@@ -9,5 +9,5 @@ return {
             assert(action.Amount, "Invalid Amount!!")
             return currentState + action.Amount
         end
-    end,
+    end
 }

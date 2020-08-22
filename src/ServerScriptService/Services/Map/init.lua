@@ -26,12 +26,14 @@ table.sort(
 
 function Service:Load()
     local currId = self:GetLoadId()
-    coroutine.wrap(function()
-        while self:GetLoadId() == currId do
-            self:ReloadQuarry()
-            wait(QUARRY_RESPAWN_TIMER)
+    coroutine.wrap(
+        function()
+            while self:GetLoadId() == currId do
+                self:ReloadQuarry()
+                wait(QUARRY_RESPAWN_TIMER)
+            end
         end
-    end)()
+    )()
 end
 
 function Service:Unload()

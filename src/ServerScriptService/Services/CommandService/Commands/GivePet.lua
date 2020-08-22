@@ -1,8 +1,8 @@
 return {
-	Name = "givepet";
-	Aliases = {"gt"};
-	Description = "Gives a pet";
-	Group = "DefaultAdmin";
+	Name = "givepet",
+	Aliases = {"gt"},
+	Description = "Gives a pet",
+	Group = "DefaultAdmin",
 	Args = {
 		{
 			Type = "player",
@@ -14,5 +14,5 @@ return {
 			Name = "Pet",
 			Description = "pet to add"
 		}
-	};
+	}
 }

@@ -4,17 +4,13 @@
 --]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local RunService = game:GetService("RunService")
-local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
-
+local Clock = require(ReplicatedStorage.Clock)
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 
 local FSM = require(ReplicatedStorage.Objects.Shared.FSM.EventDrivenFSM)
 local State = require(ReplicatedStorage.Objects.Shared.FSM.State)
 local EventTransition = require(ReplicatedStorage.Objects.Shared.FSM.EventTransition)
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 
 local AttackObject = setmetatable({}, BaseObject)
 AttackObject.ClassName = script.Name
@@ -22,10 +18,7 @@ AttackObject.__index = AttackObject
 --CONSTRUCTOR--
 -- @param attack_name -- A string name to assign to the attack (should be unique across all attacks)
 function AttackObject.new(attack_name)
-    assert(
-        type(attack_name) == "string",
-        "Attack must have a valid name! (given: " .. attack_name .. ", of type: " .. type(attack_name) .. ")"
-    )
+    assert(type(attack_name) == "string", "Attack must have a valid name! (given: " .. attack_name .. ", of type: " .. type(attack_name) .. ")")
     local self = setmetatable(BaseObject.new(attack_name), AttackObject)
 
     self.Name = attack_name
@@ -47,9 +40,11 @@ function AttackObject.new(attack_name)
     self._maid:GiveTask(basestate)
     self._FSM:AddState(basestate)
 
-    self._maid:GiveTask(function()
-        self:Stop()
-    end)
+    self._maid:GiveTask(
+        function()
+            self:Stop()
+        end
+    )
     return self
 end
 
@@ -108,7 +103,7 @@ function AttackObject:Start()
             end
         )
     )
-    self.StartTime = _G.Clock:GetTime()
+    self.StartTime = Clock:GetTime()
     self._FSM:Start()
     self.Started:Fire()
 end

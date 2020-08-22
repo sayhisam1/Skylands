@@ -4,19 +4,18 @@ local MAX_STACK = 5
 function module.dd(data, original_tabs, curr_stack, seen)
 	curr_stack = curr_stack or 0
 	seen = seen or {}
-	if (curr_stack > MAX_STACK) then
+	if curr_stack > MAX_STACK then
 		return "<stack limit reached>"
 	end
 	original_tabs = original_tabs or ""
 	local stringRet = ""
-	if (type(data) == "table") then
+	if type(data) == "table" then
 		stringRet = original_tabs .. "{\n"
 		local tabs = original_tabs .. "  "
 		seen[data] = (seen[data] or 0) + 1
 		for i, v in pairs(data) do
 			local key = (type(i) ~= "function" and i) or "TYPE:FUNC"
-			stringRet =
-				stringRet .. tabs .. tostring(key) .. "  :  " .. datadump_table[type(v)](v, original_tabs, curr_stack, seen) .. "\n"
+			stringRet = stringRet .. tabs .. tostring(key) .. "  :  " .. datadump_table[type(v)](v, original_tabs, curr_stack, seen) .. "\n"
 		end
 		seen[data] = seen[data] - 1
 		stringRet = stringRet .. original_tabs .. "}\n"
@@ -63,11 +62,13 @@ function module.scanValidity(tbl, passed, path)
 	if type(tbl) ~= "table" then
 		return module.scanValidity({input = tbl}, {}, {})
 	end
-	passed, path = passed or {}, path or {"input"}
+	passed,
+		path = passed or {}, path or {"input"}
 	passed[tbl] = true
 	local tblType
 	do
-		local key, value = next(tbl)
+		local key,
+			value = next(tbl)
 		if type(key) == "number" then
 			tblType = "Array"
 		else
@@ -96,7 +97,8 @@ function module.scanValidity(tbl, passed, path)
 			end
 			last = key
 		end
-		local isTypeValid, valueType = module.typeValid(value)
+		local isTypeValid,
+			valueType = module.typeValid(value)
 		if not isTypeValid then
 			return false, path, "Invalid type", valueType
 		end
@@ -104,7 +106,10 @@ function module.scanValidity(tbl, passed, path)
 			if passed[value] then
 				return false, path, "Cyclic"
 			end
-			local isValid, keyPath, reason, extra = module.scanValidity(value, passed, path)
+			local isValid,
+				keyPath,
+				reason,
+				extra = module.scanValidity(value, passed, path)
 			if not isValid then
 				return isValid, keyPath, reason, extra
 			end

@@ -29,9 +29,11 @@ function InstanceWrapper:Destroy()
     self._instance = nil
 
     if instance then
-        pcall(function()
-            instance:Destroy()
-        end)
+        pcall(
+            function()
+                instance:Destroy()
+            end
+        )
     end
 end
 
@@ -46,8 +48,6 @@ end
 function InstanceWrapper:GetInstance()
     return self._instance
 end
-
-
 
 function InstanceWrapper:FindFirstChild(...)
     if not self._instance then
@@ -93,7 +93,8 @@ function InstanceWrapper:RunModule(module_name, ...)
     local module = self:GetAttribute(module_name)
     if module then
         assert(module:IsA("ModuleScript"), "Invalid module " .. module_name .. "!")
-        local success, res =
+        local success,
+            res =
             pcall(
             function(...)
                 local req = require(module)
@@ -109,7 +110,7 @@ function InstanceWrapper:RunModule(module_name, ...)
         if not success then
             local be = Instance.new("BindableEvent")
             be.Event:Connect(error)
-            be:Fire(self:GetLogPrefix().."Run module "..module_name.." failed with error:\n"..res)
+            be:Fire(self:GetLogPrefix() .. "Run module " .. module_name .. " failed with error:\n" .. res)
             be:Destroy()
         else
             return res

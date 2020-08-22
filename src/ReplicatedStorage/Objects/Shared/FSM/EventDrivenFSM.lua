@@ -91,17 +91,21 @@ function FSM:AddState(state)
 	for i, v in pairs(state.Transitions) do
 		self:_RegisterTransition(v)
 	end
-	self._maid:GiveTask(state.TransitionAdded:Connect(
-		function(...)
-			self:_RegisterTransition(...)
-		end
-	))
+	self._maid:GiveTask(
+		state.TransitionAdded:Connect(
+			function(...)
+				self:_RegisterTransition(...)
+			end
+		)
+	)
 
-	self._maid:GiveTask(state.StateChanged:Connect(
-		function(...)
-			self:ChangeState(...)
-		end
-	))
+	self._maid:GiveTask(
+		state.StateChanged:Connect(
+			function(...)
+				self:ChangeState(...)
+			end
+		)
+	)
 	self._registeredStates[state.Name] = state
 	return state
 end
@@ -193,7 +197,8 @@ function FSM:_RegisterTransition(transition)
 	if self._registeredTransitions[transition.Id] then
 		return --Already binded!
 	end
-	local connector = transition.Event:Connect(
+	local connector =
+		transition.Event:Connect(
 		function(...)
 			if (not self._stopped) then
 				self:Log(1, "TRANSITION EVENT RECV", transition.NextState)

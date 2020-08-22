@@ -61,22 +61,22 @@ function module:getCube(pos)
 end
 
 local FACES = {
-	Enum.NormalId.Back,
-	Enum.NormalId.Front,
-	Enum.NormalId.Top,
-	Enum.NormalId.Bottom,
-	Enum.NormalId.Left,
-	Enum.NormalId.Right
+    Enum.NormalId.Back,
+    Enum.NormalId.Front,
+    Enum.NormalId.Top,
+    Enum.NormalId.Bottom,
+    Enum.NormalId.Left,
+    Enum.NormalId.Right
 }
 
 local DIRECTIONS = {
-	"clockwise",
-	"counter-clockwise"
+    "clockwise",
+    "counter-clockwise"
 }
 function module:scramble(n)
     n = n or 1
-    for i=1,n do
-        self:rotateFace(FACES[math.random(1, #FACES)], DIRECTIONS[math.random(1,#DIRECTIONS)])
+    for i = 1, n do
+        self:rotateFace(FACES[math.random(1, #FACES)], DIRECTIONS[math.random(1, #DIRECTIONS)])
     end
 end
 

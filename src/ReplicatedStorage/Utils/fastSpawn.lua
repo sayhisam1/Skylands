@@ -9,9 +9,11 @@ return function(func, ...)
 	local count = select("#", ...)
 
 	local bindable = Instance.new("BindableEvent")
-	bindable.Event:Connect(function()
-		func(unpack(args, 1, count))
-	end)
+	bindable.Event:Connect(
+		function()
+			func(unpack(args, 1, count))
+		end
+	)
 
 	bindable:Fire()
 	bindable:Destroy()

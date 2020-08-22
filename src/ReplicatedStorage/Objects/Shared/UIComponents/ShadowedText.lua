@@ -22,7 +22,7 @@ function ShadowedText:render()
                     Text = self.props.Text,
                     AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
                     ZIndex = (self.props.ZIndex and self.props.ZIndex + 1) or 2,
-                    Rotation = self.props.Rotation or 0,
+                    Rotation = self.props.Rotation or 0
                 }
             ),
             ShadowText = Roact.createElement(
@@ -40,7 +40,7 @@ function ShadowedText:render()
                     Text = self.props.Text,
                     AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
                     ZIndex = self.props.ZIndex or 1,
-                    Rotation = self.props.Rotation or 0,
+                    Rotation = self.props.Rotation or 0
                 }
             )
         }

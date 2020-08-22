@@ -69,7 +69,8 @@ end
 -- @param delta now to skip forwards
 function Spring:TimeSkip(delta)
     local now = self._clock()
-    local position, velocity = self:_positionVelocity(now + delta)
+    local position,
+        velocity = self:_positionVelocity(now + delta)
     self._position0 = position
     self._velocity0 = velocity
     self._time0 = now
@@ -79,10 +80,12 @@ function Spring:__index(index)
     if Spring[index] then
         return Spring[index]
     elseif index == "Value" or index == "Position" or index == "p" then
-        local position, _ = self:_positionVelocity(self._clock())
+        local position,
+            _ = self:_positionVelocity(self._clock())
         return position
     elseif index == "Velocity" or index == "v" then
-        local _, velocity = self:_positionVelocity(self._clock())
+        local _,
+            velocity = self:_positionVelocity(self._clock())
         return velocity
     elseif index == "Target" or index == "t" then
         return self._target
@@ -101,35 +104,41 @@ function Spring:__newindex(index, value)
     local now = self._clock()
 
     if index == "Value" or index == "Position" or index == "p" then
-        local _, velocity = self:_positionVelocity(now)
+        local _,
+            velocity = self:_positionVelocity(now)
         self._position0 = value
         self._velocity0 = velocity
         self._time0 = now
     elseif index == "Velocity" or index == "v" then
-        local position, _ = self:_positionVelocity(now)
+        local position,
+            _ = self:_positionVelocity(now)
         self._position0 = position
         self._velocity0 = value
         self._time0 = now
     elseif index == "Target" or index == "t" then
-        local position, velocity = self:_positionVelocity(now)
+        local position,
+            velocity = self:_positionVelocity(now)
         self._position0 = position
         self._velocity0 = velocity
         self._target = value
         self._time0 = now
     elseif index == "Damper" or index == "d" then
-        local position, velocity = self:_positionVelocity(now)
+        local position,
+            velocity = self:_positionVelocity(now)
         self._position0 = position
         self._velocity0 = velocity
         self._damper = math.clamp(value, 0, 1)
         self._time0 = now
     elseif index == "Speed" or index == "s" then
-        local position, velocity = self:_positionVelocity(now)
+        local position,
+            velocity = self:_positionVelocity(now)
         self._position0 = position
         self._velocity0 = velocity
         self._speed = value < 0 and 0 or value
         self._time0 = now
     elseif index == "Clock" then
-        local position, velocity = self:_positionVelocity(now)
+        local position,
+            velocity = self:_positionVelocity(now)
         self._position0 = position
         self._velocity0 = velocity
         self._clock = value
@@ -149,20 +158,25 @@ function Spring:_positionVelocity(now)
     local t = s * (now - self._time0)
     local d2 = d * d
 
-    local h, si, co
+    local h,
+        si,
+        co
     if d2 < 1 then
         h = math.sqrt(1 - d2)
         local ep = math.exp(-d * t) / h
-        co, si = ep * math.cos(h * t), ep * math.sin(h * t)
+        co,
+            si = ep * math.cos(h * t), ep * math.sin(h * t)
     elseif d2 == 1 then
         h = 1
         local ep = math.exp(-d * t) / h
-        co, si = ep, ep * t
+        co,
+            si = ep, ep * t
     else
         h = math.sqrt(d2 - 1)
         local u = math.exp((-d + h) * t) / (2 * h)
         local v = math.exp((-d - h) * t) / (2 * h)
-        co, si = u + v, u - v
+        co,
+            si = u + v, u - v
     end
 
     local a0 = h * co + d * si

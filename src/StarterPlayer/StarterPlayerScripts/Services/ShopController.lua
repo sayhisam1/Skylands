@@ -10,28 +10,32 @@ local CollectionService = game:GetService("CollectionService")
 
 Service.SHOP_CATEGORIES = {
     Pickaxes = "Pickaxes",
-    Backpacks = "Backpacks",
+    Backpacks = "Backpacks"
 }
 local last_close_time = 0
 
 local debounce = false
 function Service:Load()
     local shopPart = CollectionService:GetTagged(self.Enums.Tags.ShopPart)[1]
-    self._maid:GiveTask(shopPart.Touched:Connect(function(part)
-        if not debounce and tick() - last_close_time > CLOSE_REOPEN_DELAY and part:IsDescendantOf(game.Players.LocalPlayer.Character) then
-            debounce = true
-            self.Services.GuiController:SetGuiGroupVisible(self.Services.GuiController.GUI_GROUPS["Shop"], true)
-            wait(.3)
-            debounce = false
-        end
-    end))
+    self._maid:GiveTask(
+        shopPart.Touched:Connect(
+            function(part)
+                if not debounce and tick() - last_close_time > CLOSE_REOPEN_DELAY and part:IsDescendantOf(game.Players.LocalPlayer.Character) then
+                    debounce = true
+                    self.Services.GuiController:SetGuiGroupVisible(self.Services.GuiController.GUI_GROUPS["Shop"], true)
+                    wait(.3)
+                    debounce = false
+                end
+            end
+        )
+    )
 end
 
 function Service:Unload()
     self._maid:Destroy()
 end
 
-function  Service:ResetLastShopCloseTime()
+function Service:ResetLastShopCloseTime()
     last_close_time = tick()
 end
 

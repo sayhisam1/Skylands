@@ -25,7 +25,7 @@ function AnimatedContainer.getDerivedStateFromProps(props, state)
     return {
         [AnimatedContainer.Targets] = props[AnimatedContainer.Targets],
         [AnimatedContainer.Damping] = props[AnimatedContainer.Damping],
-        [AnimatedContainer.Frequency] = props[AnimatedContainer.Frequency],
+        [AnimatedContainer.Frequency] = props[AnimatedContainer.Frequency]
     }
 end
 
@@ -47,9 +47,14 @@ end
 
 function AnimatedContainer:render()
     local newProps = TableUtil.shallow(self.props)
-    newProps = TableUtil.filter(newProps, function(k)
-        return k ~= AnimatedContainer.Targets and k ~= AnimatedContainer.Damping and k ~= AnimatedContainer.Frequency and k ~= AnimatedContainer.ContainerType
-    end)
+    newProps =
+        TableUtil.filter(
+        newProps,
+        function(k)
+            return k ~= AnimatedContainer.Targets and k ~= AnimatedContainer.Damping and k ~= AnimatedContainer.Frequency and
+                k ~= AnimatedContainer.ContainerType
+        end
+    )
     newProps[Roact.Ref] = self.ref
     return Roact.createElement(self.props[AnimatedContainer.ContainerType] or "Frame", newProps)
 end

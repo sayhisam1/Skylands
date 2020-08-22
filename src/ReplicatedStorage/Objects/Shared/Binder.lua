@@ -26,11 +26,14 @@ function Binder.new(tagName, constructor)
 
 	self._listeners = {} -- [inst] = callback
 
-	delay(5, function()
-		if not self._loaded then
-			warn("Binder is not loaded. Call :Init() on it!")
+	delay(
+		5,
+		function()
+			if not self._loaded then
+				warn("Binder is not loaded. Call :Init() on it!")
+			end
 		end
-	end)
+	)
 
 	return self
 end
@@ -48,9 +51,12 @@ function Binder:Init()
 	local bindable = Instance.new("BindableEvent")
 
 	for _, inst in pairs(CollectionService:GetTagged(self._tagName)) do
-		local conn = bindable.Event:Connect(function()
-			self:_add(inst)
-		end)
+		local conn =
+			bindable.Event:Connect(
+			function()
+				self:_add(inst)
+			end
+		)
 
 		bindable:Fire()
 		conn:Disconnect()
@@ -58,12 +64,20 @@ function Binder:Init()
 
 	bindable:Destroy()
 
-	self._maid:GiveTask(CollectionService:GetInstanceAddedSignal(self._tagName):Connect(function(inst)
-		self:_add(inst)
-	end))
-	self._maid:GiveTask(CollectionService:GetInstanceRemovedSignal(self._tagName):Connect(function(inst)
-		self:_remove(inst)
-	end))
+	self._maid:GiveTask(
+		CollectionService:GetInstanceAddedSignal(self._tagName):Connect(
+			function(inst)
+				self:_add(inst)
+			end
+		)
+	)
+	self._maid:GiveTask(
+		CollectionService:GetInstanceRemovedSignal(self._tagName):Connect(
+			function(inst)
+				self:_remove(inst)
+			end
+		)
+	)
 end
 
 function Binder:GetConstructor()
@@ -115,7 +129,7 @@ end
 function Binder:GetAll()
 	local all = {}
 	for class, _ in pairs(self._allClassSet) do
-		all[#all+1] = class
+		all[#all + 1] = class
 	end
 	return all
 end
@@ -129,8 +143,7 @@ end
 -- i.e. one without replication.
 function Binder:BindClient(inst)
 	if not RunService:IsClient() then
-		warn(("[Binder.BindClient] - Bindings '%s' done on the server! Will be replicated!")
-			:format(self._tagName))
+		warn(("[Binder.BindClient] - Bindings '%s' done on the server! Will be replicated!"):format(self._tagName))
 	end
 
 	CollectionService:AddTag(inst, self._tagName)
@@ -139,8 +152,7 @@ end
 
 function Binder:Bind(inst)
 	if RunService:IsClient() then
-		warn(("[Binder.Bind] - Bindings '%s' done on the client! Will be disrupted upon server replication!")
-			:format(self._tagName))
+		warn(("[Binder.Bind] - Bindings '%s' done on the client! Will be disrupted upon server replication!"):format(self._tagName))
 	end
 
 	CollectionService:AddTag(inst, self._tagName)
@@ -151,8 +163,7 @@ function Binder:Unbind(inst)
 	assert(typeof(inst) == "Instance")
 
 	if RunService:IsClient() then
-		warn(("[Binder.Bind] - Unbinding '%s' done on the client! Might be disrupted upon server replication!")
-			:format(self._tagName))
+		warn(("[Binder.Bind] - Unbinding '%s' done on the client! Might be disrupted upon server replication!"):format(self._tagName))
 	end
 
 	CollectionService:RemoveTag(inst, self._tagName)
@@ -195,10 +206,12 @@ function Binder:_add(inst)
 	if self._pendingInstSet[inst] ~= true then
 		-- Got GCed in the process of loading?!
 		-- Constructor probably yields. Yikes.
-		warn(("[Binder._add] - Failed to load instance %q of %q, removed while loading!")
-			:format(
+		warn(
+			("[Binder._add] - Failed to load instance %q of %q, removed while loading!"):format(
 				inst:GetFullName(),
-				tostring(type(self._constructor) == "table" and self._constructor.ClassName or self._constructor)))
+				tostring(type(self._constructor) == "table" and self._constructor.ClassName or self._constructor)
+			)
+		)
 		return
 	end
 
@@ -221,9 +234,12 @@ function Binder:_add(inst)
 		local bindable = Instance.new("BindableEvent")
 
 		for callback, _ in pairs(listeners) do
-			local conn = bindable.Event:Connect(function()
-				callback(class)
-			end)
+			local conn =
+				bindable.Event:Connect(
+				function()
+					callback(class)
+				end
+			)
 
 			bindable:Fire()
 			conn:Disconnect()
@@ -260,9 +276,12 @@ function Binder:_remove(inst)
 		local bindable = Instance.new("BindableEvent")
 
 		for callback, _ in pairs(listeners) do
-			local conn = bindable.Event:Connect(function()
-				callback(nil)
-			end)
+			local conn =
+				bindable.Event:Connect(
+				function()
+					callback(nil)
+				end
+			)
 
 			bindable:Fire()
 			conn:Disconnect()
@@ -275,16 +294,16 @@ function Binder:_remove(inst)
 	if class.Destroy then
 		class:Destroy()
 	else
-		warn(("[Binder._remove] - Class %q no longer has destroy, something destroyed it!")
-			:format(tostring(self._tagName)))
+		warn(("[Binder._remove] - Class %q no longer has destroy, something destroyed it!"):format(tostring(self._tagName)))
 	end
 end
 
 function Binder:Destroy()
-	local index, class = next(self._instToClass)
+	local index,
+		class = next(self._instToClass)
 	while class ~= nil do
 		self:_remove(class)
-		assert(self._instToClass[index] == nil)
+		assert(self._instToClass[index] == nil, "Failed to destroy!")
 	end
 
 	-- Disconnect events

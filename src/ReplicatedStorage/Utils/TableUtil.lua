@@ -13,7 +13,7 @@ end
 newTable.len = function(tbl)
 	local len = 0
 
-	for _,_ in pairs(tbl) do
+	for _, _ in pairs(tbl) do
 		len = len + 1
 	end
 
@@ -23,7 +23,7 @@ end
 newTable.keys = function(tbl)
 	local ret = {}
 
-	for key,_ in pairs(tbl) do
+	for key, _ in pairs(tbl) do
 		table.insert(ret, key)
 	end
 
@@ -33,7 +33,7 @@ end
 newTable.values = function(tbl)
 	local ret = {}
 
-	for _,val in pairs(tbl) do
+	for _, val in pairs(tbl) do
 		table.insert(ret, val)
 	end
 
@@ -60,12 +60,15 @@ end
 --sort by values
 newTable.vsort = function(tbl, sort)
 	sort = sort or function(x, y)
-		return x > y
-	end
+			return x > y
+		end
 
-	return newTable.xsort(tbl, function(x, y)
-		return sort(tbl[x], tbl[y])
-	end)
+	return newTable.xsort(
+		tbl,
+		function(x, y)
+			return sort(tbl[x], tbl[y])
+		end
+	)
 end
 
 newTable.choice = function(tbl, resultCount)
@@ -76,13 +79,13 @@ newTable.choice = function(tbl, resultCount)
 	--clone the table
 	local clone = {}
 
-	for i,v in pairs(tbl) do
+	for i, v in pairs(tbl) do
 		clone[i] = v
 	end
 
 	local keys = newTable.keys(clone)
 
-	for _=1,math.min(#tbl, math.max(resultCount, 1)) do
+	for _ = 1, math.min(#tbl, math.max(resultCount, 1)) do
 		table.insert(results, tbl[table.remove(keys, math.random(#keys))])
 	end
 
@@ -96,7 +99,7 @@ end
 newTable.shallow = function(tbl)
 	local clone = {}
 
-	for key,val in pairs(tbl) do
+	for key, val in pairs(tbl) do
 		clone[key] = val
 	end
 
@@ -106,7 +109,7 @@ end
 newTable.deep = function(tbl)
 	local clone = {}
 
-	for key,val in pairs(tbl) do
+	for key, val in pairs(tbl) do
 		if typeof(val) == "table" then
 			clone[key] = newTable.deep(val)
 		else
@@ -120,7 +123,7 @@ end
 newTable.cloneKeys = function(tbl)
 	local ret = {}
 
-	for key,_ in pairs(tbl) do
+	for key, _ in pairs(tbl) do
 		ret[key] = true
 	end
 
@@ -130,7 +133,7 @@ end
 newTable.dump = function(tbl, prefix)
 	prefix = prefix or ""
 
-	for key,val in pairs(tbl) do
+	for key, val in pairs(tbl) do
 		print(("%s%s = %s"):format(prefix, tostring(key), tostring(val)))
 
 		if typeof(val) == "table" then
@@ -142,8 +145,8 @@ end
 newTable.merge = function(tbl, ...)
 	local ret = {}
 
-	for _,tbl in pairs({tbl, ...}) do
-		for _,value in pairs(tbl) do
+	for _, tbl in pairs({tbl, ...}) do
+		for _, value in pairs(tbl) do
 			table.insert(ret, value)
 		end
 	end
@@ -182,6 +185,9 @@ newTable.map = function(tbl, lambda)
 	return newtbl
 end
 
-return setmetatable(newTable, {
-	__index = table
-})
+return setmetatable(
+	newTable,
+	{
+		__index = table
+	}
+)

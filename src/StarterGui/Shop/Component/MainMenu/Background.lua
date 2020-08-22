@@ -53,18 +53,21 @@ return function()
                     BorderSizePixel = 0
                 }
             ),
-            ShopkeepText = Roact.createElement(ShadowedText, {
-                ShadowOffset = UDim2.new(.005, 0, .005, 0),
-                Size = UDim2.new(.3, 0, .3, 0),
-                Position = UDim2.new(0.65, 0, 0.1, 0),
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
-                TextStrokeColor3 = Color3.fromRGB(0, 0, 0),
-                ShadowTextStrokeColor3 = Color3.fromRGB(255, 255, 255),
-                Font = Enum.Font.GothamBold,
-                Text="The Pickaxe Emporium",
-                ZIndex=1000
-            })
+            ShopkeepText = Roact.createElement(
+                ShadowedText,
+                {
+                    ShadowOffset = UDim2.new(.005, 0, .005, 0),
+                    Size = UDim2.new(.3, 0, .3, 0),
+                    Position = UDim2.new(0.65, 0, 0.1, 0),
+                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                    TextStrokeColor3 = Color3.fromRGB(0, 0, 0),
+                    ShadowTextStrokeColor3 = Color3.fromRGB(255, 255, 255),
+                    Font = Enum.Font.GothamBold,
+                    Text = "The Pickaxe Emporium",
+                    ZIndex = 1000
+                }
+            )
         }
     )
 end

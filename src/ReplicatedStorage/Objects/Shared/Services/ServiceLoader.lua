@@ -18,7 +18,6 @@ if IsServer then
     dir.Parent = ReplicatedStorage
 end
 
-
 local ServiceLoader = setmetatable({}, BaseObject)
 ServiceLoader.__index = ServiceLoader
 ServiceLoader.ClassName = script.Name
@@ -47,7 +46,7 @@ local function getAllModules(start_dir)
     while not dirs:IsEmpty() do
         local dir = dirs:Dequeue()
         for _, v in ipairs(dir:GetChildren()) do
-            if (v:IsA("ModuleScript")) then
+            if v:IsA("ModuleScript") then
                 srvs[#srvs + 1] = v
             end
             if v:IsA("Folder") then
@@ -65,7 +64,7 @@ local function getAllServices(start_dir)
     while not dirs:IsEmpty() do
         local dir = dirs:Dequeue()
         for _, v in ipairs(dir:GetChildren()) do
-            if (v:IsA("ModuleScript")) then
+            if v:IsA("ModuleScript") then
                 srvs[#srvs + 1] = v
             end
             if v:IsA("Folder") then
@@ -86,7 +85,7 @@ function ServiceLoader.new(directory)
 
     -- check for duplicate services of same name
     local seen = {}
-    for i, v in pairs(getAllModules(directory)) do
+    for _, v in pairs(getAllModules(directory)) do
         if seen[v.Name] then
             error("DUPLICATE MODULE " .. v.Name)
         else
@@ -102,7 +101,7 @@ function ServiceLoader.new(directory)
                     return rawget(t, i)
                 end
                 local srv = recursiveSearch(directory, i)
-                if (srv) then
+                if srv then
                     rawset(t, i, require(srv))
                     return rawget(t, i)
                 end
@@ -119,16 +118,13 @@ end
 
 function ServiceLoader:PrefetchServices()
     self:Log(1, "PREFETCHING SERVICES...")
-    for i, v in pairs(getAllServices(self.Directory)) do
+    for _, v in pairs(getAllServices(self.Directory)) do
         self:Log(1, "\tPrefetching", v:GetFullName(), "...")
 
         self:Log(1, "\t", v.Name)
         if not rawget(self.ServiceTable, v.Name) then
             rawset(self.ServiceTable, v.Name, require(v))
-            assert(
-                type(self.ServiceTable[v.Name]) == "table",
-                "Invalid service " .. v.Name .. " of type " .. type(self.ServiceTable[v.Name])
-            )
+            assert(type(self.ServiceTable[v.Name]) == "table", "Invalid service " .. v.Name .. " of type " .. type(self.ServiceTable[v.Name]))
         end
     end
 end
@@ -137,7 +133,7 @@ function ServiceLoader:LoadService(name, level, seen)
     level = level or 1
     seen = seen or {}
     assert(self.ServiceTable[name], "Invalid service " .. name .. "!")
-    if (seen[name]) then
+    if seen[name] then
         return
     end
     seen[name] = true
@@ -146,19 +142,16 @@ function ServiceLoader:LoadService(name, level, seen)
         self:Log(1, "Skipped disabled service", name)
         return
     end
-    assert(
-        type(service) == "table",
-        "Invalid service " .. name .. " of type " .. type(service) .. " (must be a ServiceObject!)"
-    )
+    assert(type(service) == "table", "Invalid service " .. name .. " of type " .. type(service) .. " (must be a ServiceObject!)")
     if service._loaded then
         return
     end
-    self:Log(2, string.rep("\t", level, ""), name)
-    for j, k in pairs(service.Dependencies) do
+    self:Log(2, string.rep("\t", level), name)
+    for _, k in pairs(service.Dependencies) do
         assert(self.ServiceTable[k], "Invalid service dependency " .. k .. " (from service " .. name .. ")!")
         self:LoadService(k, level + 1, seen)
     end
-    if (type(service._load) == "function") then
+    if type(service._load) == "function" then
         -- dependency injection --
         service.Services = self.ServiceTable
         service:_load()
@@ -167,21 +160,21 @@ end
 
 function ServiceLoader:UnloadService(name, level)
     level = level or 1
-    self:Log(1, string.rep("\t", level, ""), name)
+    self:Log(1, string.rep("\t", level), name)
     assert(self.ServiceTable[name], "Invalid service " .. name .. "!")
     local service = self.ServiceTable[name]
     assert(type(service) == "table", "Invalid service type " .. type(service) .. " (must be a ServiceObject!)")
-    for j, k in pairs(service.Dependencies) do
+    for _, k in pairs(service.Dependencies) do
         self:UnloadService(k, level + 1)
     end
-    if (type(service._unload) == "function") then
+    if type(service._unload) == "function" then
         service:_unload()
     end
 end
 
 function ServiceLoader:LoadAllServices()
     self:Log(2, "LOADING SERVICES")
-    for i, v in pairs(self.ServiceTable) do
+    for i, _ in pairs(self.ServiceTable) do
         self:LoadService(i)
     end
     self:Log(2, "SERVICES LOADED!")

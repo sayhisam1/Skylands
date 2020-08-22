@@ -16,7 +16,7 @@ function IconFrame:render()
             Rotation = self.props.Rotation,
             LayoutOrder = self.props.LayoutOrder,
             AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
-            ZIndex = zindex,
+            ZIndex = zindex
         },
         {
             UIListLayout = Roact.createElement(
@@ -25,7 +25,7 @@ function IconFrame:render()
                     FillDirection = Enum.FillDirection.Horizontal,
                     SortOrder = Enum.SortOrder.LayoutOrder,
                     HorizontalAlignment = Enum.HorizontalAlignment.Center,
-                    VerticalAlignment = Enum.VerticalAlignment.Center,
+                    VerticalAlignment = Enum.VerticalAlignment.Center
                 }
             ),
             ContentFrame = Roact.createElement(
@@ -34,7 +34,7 @@ function IconFrame:render()
                     BackgroundTransparency = 1,
                     Size = UDim2.new(.8, 0, 1, 0),
                     LayoutOrder = 2,
-                    ZIndex = zindex + 1,
+                    ZIndex = zindex + 1
                 },
                 self.props[Roact.Children]
             ),

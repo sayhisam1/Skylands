@@ -68,9 +68,7 @@ function Service:Load()
         network_channel:Subscribe(
             "REQUEST_SHOP_TELEPORT",
             function(plr)
-                plr.Character:SetPrimaryPartCFrame(
-                    CollectionService:GetTagged(self.Enums.Tags.SellPart)[1].CFrame + Vector3.new(0, 5, 0)
-                )
+                plr.Character:SetPrimaryPartCFrame(CollectionService:GetTagged(self.Enums.Tags.SellPart)[1].CFrame + Vector3.new(0, 5, 0))
             end
         )
     )

@@ -11,21 +11,27 @@ local musicRegistry = {}
 function Service:Load()
     local maid = self._maid
     local default_music = SoundService.Music:GetChildren()
-    maid:GiveTask(function()
-        while musicStack:GetSize() > 0 do
-            self:PopMusic()
+    maid:GiveTask(
+        function()
+            while musicStack:GetSize() > 0 do
+                self:PopMusic()
+            end
         end
-    end)
+    )
     for i, v in ipairs(default_music) do
         local music = self:_lookupMusic(v)
-        maid:GiveTask(music.Ended:Connect(function()
-            self:Log(3, "Playing next music track")
-            if musicStack:GetSize() <= 1 then
-                self:PopMusic()
-                local next_music_idx = (i % #default_music) + 1
-                self:PushMusic(default_music[next_music_idx])
-            end
-        end))
+        maid:GiveTask(
+            music.Ended:Connect(
+                function()
+                    self:Log(3, "Playing next music track")
+                    if musicStack:GetSize() <= 1 then
+                        self:PopMusic()
+                        local next_music_idx = (i % #default_music) + 1
+                        self:PushMusic(default_music[next_music_idx])
+                    end
+                end
+            )
+        )
     end
     self:PushMusic(default_music[1])
 end
@@ -67,8 +73,7 @@ function Service:PopMusic()
 end
 
 function Service:SetMusicVolume(vol)
-    assert(typeof(vol) == 'number', "Invalid volume!")
-
+    assert(typeof(vol) == "number", "Invalid volume!")
 end
 
 return Service

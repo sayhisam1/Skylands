@@ -3,7 +3,6 @@ local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 
 local RunService = game:GetService("RunService")
 local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
 
 local KeyframeWrapper = setmetatable({}, BaseObject)
 KeyframeWrapper.__index = KeyframeWrapper

@@ -1,9 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local RunService = game:GetService("RunService")
-local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
-
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local AttackContext = setmetatable({}, BaseObject)
 AttackContext.__index = AttackContext
@@ -45,19 +41,21 @@ function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
     end
 
     self._runningAttacks[name] = attack
-    self._maid:GiveTask(attack.Stopped:Connect(
-        function()
-            self._runningAttacks[name] = nil
-            self._maid[attack] = nil
-            if cooldown > 0.03 then
-                self._coolingDownAttacks[name] = tick()
-                wait(cooldown)
-                if self._coolingDownAttacks[name] then
-                    self._coolingDownAttacks[name] = nil
+    self._maid:GiveTask(
+        attack.Stopped:Connect(
+            function()
+                self._runningAttacks[name] = nil
+                self._maid[attack] = nil
+                if cooldown > 0.03 then
+                    self._coolingDownAttacks[name] = tick()
+                    wait(cooldown)
+                    if self._coolingDownAttacks[name] then
+                        self._coolingDownAttacks[name] = nil
+                    end
                 end
             end
-        end
-    ))
+        )
+    )
     self._maid[attack] = attack
     self:Log(1, "Attack", name, "starting!")
     attack:Start()

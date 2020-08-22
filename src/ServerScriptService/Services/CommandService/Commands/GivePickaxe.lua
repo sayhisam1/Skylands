@@ -1,8 +1,8 @@
 return {
-	Name = "give-pickaxe";
-	Aliases = {"gp"};
-	Description = "Gives a pickaxe";
-	Group = "DefaultAdmin";
+	Name = "give-pickaxe",
+	Aliases = {"gp"},
+	Description = "Gives a pickaxe",
+	Group = "DefaultAdmin",
 	Args = {
 		{
 			Type = "player",
@@ -14,5 +14,5 @@ return {
 			Name = "Pickaxe",
 			Description = "pickaxe to add"
 		}
-	};
+	}
 }

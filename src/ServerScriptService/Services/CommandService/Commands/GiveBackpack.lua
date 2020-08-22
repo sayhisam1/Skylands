@@ -1,8 +1,8 @@
 return {
-	Name = "give-backpack";
-	Aliases = {"gb"};
-	Description = "Gives a backpack";
-	Group = "DefaultAdmin";
+	Name = "give-backpack",
+	Aliases = {"gb"},
+	Description = "Gives a backpack",
+	Group = "DefaultAdmin",
 	Args = {
 		{
 			Type = "player",
@@ -14,5 +14,5 @@ return {
 			Name = "Backpack",
 			Description = "backpack to add"
 		}
-	};
+	}
 }

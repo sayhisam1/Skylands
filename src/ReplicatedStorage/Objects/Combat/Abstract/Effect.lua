@@ -1,9 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Services = require(ReplicatedStorage.Services)
-
-local RunService = game:GetService("RunService")
-local IsClient = RunService:IsClient()
-local IsServer = RunService:IsServer()
 
 local SoundUtil = require(ReplicatedStorage.Utils.SoundUtil)
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
@@ -15,7 +10,7 @@ Effect.ClassName = script.Name
 function Effect.new(func)
     local self = setmetatable(BaseObject.new(), Effect)
     self._func = func or function()
-    end
+        end
     return self
 end
 
@@ -24,7 +19,8 @@ function Effect:Start(...)
     self._running = true
     coroutine.wrap(
         function(...)
-            local status, result = pcall(self._func, self, ...)
+            local status,
+                result = pcall(self._func, self, ...)
             self:Stop()
             if not status then
                 error(result)
@@ -57,30 +53,6 @@ function Effect:PlaySound(sound, options)
         return
     end
     SoundUtil.PlaySound(sound, options)
-end
-
-function Effect:DealDamage(attacking_humanoid, target_humanoid, amount, location)
-    if not self._running then
-        return false
-    end
-    if IsServer then
-        return Services.Combat:DealDamage(attacking_humanoid, target_humanoid, amount)
-    end
-    return false
-end
-
-function Effect:SetObjectProperty(object, property, value, revert_on_stop)
-    assert(type(object) == "userdata", "Invalid object provided with type " .. type(object))
-    if revert_on_stop then
-        local old = object[property]
-        local object = object
-        self._maid:GiveTask(
-            function()
-                object[property] = old
-            end
-        )
-    end
-    object[property] = value
 end
 
 function Effect:AddCleanupTask(task)

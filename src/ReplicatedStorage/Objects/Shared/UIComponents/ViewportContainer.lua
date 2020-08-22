@@ -6,7 +6,7 @@ local ViewportContainer = Roact.Component:extend("ViewportContainer")
 local function setInstanceCFrame(instance, cframe)
     local parts = {}
     local midpointPosition = Vector3.new(0, 0, 0)
-    for _,v in pairs(instance:GetDescendants()) do
+    for _, v in pairs(instance:GetDescendants()) do
         if v:IsA("BasePart") then
             table.insert(parts, v)
             midpointPosition = midpointPosition + v.Position
@@ -16,7 +16,8 @@ local function setInstanceCFrame(instance, cframe)
         return
     end
     midpointPosition = midpointPosition / #parts
-    local midpointPart, dist = nil, math.huge
+    local midpointPart,
+        dist = nil, math.huge
     for _, part in pairs(parts) do
         local currDist = (part.Position - midpointPosition).Magnitude
         if currDist < dist then
@@ -37,21 +38,27 @@ end
 
 function ViewportContainer:init()
     self.viewportRef = Roact.createRef()
-    self:setState({
-        maid = Maid.new()
-    })
+    self:setState(
+        {
+            maid = Maid.new()
+        }
+    )
 end
 
 function ViewportContainer:render()
-    return Roact.createElement("ViewportFrame", {
-        BackgroundTransparency = self.props.BackgroundTransparency or 1,
-        Size = self.props.Size,
-        Position = self.props.Position,
-        AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
-        BackgroundColor3 = self.props.BackgroundColor3 or Color3.fromRGB(0, 0, 0),
-        BorderSizePixel = self.props.BorderSizePixel or 0,
-        [Roact.Ref] = self.viewportRef
-    }, self.props[Roact.Children])
+    return Roact.createElement(
+        "ViewportFrame",
+        {
+            BackgroundTransparency = self.props.BackgroundTransparency or 1,
+            Size = self.props.Size,
+            Position = self.props.Position,
+            AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
+            BackgroundColor3 = self.props.BackgroundColor3 or Color3.fromRGB(0, 0, 0),
+            BorderSizePixel = self.props.BorderSizePixel or 0,
+            [Roact.Ref] = self.viewportRef
+        },
+        self.props[Roact.Children]
+    )
 end
 
 local function viewportUpdate(self)

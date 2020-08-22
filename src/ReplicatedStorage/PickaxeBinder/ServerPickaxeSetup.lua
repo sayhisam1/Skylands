@@ -12,26 +12,40 @@ return function(tool)
 	tool._maid:GiveTask(pickaxeAttackContext)
 	local maid = Maid.new()
 	tool._maid:GiveTask(maid)
-	tool._maid:GiveTask(toolInstance.Equipped:Connect(function()
-		-- Weld motor6d to hand
-		local char = toolInstance.Parent
-		local rightHand = char:FindFirstChild("RightHand")
-		local handle = toolInstance.PickaxeHandle
-		maid:GiveTask(Welding.motor6dParts(rightHand, handle, CFrame.new(0,0,-1)*CFrame.Angles(math.pi/-2, 0, 0) * CFrame.Angles(0,math.pi/2,0)))
-		handle.Anchored = false
+	tool._maid:GiveTask(
+		toolInstance.Equipped:Connect(
+			function()
+				-- Weld motor6d to hand
+				local char = toolInstance.Parent
+				local rightHand = char:FindFirstChild("RightHand")
+				local handle = toolInstance.PickaxeHandle
+				maid:GiveTask(
+					Welding.motor6dParts(rightHand, handle, CFrame.new(0, 0, -1) * CFrame.Angles(math.pi / -2, 0, 0) * CFrame.Angles(0, math.pi / 2, 0))
+				)
+				handle.Anchored = false
 
-		pickaxeAttackContext:Enable()
-	end))
+				pickaxeAttackContext:Enable()
+			end
+		)
+	)
 
-	tool._maid:GiveTask(toolInstance.Unequipped:Connect(function()
-		local handle = tool:FindFirstChild("PickaxeHandle")
-		handle.Anchored = true
-		maid:Destroy()
-		pickaxeAttackContext:Disable()
-	end))
+	tool._maid:GiveTask(
+		toolInstance.Unequipped:Connect(
+			function()
+				local handle = tool:FindFirstChild("PickaxeHandle")
+				handle.Anchored = true
+				maid:Destroy()
+				pickaxeAttackContext:Disable()
+			end
+		)
+	)
 
-	tool._maid:GiveTask(toolInstance.Activated:Connect(function()
-		local action = tool:GetAttribute("MineAction") or script.Parent.DefaultMine
-		pickaxeAttackContext:MakeAttack(require(action)(tool))
-	end))
+	tool._maid:GiveTask(
+		toolInstance.Activated:Connect(
+			function()
+				local action = tool:GetAttribute("MineAction") or script.Parent.DefaultMine
+				pickaxeAttackContext:MakeAttack(require(action)(tool))
+			end
+		)
+	)
 end

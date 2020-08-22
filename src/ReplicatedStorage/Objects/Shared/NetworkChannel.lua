@@ -66,11 +66,13 @@ function NetworkChannel.new(channel_name, remote_event, call_on_caller)
     end
 
     self._maid:GiveTask(
-        remote_event.AncestryChanged:connect(function()
-            if not remote_event:IsDescendantOf(game) then
-                self:Destroy()
+        remote_event.AncestryChanged:connect(
+            function()
+                if not remote_event:IsDescendantOf(game) then
+                    self:Destroy()
+                end
             end
-        end)
+        )
     )
     _cache[remote_event] = self
     return self
@@ -98,10 +100,7 @@ end
 function NetworkChannel:PublishPlayer(plr, topic, ...)
     assert(type(topic) == "string", "ERROR: Topic needs to be a string!")
     assert(IsServer, "PublishPlayer can only be called from server!")
-    assert(
-        type(plr) == "userdata",
-        "Attempted to publish to Invalid player " .. tostring(plr) .. " (type: " .. type(plr) .. ")"
-    )
+    assert(type(plr) == "userdata", "Attempted to publish to Invalid player " .. tostring(plr) .. " (type: " .. type(plr) .. ")")
     self:Log(1, "Publish player", self._remoteEvent:GetFullName(), plr, topic, ...)
     self._remoteEvent:FireClient(plr, topic, ...)
 end
@@ -125,11 +124,13 @@ function NetworkChannel:Subscribe(topic, callback, cache_lookup_time)
     self:Log(1, "Subscribed", topic)
     if not self._topicCallbacks[topic] then
         self._topicCallbacks[topic] = Event.new()
-        self._maid:GiveTask(function()
-            warn("CLEARING TOPIC", topic)
-            self._topicCallbacks[topic]:Destroy()
-            self._topicCallbacks[topic] = nil
-        end)
+        self._maid:GiveTask(
+            function()
+                warn("CLEARING TOPIC", topic)
+                self._topicCallbacks[topic]:Destroy()
+                self._topicCallbacks[topic] = nil
+            end
+        )
     end
 
     if cache_lookup_time then
@@ -148,9 +149,13 @@ function NetworkChannel:Wait(topic, timeout)
     timeout = timeout or 5 -- default timeout is 5 seconds
     local data = nil
     local start_time = tick()
-    local listener = self:Subscribe(topic, function(...)
-        data = {...}
-    end)
+    local listener =
+        self:Subscribe(
+        topic,
+        function(...)
+            data = {...}
+        end
+    )
     while (not data) and (tick() - start_time < timeout) do
         wait(.1) -- spinlock for data
     end
@@ -167,7 +172,7 @@ end
 
 -- Calls all the listeners for a given topic, passing params
 function NetworkChannel:_callListeners(topic, ...)
-    self:Log(1, "Receive broadcast on topic", topic, ..., "(handler:", self._topicCallbacks[topic],")")
+    self:Log(1, "Receive broadcast on topic", topic, ..., "(handler:", self._topicCallbacks[topic], ")")
     self._topicCache[topic] = {
         Values = {...},
         Timestamp = tick()

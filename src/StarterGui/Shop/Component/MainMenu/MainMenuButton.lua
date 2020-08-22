@@ -24,7 +24,7 @@ function MainMenuButton:render()
         self:setState(
             {
                 [AnimatedContainer.Targets] = {
-                    Size = self.props.Size + UDim2.new(.02, 0, .02, 0),
+                    Size = self.props.Size + UDim2.new(.02, 0, .02, 0)
                 }
             }
         )
@@ -33,7 +33,7 @@ function MainMenuButton:render()
         self:setState(
             {
                 [AnimatedContainer.Targets] = {
-                    Size = self.props.Size,
+                    Size = self.props.Size
                 }
             }
         )

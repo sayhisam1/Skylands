@@ -79,7 +79,7 @@ function MainMenu:render()
                         selectNext()
                         local PickaxesMenu = require(script.Parent:WaitForChild("Pickaxes"))
                         self.props.selectMenu(PickaxesMenu)
-                    end,
+                    end
                 }
             ),
             Backpacks = Roact.createElement(
@@ -99,7 +99,7 @@ function MainMenu:render()
                         selectNext()
                         local BackpacksMenu = require(script.Parent:WaitForChild("Backpacks"))
                         self.props.selectMenu(BackpacksMenu)
-                    end,
+                    end
                 }
             ),
             Close = Roact.createElement(
@@ -116,7 +116,7 @@ function MainMenu:render()
                     Position = UDim2.new(0.05, 0, 0.2, 0),
                     Size = UDim2.new(0, 0, .1, 0),
                     -- Event hooks --
-                    [Roact.Event.MouseButton1Click] = self.props.closeGui,
+                    [Roact.Event.MouseButton1Click] = self.props.closeGui
                 }
             ),
             Decor = Roact.createElement(Background)

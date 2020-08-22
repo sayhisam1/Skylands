@@ -6,6 +6,8 @@ if not RunService:IsRunning() then
     return require(ReplicatedStorage.Objects.Shared.Services.MockServices)
 end
 
-while not _G.Services do wait() end
+while not _G.Services do
+    wait()
+end
 
 return _G.Services

@@ -47,7 +47,7 @@ function PetViewport:render()
         },
         {
             Viewport = viewportContainer,
-            Button =  Roact.createElement(
+            Button = Roact.createElement(
                 "TextButton",
                 {
                     Text = (data and ((data.Selected and " SELECTED ") or " SELECT ")) or "",
@@ -74,7 +74,7 @@ function PetViewport:render()
                         {
                             CornerRadius = UDim.new(.2, 0)
                         }
-                    ),
+                    )
                 }
             )
         }

@@ -43,7 +43,8 @@ local function fade(t)
 end
 local function grad(h, x, y, z)
     h = h % 15
-    local u, v
+    local u,
+        v
     if (h < 8) then
         u = x
     else
@@ -91,11 +92,7 @@ function module:noise(x, y, z)
     -- this thing is so messy >.<
     return lerp(
         w,
-        lerp(
-            v,
-            lerp(u, grad(P[AA], x, y, z), grad(P[BA], x - 1, y, z)),
-            lerp(u, grad(P[AB], x, y - 1, z), grad(P[BB], x - 1, y - 1, z))
-        ),
+        lerp(v, lerp(u, grad(P[AA], x, y, z), grad(P[BA], x - 1, y, z)), lerp(u, grad(P[AB], x, y - 1, z), grad(P[BB], x - 1, y - 1, z))),
         lerp(
             v,
             lerp(u, grad(P[AA + 1], x, y, z - 1), grad(P[BA + 1], x - 1, y, z - 1)),

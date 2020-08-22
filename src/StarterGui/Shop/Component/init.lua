@@ -55,13 +55,15 @@ end
 
 function gui:render()
     local closeGui = function()
-        self:setState({
-            [AnimatedContainer.Damping] = 1,
-            [AnimatedContainer.Frequency] = 2,
-            [AnimatedContainer.Targets] = {
-                Position = UDim2.new(.5, 0, 2, 0)
-            },
-        })
+        self:setState(
+            {
+                [AnimatedContainer.Damping] = 1,
+                [AnimatedContainer.Frequency] = 2,
+                [AnimatedContainer.Targets] = {
+                    Position = UDim2.new(.5, 0, 2, 0)
+                }
+            }
+        )
         wait(.5)
         GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS.Shop, false)
     end
@@ -77,13 +79,14 @@ function gui:render()
         {
             [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .8,
             [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
-            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or {
-                Position = UDim2.new(.5, 0, .5, 0)
-            },
+            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or
+                {
+                    Position = UDim2.new(.5, 0, .5, 0)
+                },
             Size = UDim2.new(1, 0, 1, 0),
             Position = UDim2.new(.5, 0, 2, 0),
             AnchorPoint = Vector2.new(.5, .5),
-            BackgroundTransparency = 1,
+            BackgroundTransparency = 1
         },
         {
             Decor = Roact.createElement(Background),

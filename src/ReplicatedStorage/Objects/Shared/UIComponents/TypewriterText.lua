@@ -10,7 +10,7 @@ function TypewriterText:init()
         {
             maid = Maid.new(),
             currText = "",
-            targetText = "",
+            targetText = ""
         }
     )
 end
@@ -18,7 +18,7 @@ end
 function TypewriterText.getDerivedStateFromProps(props, state)
     return {
         targetText = props.Text,
-        onUpdate = props.onUpdate,
+        onUpdate = props.onUpdate
     }
 end
 function TypewriterText:render()
@@ -31,31 +31,35 @@ end
 function TypewriterText:didMount()
     self.running = true
 
-    coroutine.wrap(function()
-        while self.running do
-            self:setState(function(state)
-                if state.currText == state.targetText then
-                    return {
-                        currText = state.targetText
-                    }
-                end
-                local ret = ""
-                if #state.currText >= #state.targetText then
-                    ret = state.targetText[1]
-                else
-                    ret = state.targetText:sub(1,#state.currText + 1)
-                end
-                if state.onUpdate then
-                    state.onUpdate(ret)
-                end
-                return {
-                    currText = ret
-                }
-            end)
+    coroutine.wrap(
+        function()
+            while self.running do
+                self:setState(
+                    function(state)
+                        if state.currText == state.targetText then
+                            return {
+                                currText = state.targetText
+                            }
+                        end
+                        local ret = ""
+                        if #state.currText >= #state.targetText then
+                            ret = state.targetText[1]
+                        else
+                            ret = state.targetText:sub(1, #state.currText + 1)
+                        end
+                        if state.onUpdate then
+                            state.onUpdate(ret)
+                        end
+                        return {
+                            currText = ret
+                        }
+                    end
+                )
 
-            wait(.01)
+                wait(.01)
+            end
         end
-    end)()
+    )()
 end
 
 function TypewriterText:willUnmount()

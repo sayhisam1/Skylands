@@ -27,7 +27,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "ANIM",
-        1/speed/5,
+        1 / speed / 5,
         function(effect, caller, animation)
             assert(player == caller, "Called by unexpected player!")
             local animation_effect =
@@ -44,7 +44,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "HIT",
-        1/speed/5,
+        1 / speed / 5,
         function(effect, caller, part, pos)
             assert(player == caller, "Called by unexpected player!")
             if not part then
@@ -54,9 +54,9 @@ return function(tool)
             if not ore and pos then
                 -- add lag compensaton by predicton which block the player meant to mine
                 local dirVec = (pos - caller.Character.PrimaryPart.Position).Unit
-                ore = OreBinder:GetNearestOreNeighbor(dirVec* 3.5 + pos)
+                ore = OreBinder:GetNearestOreNeighbor(dirVec * 3.5 + pos)
             end
-            assert(ore, "Unabled to reference ore "..part:GetFullName())
+            assert(ore, "Unabled to reference ore " .. part:GetFullName())
             local critChance = tool:GetAttribute("CritChance")
             local critPercentage = math.random()
             effect:PlaySound(tool:FindFirstChild("HitSound"), {Position = ore:GetCFrame().Position, IgnoredPlayers = {player}})

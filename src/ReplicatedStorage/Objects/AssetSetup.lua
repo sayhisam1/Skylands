@@ -9,15 +9,18 @@ function AssetSetup.new(name, required_children)
     local self = setmetatable(BaseObject.new(name), AssetSetup)
     self._tasks = {}
     for _, v in pairs(required_children or {}) do
-        self:AddRequiredChild(v.Name, function()
-            return v:Clone()
-        end)
+        self:AddRequiredChild(
+            v.Name,
+            function()
+                return v:Clone()
+            end
+        )
     end
     return self
 end
 
 function AssetSetup:AddSetupTask(func)
-    self._tasks[#self._tasks+1] = func
+    self._tasks[#self._tasks + 1] = func
 end
 
 function AssetSetup:AddRequiredChild(name, getter)
@@ -37,7 +40,8 @@ function AssetSetup:Setup(assets)
     for _, asset in pairs(assets) do
         self:Log(1, "\tAsset:", asset)
         for _, task in pairs(self._tasks) do
-            local status, res = pcall(task, asset)
+            local status,
+                res = pcall(task, asset)
             if not status then
                 errors[asset.Name] = res
                 break
@@ -48,12 +52,11 @@ function AssetSetup:Setup(assets)
     local be = Instance.new("BindableEvent")
     for name, msg in pairs(errors) do
         local conn = be.Event:Connect(error)
-        be:Fire("Asset setup task for "..name.." failed with error:\n"..msg)
+        be:Fire("Asset setup task for " .. name .. " failed with error:\n" .. msg)
         conn:Disconnect()
     end
     be:Destroy()
 end
-
 
 function AssetSetup.RecursiveFilter(root, type, ignored_types, ret)
     ignored_types = ignored_types or {"Script", "ModuleScript", "LocalScript"}

@@ -21,7 +21,7 @@ Service.GUI_GROUPS = {
         "Shop"
     },
     Pets = {
-        "Pets",
+        "Pets"
     },
     Core = {}
 }

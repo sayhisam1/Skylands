@@ -25,7 +25,7 @@ function Stack.new()
 end
 
 function Stack:Destroy()
-    for i,v in pairs(self) do
+    for i, v in pairs(self) do
         self[i] = nil
     end
 end

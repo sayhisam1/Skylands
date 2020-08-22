@@ -10,7 +10,7 @@ return function()
             AnchorPoint = Vector2.new(.5, .5),
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1,
-            ClipsDescendants = false,
+            ClipsDescendants = false
         },
         {
             BlackAccent = Roact.createElement(

@@ -3,7 +3,7 @@ return {
     DEFAULT_VALUE = {},
     Reducer = function(currentState, action)
         if action.type == "Set" then
-            assert(action.Value and typeof(action.Value) == 'table', "Invalid Value!")
+            assert(action.Value and typeof(action.Value) == "table", "Invalid Value!")
             return action.Value
         elseif action.type == "AddPet" then
             assert(action.Data, "No data to store!!")

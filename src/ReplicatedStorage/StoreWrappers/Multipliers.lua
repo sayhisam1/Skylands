@@ -7,7 +7,6 @@ local RunService = game:GetService("RunService")
 local IsServer = RunService:IsServer()
 local IsClient = RunService:IsClient()
 
-
 local module = {}
 
 if IsServer then
@@ -21,17 +20,21 @@ if IsServer then
     function module.AddPlayerMultiplier(player, category, multiplier)
         local store = PlayerData:GetStore(player, "ActiveMultipliers")
         local id = HttpService:GenerateGUID(false)
-        store:dispatch({
-            type="AddMultiplier",
-            Id = id,
-            Category = category,
-            Multiplier = multiplier,
-        })
+        store:dispatch(
+            {
+                type = "AddMultiplier",
+                Id = id,
+                Category = category,
+                Multiplier = multiplier
+            }
+        )
         return function()
-            store:dispatch({
-                type="RemoveMultiplier",
-                Id = id
-            })
+            store:dispatch(
+                {
+                    type = "RemoveMultiplier",
+                    Id = id
+                }
+            )
         end
     end
 end
