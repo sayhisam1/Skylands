@@ -6,8 +6,6 @@ local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 
 local OreBinder = require(ReplicatedStorage.OreBinder)
 local SPAWNED_ORES = OreBinder:GetOresDirectory()
-local HttpService = game:GetService("HttpService")
-local CollectionService = game:GetService("CollectionService")
 
 local Quarry = setmetatable({}, BaseObject)
 local BLOCK_SIZE = 7
@@ -18,7 +16,6 @@ Quarry.ClassName = script.Name
 function Quarry.new(layer_probabilities, bottom_left_pos, length, width)
     local self = setmetatable(BaseObject.new(), Quarry)
 
-    self._tag = HttpService:GenerateGUID(false)
     self._layerProbabilities = layer_probabilities
     self._length = length
     self._width = width
@@ -69,16 +66,13 @@ function Quarry:GenerateOre(depth, x, z)
         new_instance = selected_ore:Clone()
     end
 
-    self:Log(1, "Spawning ore", new_instance, "at", depth, x, z)
+    local pos = self:GetAbsoluteCoordinates(depth, x, z)
+    new_instance:SetPrimaryPartCFrame(CFrame.new(pos))
     new_instance.Parent = SPAWNED_ORES
     local ore = OreBinder:Bind(new_instance)
     self._maid:GiveTask(ore)
-    CollectionService:AddTag(new_instance, self._tag)
 
     ore._quarry = self -- HACK: inject quarry ref into ore
-
-    local pos = self:GetAbsoluteCoordinates(depth, x, z)
-    ore:SetCFrame(CFrame.new(pos))
 
     self:MarkHasSpawned(ore, depth, x, z)
 
@@ -102,7 +96,6 @@ function Quarry:GenerateOre(depth, x, z)
             self:GenerateOre(unpack(v))
         end
     end
-
     return ore
 end
 

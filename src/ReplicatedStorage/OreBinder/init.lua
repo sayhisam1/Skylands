@@ -20,7 +20,6 @@ if RunService:IsServer() then
     classAddedSignal:Connect(
         function(ore)
             -- don't add original models to octree
-            OreBinder:Log(1, "ADDED", ore:GetInstance())
             ore._maid:GiveTask(
                 ore:GetInstance().PrimaryPart:GetPropertyChangedSignal("Position"):Connect(
                     function()
@@ -35,6 +34,7 @@ if RunService:IsServer() then
                     end
                 )
             )
+            OreBinder:UpdateOrePos(ore)
         end
     )
 
@@ -48,7 +48,8 @@ if RunService:IsServer() then
     )
     function OreBinder:GetNearestOreNeighbor(coords, max_dist)
         max_dist = max_dist or 3.5
-        return oreTree:GetNearestNeighbor(coords, max_dist)
+        local ret = oreTree:GetNearestNeighbor(coords, max_dist)
+        return ret
     end
 end
 
@@ -60,7 +61,7 @@ function OreBinder:UpdateOrePos(ore)
     if oreTree:Contains(ore) then
         oreTree:Remove(ore)
     end
-    if ore:GetInstance():IsDescendantOf(Workspace) then
+    if ore:GetInstance().Parent == SPAWNED_ORES then
         local pos = ore:GetCFrame().Position
         oreTree:Insert(pos, ore)
     end
