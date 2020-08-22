@@ -46,7 +46,7 @@ function TypewriterText:didMount()
                     ret = state.targetText:sub(1,#state.currText + 1)
                 end
                 if state.onUpdate then
-                    state.onUpdate()
+                    state.onUpdate(ret)
                 end
                 return {
                     currText = ret
