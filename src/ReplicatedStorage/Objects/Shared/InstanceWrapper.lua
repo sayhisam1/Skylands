@@ -47,6 +47,15 @@ function InstanceWrapper:GetInstance()
     return self._instance
 end
 
+
+
+function InstanceWrapper:FindFirstChild(...)
+    if not self._instance then
+        return
+    end
+    return self:GetInstance():FindFirstChild(...)
+end
+
 function InstanceWrapper:GetAttribute(attribute_name)
     if not self._instance then
         return
@@ -55,13 +64,6 @@ function InstanceWrapper:GetAttribute(attribute_name)
     if attribute then
         return attribute.Value
     end
-end
-
-function InstanceWrapper:FindFirstChild(...)
-    if not self._instance then
-        return
-    end
-    return self:GetInstance():FindFirstChild(...)
 end
 
 function InstanceWrapper:SetAttribute(attribute_name, value)
