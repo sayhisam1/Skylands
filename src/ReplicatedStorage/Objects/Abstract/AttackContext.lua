@@ -31,12 +31,10 @@ function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
     local name = attack.Name
     if self._coolingDownAttacks[name] or self._runningAttacks[name] then
         self:Log(1, "Attack", name, "is on cooldown!")
-        -- warn("ATTACK STILL COOLING DOWN OR IS CURRENTLY RUNNING!")
         return false
     end
     if is_exclusive and not isTableEmpty(self._runningAttacks) then
         self:Log(1, "Attack", name, "is already running!")
-        -- warn("ANOTHER ATTACK IS ALREADY RUNNING!")
         return false
     end
 
