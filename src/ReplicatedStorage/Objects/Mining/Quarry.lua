@@ -141,9 +141,4 @@ function Quarry:GetNeighboringCoordinates(depth, x, z)
     }
 end
 
-function Quarry:Destroy()
-    self._destroyed = true
-    self._maid:Destroy()
-end
-
 return Quarry
