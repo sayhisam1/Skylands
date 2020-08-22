@@ -1,4 +1,4 @@
-std = "roblox"
+std = "roblox+testez"
 
 [selene]
 base = "lua51"
