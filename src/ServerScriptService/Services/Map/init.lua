@@ -20,6 +20,7 @@ end
 table.sort(
     LAYER_PRESETS,
     function(a, b)
+        assert(a.Depth ~= b.Depth or a == b, "Duplicate depth "..a.Depth)
         return a.Depth < b.Depth
     end
 )
