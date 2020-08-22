@@ -14,12 +14,12 @@ module.Metrics = {
 	end
 }
 
-local memoized = {
+local memoizedCube = {
 	[0] = {ORIGIN}
 }
 
 local function getMemoizedCube(n)
-	if not memoized[n] then
+	if not memoizedCube[n] then
 		local list = TableUtil.shallow(getMemoizedCube(n - 1))
 		for x = -n, n do
 			for y = -n, n do
@@ -30,9 +30,9 @@ local function getMemoizedCube(n)
 				end
 			end
 		end
-		memoized[n] = list
+		memoizedCube[n] = list
 	end
-	return memoized[n]
+	return memoizedCube[n]
 end
 
 function module.GetCubeNeighbors(n, vec, mult)
@@ -58,6 +58,37 @@ function module.GetHollowCubeNeighbors(n, vec, mult)
 		end
 	end
 	return list
+end
+
+local memoizedManhattan = {
+	[0] = {ORIGIN}
+}
+
+local function getMemoizedManhattan(n)
+	if not memoizedManhattan[n] then
+		local list = TableUtil.shallow(getMemoizedManhattan(n - 1))
+		for x = -n, n do
+			for y = -n, n do
+				for z = -n, n do
+					if module.Metrics.MANHATTAN(Vector3.new(x,y,z), ORIGIN) == n then
+						list[#list + 1] = Vector3.new(x, y, z)
+					end
+				end
+			end
+		end
+		memoizedManhattan[n] = list
+	end
+	return memoizedManhattan[n]
+end
+
+function module.GetManhattanNeighbors(n, vec, mult)
+	local list = getMemoizedManhattan(n)
+	return TableUtil.map(
+		list,
+		function(v)
+			return vec + v * mult
+		end
+	)
 end
 
 function module.SortListByDistTo(list, vec, metric)
