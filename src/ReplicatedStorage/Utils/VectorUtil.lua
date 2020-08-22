@@ -1,17 +1,48 @@
-local module = {}
+local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 local ORIGIN = Vector3.new(0, 0, 0)
+local module = {}
 
-function module.GetCubeNeighbors(n, vec, mult)
-	mult = mult or 1
-	local list = {}
-	for x = -n, n do
-		for y = -n, n do
-			for z = -n, n do
-				list[#list + 1] = vec + Vector3.new(x, y, z) * mult
+module.Metrics = {
+	EUCLIDEAN = function(a, b)
+		return (a - b).Magnitude
+	end,
+	MANHATTAN = function(a, b)
+		local diff = a - b
+		return diff.X + diff.Y + diff.Z
+	end
+}
+
+local memoized = {
+	[0] = {ORIGIN}
+}
+
+local function getMemoizedCube(n)
+	if not memoized[n] then
+		local list = TableUtil.shallow(getMemoizedCube(n - 1))
+		for x = -n, n do
+			for y = -n, n do
+				for z = -n, n do
+					if math.abs(x) == n or math.abs(y) == n or math.abs(z) == n then
+						list[#list + 1] = Vector3.new(x, y, z)
+					end
+				end
 			end
 		end
+		memoized[n] = list
 	end
-	return list
+	return memoized[n]
+end
+
+function module.GetCubeNeighbors(n, vec, mult)
+	local list = getMemoizedCube(n)
+	return TableUtil.map(
+		list,
+		function(v)
+			return vec + v * mult
+		end
+	)
 end
 
 function module.GetHollowCubeNeighbors(n, vec, mult)
@@ -29,44 +60,32 @@ function module.GetHollowCubeNeighbors(n, vec, mult)
 	return list
 end
 
-function module.ManhattanDist(v1, v2)
-	return math.abs(v1.X - v2.X) + math.abs(v1.Y - v2.Y) + math.abs(v1.Z + v2.Z)
-end
-
-function module.GetManhattanDistanceNeighbors(n, vec, mult)
-	mult = mult or 1
-	local list = {}
-	for x = -n, n do
-		for y = -n, n do
-			for z = -n, n do
-				local newVec = Vector3.new(x, y, z)
-				if module.ManhattanDist(ORIGIN, newVec) <= n then
-					list[#list + 1] = vec + newVec * mult
-				end
-			end
-		end
-	end
-	return list
-end
-
-function module.SortListByDistTo(list, vec)
+function module.SortListByDistTo(list, vec, metric)
+	metric = metric or module.Metrics.EUCLIDEAN
 	table.sort(
 		list,
 		function(a, b)
-			return (a - vec).Magnitude < (b - vec).Magnitude
+			return metric(a, vec) < metric(b, vec)
 		end
 	)
 end
 
 function module.MarkPoints(points)
-	for _,v in pairs(points) do
-		local p = Instance.new("Part")
-		p.CanCollide = false
-		p.Anchored =true
-		p.Size = Vector3.new(.2, .2 ,.2)
-		p.CFrame = CFrame.new(v)
-		p.Color = Color3.new(1, 0, 0)
-		p.Parent = Workspace
+	local p = Instance.new("Part")
+	p.CanCollide = false
+	p.Anchored = true
+	p.Size = Vector3.new(.2, .2, .2)
+	p.Color = Color3.new(1, 0, 0)
+	local partClones = TableUtil.map(points, function(pt)
+		local cloned = p:Clone()
+		cloned.CFrame = CFrame.new(pt)
+		cloned.Parent = Workspace
+		return cloned
+	end)
+	return function()
+		TableUtil.map(partClones, function(part)
+			part:Destroy()
+		end)
 	end
 end
 
