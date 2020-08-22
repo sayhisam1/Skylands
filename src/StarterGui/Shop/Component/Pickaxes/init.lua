@@ -1,19 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
-
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
-local Services = require(ReplicatedStorage.Services)
-local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 local TweenService = game:GetService("TweenService")
 local Roact = require(ReplicatedStorage.Lib.Roact)
 
-local PickaxeMenuButton = require(script.PickaxeMenuButton)
-local PickaxeButtons = require(script.PickaxeButtons)
+local MainMenu = script.Parent:WaitForChild("MainMenu")
+local MainMenuButton = require(MainMenu:WaitForChild("MainMenuButton"))
+local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
+local Background = require(script:WaitForChild("Background"))
+
+local PickaxeList = require(script:WaitForChild("PickaxeList"))
 
 local PickaxeMenu = Roact.Component:extend("PickaxeMenu")
-local RootContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
-local AnimatedComponent = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedComponent)
-local Background = require(script:WaitForChild("Background"))
 
 local shopkeepAnimationId = "rbxassetid://5104830460"
 local shopkeepAnimation = Instance.new("Animation")
@@ -23,7 +19,7 @@ local shopkeepOverlayTweenInfo = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum
 function PickaxeMenu:render()
     local shopkeepOverlay = self.props.shopkeepOverlayController:GetViewportFrame()
     local shopkeepCam = self.props.shopkeepOverlayController:GetCamera()
-    shopkeepOverlayTween =
+    local shopkeepOverlayTween =
         TweenService:Create(
         shopkeepOverlay,
         shopkeepOverlayTweenInfo,
@@ -31,7 +27,7 @@ function PickaxeMenu:render()
             Position = UDim2.new(0.45, 0, 0, 0)
         }
     )
-    shopkeepCamTween =
+    local shopkeepCamTween =
         TweenService:Create(
         shopkeepCam,
         shopkeepOverlayTweenInfo,
@@ -42,67 +38,56 @@ function PickaxeMenu:render()
     shopkeepOverlayTween:Play()
     shopkeepCamTween:Play()
     self.props.shopkeepOverlayController:PlayAnimation(shopkeepAnimation)
-    return Roact.createElement(
-        RootContainer,
-        {
-            [AnimatedComponent.TweenInfoOnMount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
-            [AnimatedComponent.TweenInfoOnUnmount] = TweenInfo.new(
-                .3,
-                Enum.EasingStyle.Linear,
-                Enum.EasingDirection.Out
-            ),
-            [AnimatedComponent.TweenTargetsOnMount] = {
-                Position = UDim2.new(.5, 0, .5, 0)
-            },
-            [AnimatedComponent.TweenTargetsOnUnmount] = {
-                Position = UDim2.new(1.5, 0, .5, 0)
-            },
-            InitialPosition = UDim2.new(1.5, 0, .5, 0),
-            [Roact.Children] = {
-                Decor = Roact.createElement(Background),
-                Back = Roact.createElement(
-                    PickaxeMenuButton,
-                    {
-                        IconProps = {
-                            Image = "rbxassetid://5423238056",
-                            ImageColor3 = Color3.fromRGB(0, 0, 0)
-                        },
-                        TextProps = {
-                            Text = "Back",
-                            Font = Enum.Font.GothamBold
-                        },
-                        Position = UDim2.new(0.05, 0, 0.1, 0),
-                        Size = UDim2.new(0, 0, .1, 0),
-                        AspectRatio = 1,
-                        -- Event hooks --
-                        [Roact.Event.MouseButton1Click] = function()
-                            local PickaxesMenu = require(script.Parent:WaitForChild("MainMenu"))
-                            self.props.selectMenuCallback(PickaxesMenu)
-                        end,
-                        [Roact.Event.MouseEnter] = function(ref)
-                            ref:TweenSize(
-                                UDim2.new(0, 0, .11, 0),
-                                Enum.EasingDirection.Out,
-                                Enum.EasingStyle.Linear,
-                                .1,
-                                true
-                            )
-                            ref.Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-                        end,
-                        [Roact.Event.MouseLeave] = function(ref)
-                            ref:TweenSize(
-                                UDim2.new(0, 0, .1, 0),
-                                Enum.EasingDirection.Out,
-                                Enum.EasingStyle.Linear,
-                                .1,
-                                true
-                            )
-                            ref.Icon.ImageColor3 = Color3.fromRGB(0, 0, 0)
-                        end
-                    }
-                ),
-                PickaxeButtons = Roact.createElement(PickaxeButtons)
+
+    local selectNext = function()
+        self:setState(
+            {
+                [AnimatedContainer.Damping] = 1,
+                [AnimatedContainer.Frequency] = 2,
+                [AnimatedContainer.Targets] = {
+                    Position = UDim2.new(2, 0, .5, 0)
+                }
             }
+        )
+        wait(.3)
+    end
+
+    return Roact.createElement(
+        AnimatedContainer,
+        {
+            [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .8,
+            [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
+            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or
+                {
+                    Position = UDim2.new(.5, 0, .5, 0)
+                },
+            Size = UDim2.new(1, 0, 1, 0),
+            Position = UDim2.new(2, 0, .5, 0),
+            AnchorPoint = Vector2.new(.5, .5),
+            BackgroundTransparency = 1,
+        },
+        {
+            Decor = Roact.createElement(Background),
+            Back = Roact.createElement(
+                MainMenuButton,
+                {
+                    IconProps = {
+                        Image = "rbxassetid://5423238056",
+                        ImageColor3 = Color3.fromRGB(0, 0, 0)
+                    },
+                    TextProps = {
+                        Text = "Back",
+                        Font = Enum.Font.GothamBold
+                    },
+                    Position = UDim2.new(0.05, 0, 0.1, 0),
+                    Size = UDim2.new(0, 0, .1, 0),
+                    [Roact.Event.MouseButton1Click] = function()
+                        selectNext()
+                        self.props.selectMenu(require(MainMenu))
+                    end
+                }
+            ),
+            PickaxeList = Roact.createElement(PickaxeList)
         }
     )
 end

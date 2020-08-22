@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
+local BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
 
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 local Services = require(ReplicatedStorage.Services)
@@ -7,82 +7,80 @@ local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
 
-local PickaxeMenuButton = require(script.Parent.PickaxeMenuButton)
+local BackpackMenuButton = require(script.Parent.BackpackMenuButton)
+local BackpackList = Roact.Component:extend("BackpackList")
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
-local PickaxeButtons = Roact.Component:extend("PickaxeButtons")
 
-function PickaxeButtons:init()
+function BackpackList:init()
     self._maid = Maid.new()
     self:setState(
         {
-            ownedPickaxes = Services.ClientPlayerData:GetStore("OwnedPickaxes"):getState(),
-            selectedPickaxe = Services.ClientPlayerData:GetStore("SelectedPickaxe"):getState(),
-            highlightedPickaxe = Services.ClientPlayerData:GetStore("SelectedPickaxe"):getState()
+            ownedBackpacks = Services.ClientPlayerData:GetStore("OwnedBackpacks"):getState(),
+            selectedBackpack = Services.ClientPlayerData:GetStore("SelectedBackpack"):getState(),
+            highlightedBackpack = Services.ClientPlayerData:GetStore("SelectedBackpack"):getState()
         }
     )
 end
 
-function PickaxeButtons:didMount()
-    local ownedPickaxeConnector =
-        Services.ClientPlayerData:GetStore("OwnedPickaxes").changed:connect(
+function BackpackList:didMount()
+    local ownedBackpackConnector =
+        Services.ClientPlayerData:GetStore("OwnedBackpacks").changed:connect(
         function(new, old)
             self:setState(
                 {
-                    ownedPickaxes = new
+                    ownedBackpacks = new
                 }
             )
         end
     )
-    local selectedPickaxeConnector =
-        Services.ClientPlayerData:GetStore("SelectedPickaxe").changed:connect(
+    local selectedBackpackConnector =
+        Services.ClientPlayerData:GetStore("SelectedBackpack").changed:connect(
         function(new, old)
             self:setState(
                 {
-                    selectedPickaxe = new
+                    selectedBackpack = new
                 }
             )
         end
     )
     self._maid:GiveTask(
         function()
-            ownedPickaxeConnector:disconnect()
+            ownedBackpackConnector:disconnect()
         end
     )
     self._maid:GiveTask(
         function()
-            selectedPickaxeConnector:disconnect()
+            selectedBackpackConnector:disconnect()
         end
     )
 end
 
-function PickaxeButtons:willUnmount()
+function BackpackList:willUnmount()
     self._maid:Destroy()
 end
 
-local function getPickaxeInfo(pickaxes, ownedPickaxes, selectedPickaxe, highlightedPickaxe)
+local function getBackpackInfo(backpacks, ownedBackpacks, selectedBackpack, highlightedBackpack)
     local list = {}
-    for _, pickaxe in pairs(pickaxes) do
-        local name = pickaxe.Name
-        local displayName = pickaxe:FindFirstChild("DisplayName").Value
-        local shopOrder = pickaxe:FindFirstChild("ShopOrder").Value
-        local goldCost = pickaxe:FindFirstChild("GoldCost").Value
-        local description = pickaxe:FindFirstChild("Description").Value
-        local damage = pickaxe:FindFirstChild("Damage").Value
-        local critChance = pickaxe:FindFirstChild("CritChance").Value
-        local selected = (name == selectedPickaxe)
-        local highlighted = (name == highlightedPickaxe)
-        local owned = (TableUtil.contains(ownedPickaxes, name))
+    for _, backpack in pairs(backpacks) do
+        local name = backpack.Name
+        local displayName = backpack:FindFirstChild("DisplayName").Value
+        local shopOrder = backpack:FindFirstChild("ShopOrder").Value
+        local goldCost = backpack:FindFirstChild("GoldCost").Value
+        local capacity = backpack:FindFirstChild("Capacity").Value
+        local description = backpack:FindFirstChild("Description").Value
+        local selected = (name == selectedBackpack)
+        local highlighted = (name == highlightedBackpack)
+        local owned = (TableUtil.contains(ownedBackpacks, name))
         local buyable = goldCost ~= math.huge
         local hidden = not (buyable or owned)
 
         list[name] = {
-            Instance = pickaxe,
+            Instance = backpack,
             Name = name,
             DisplayName = displayName,
-            Damage = damage,
-            CritChance = critChance,
             ShopOrder = shopOrder,
             GoldCost = goldCost,
+            Capacity = capacity,
             Description = description,
             Selected = selected,
             Highlighted = highlighted,
@@ -95,21 +93,23 @@ local function getPickaxeInfo(pickaxes, ownedPickaxes, selectedPickaxe, highligh
 end
 
 local GLOBAL_RAND_SHIFT = tick()
-function PickaxeButtons:render()
+function BackpackList:render()
     local buttons = {}
-    local ownedPickaxes = self.state.ownedPickaxes
-    local selectedPickaxe = self.state.selectedPickaxe
-    local highlightedPickaxe = self.state.highlightedPickaxe or selectedPickaxe
-    local highlightedPickaxeData = nil
+    local ownedBackpacks = self.state.ownedBackpacks
+    local selectedBackpack = self.state.selectedBackpack
+    local highlightedBackpack = self.state.highlightedBackpack or selectedBackpack
+    local highlightedBackpackData = nil
     local actionButton = nil
-    for name, data in pairs(getPickaxeInfo(PICKAXES:GetChildren(), ownedPickaxes, selectedPickaxe, highlightedPickaxe)) do
-        highlightedPickaxeData = (data.Highlighted and data) or highlightedPickaxeData
+    for name, data in pairs(
+        getBackpackInfo(BACKPACKS:GetChildren(), ownedBackpacks, selectedBackpack, highlightedBackpack)
+    ) do
+        highlightedBackpackData = (data.Highlighted and data) or highlightedBackpackData
         if not data.Hidden then
             math.randomseed(string.byte(name) + GLOBAL_RAND_SHIFT)
             local buttonRotation = math.random(-2, 2)
             buttons[name] =
                 Roact.createElement(
-                PickaxeMenuButton,
+                BackpackMenuButton,
                 {
                     IconProps = {
                         Image = "rbxassetid://5137381399",
@@ -143,7 +143,7 @@ function PickaxeButtons:render()
                     [Roact.Event.MouseButton1Click] = function()
                         self:setState(
                             {
-                                highlightedPickaxe = name
+                                highlightedBackpack = name
                             }
                         )
                     end,
@@ -182,7 +182,7 @@ function PickaxeButtons:render()
             if data.Highlighted then
                 actionButton =
                     Roact.createElement(
-                    PickaxeMenuButton,
+                    BackpackMenuButton,
                     {
                         IconProps = {
                             Image = "rbxassetid://5137381399",
@@ -277,7 +277,7 @@ function PickaxeButtons:render()
                 {
                     BackgroundTransparency = 1,
                     Size = UDim2.new(.20, 0, .9, 0),
-                    CanvasSize = UDim2.new(0, 0, .2 * #PICKAXES:GetChildren(), 0),
+                    CanvasSize = UDim2.new(0, 0, .2 * #BACKPACKS:GetChildren(), 0),
                     Position = UDim2.new(.10, 0, .05, 0),
                     AnchorPoint = Vector2.new(0, 0),
                     BorderSizePixel = 0,
@@ -299,21 +299,19 @@ function PickaxeButtons:render()
             ViewportContainer = Roact.createElement(
                 ViewportContainer,
                 {
-                    RenderedModel = highlightedPickaxeData.Instance,
+                    RenderedModel = highlightedBackpackData.Instance,
                     BackgroundTransparency = 1,
-                    Size = UDim2.new(.3, 0, .7, 0),
+                    Size = UDim2.new(.3, 0, .6, 0),
                     Position = UDim2.new(.4, 0, .15, 0),
-                    CameraCFrame = CFrame.new(0, 0, 6),
-                    ModelCFrame = CFrame.Angles(0, math.pi / 8, math.pi / 8),
-                    BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    CameraCFrame = CFrame.new(0, 0, -3)
                 },
                 {
-                    -- UICorner = Roact.createElement(
-                    --     "UICorner",
-                    --     {
-                    --         CornerRadius = UDim.new(.1, 0)
-                    --     }
-                    -- ),
+                    UICorner = Roact.createElement(
+                        "UICorner",
+                        {
+                            CornerRadius = UDim.new(.1, 0)
+                        }
+                    ),
                     Stats = Roact.createElement(
                         "Frame",
                         {
@@ -326,24 +324,21 @@ function PickaxeButtons:render()
                             UIGridLayout = Roact.createElement(
                                 "UIGridLayout",
                                 {
-                                    CellPadding = UDim2.new(0, 0, 0, 0),
                                     CellSize = UDim2.new(.5, 0, .5, 0),
-                                    FillDirectionMaxCells = 2,
-                                    SortOrder = Enum.SortOrder.LayoutOrder
+                                    FillDirectionMaxCells = 2
                                 }
                             ),
                             GoldCost = Roact.createElement(
                                 IconFrame,
                                 {
-                                    Image = "rbxassetid://5013823501",
-                                    LayoutOrder = 3,
+                                    Image = "rbxassetid://5013823501"
                                 },
                                 {
                                     Roact.createElement(
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedPickaxeData.GoldCost),
+                                            Text = string.format(" %d", highlightedBackpackData.GoldCost),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -353,39 +348,17 @@ function PickaxeButtons:render()
                                     )
                                 }
                             ),
-                            Damage = Roact.createElement(
+                            Capacity = Roact.createElement(
                                 IconFrame,
                                 {
-                                    Image = "rbxassetid://5063940411",
-                                    LayoutOrder = 1
+                                    Image = "rbxassetid://5572289405"
                                 },
                                 {
                                     Roact.createElement(
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedPickaxeData.Damage),
-                                            TextColor3 = Color3.fromRGB(255, 187, 0),
-                                            BackgroundTransparency = 1,
-                                            Font = Enum.Font.GothamBold,
-                                            TextScaled = true,
-                                            TextXAlignment = Enum.TextXAlignment.Left
-                                        }
-                                    )
-                                }
-                            ),
-                            CriticalStrike = Roact.createElement(
-                                IconFrame,
-                                {
-                                    Image = "rbxassetid://5063940411",
-                                    LayoutOrder = 2,
-                                },
-                                {
-                                    Roact.createElement(
-                                        "TextLabel",
-                                        {
-                                            Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %.2f", highlightedPickaxeData.CritChance),
+                                            Text = string.format(" %d", highlightedBackpackData.Capacity),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -400,7 +373,7 @@ function PickaxeButtons:render()
                 }
             ),
             Description = Roact.createElement(
-                PickaxeMenuButton,
+                BackpackMenuButton,
                 {
                     Size = UDim2.new(.6, 0, .1, 0),
                     Position = UDim2.new(.4, 0, 0, 0),
@@ -423,7 +396,7 @@ function PickaxeButtons:render()
                         ZIndex = 999
                     },
                     TextProps = {
-                        Text = highlightedPickaxeData.Description,
+                        Text = highlightedBackpackData.Description,
                         TextColor3 = Color3.fromRGB(255, 255, 255),
                         ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
                         Font = Enum.Font.GothamBold,
@@ -437,7 +410,7 @@ function PickaxeButtons:render()
                 }
             ),
             CurrCoinCount = Roact.createElement(
-                PickaxeMenuButton,
+                BackpackMenuButton,
                 {
                     Size = UDim2.new(.2, 0, .1, 0),
                     Position = UDim2.new(.8, 0, .1, 0),
@@ -478,4 +451,4 @@ function PickaxeButtons:render()
     )
 end
 
-return PickaxeButtons
+return BackpackList

@@ -1,15 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Services = require(ReplicatedStorage.Services)
+local GuiController = Services.GuiController
 
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 local Roact = require(ReplicatedStorage.Lib.Roact)
-local AnimatedComponent = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedComponent)
+local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local Null = require(ReplicatedStorage.Objects.Shared.Null)
 
-local RootContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local Background = require(script:WaitForChild("Background"))
 local MainMenu = require(script:WaitForChild("MainMenu"))
 
@@ -22,16 +20,16 @@ function gui:init()
     local overlayClone = Null
     local controller = Null
     if RunService:IsRunning() then
-        overlayclone = ShopkeepOverlay:Clone()
-        overlayclone.Parent = script.Parent:WaitForChild("ShopScreenGui")
-        controller = require(overlayclone:WaitForChild("Controller"))
+        overlayClone = ShopkeepOverlay:Clone()
+        overlayClone.Parent = script.Parent:WaitForChild("ShopScreenGui")
+        controller = require(overlayClone:WaitForChild("Controller"))
     end
 
     self.ref = Roact.createRef()
     self:setState(
         {
             selectedMenu = MainMenu,
-            shopkeepOverlay = overlayclone,
+            shopkeepOverlay = overlayClone,
             shopkeepController = controller
         }
     )
@@ -56,35 +54,44 @@ function gui:willUnmount()
 end
 
 function gui:render()
+    local closeGui = function()
+        self:setState({
+            [AnimatedContainer.Damping] = 1,
+            [AnimatedContainer.Frequency] = 2,
+            [AnimatedContainer.Targets] = {
+                Position = UDim2.new(.5, 0, 2, 0)
+            },
+        })
+        wait(.5)
+        GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS.Shop, false)
+    end
+    local selectMenu = function(new_menu)
+        self:setState(
+            {
+                selectedMenu = new_menu
+            }
+        )
+    end
     return Roact.createElement(
-        RootContainer,
+        AnimatedContainer,
         {
-            [AnimatedComponent.TweenInfoOnMount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
-            [AnimatedComponent.TweenInfoOnUnmount] = TweenInfo.new(
-                .3,
-                Enum.EasingStyle.Linear,
-                Enum.EasingDirection.Out
-            ),
-            [AnimatedComponent.TweenTargetsOnMount] = {
+            [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .8,
+            [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
+            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or {
                 Position = UDim2.new(.5, 0, .5, 0)
             },
-            [AnimatedComponent.TweenTargetsOnUnmount] = {
-                Position = UDim2.new(.5, 0, 1.5, 50)
-            },
-            InitialPosition = UDim2.new(.5, 0, 1.5, 50),
+            Size = UDim2.new(1, 0, 1, 0),
+            Position = UDim2.new(.5, 0, 2, 0),
+            AnchorPoint = Vector2.new(.5, .5),
+            BackgroundTransparency = 1,
         },
         {
             Decor = Roact.createElement(Background),
             Menu = Roact.createElement(
                 self.state.selectedMenu,
                 {
-                    selectMenuCallback = function(new_menu)
-                        self:setState(
-                            {
-                                selectedMenu = new_menu
-                            }
-                        )
-                    end,
+                    closeGui = closeGui,
+                    selectMenu = selectMenu,
                     shopkeepOverlayController = self.state.shopkeepController
                 }
             )

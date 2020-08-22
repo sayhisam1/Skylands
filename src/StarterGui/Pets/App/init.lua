@@ -9,9 +9,8 @@ local StorageSlotsStore = ClientPlayerData:GetStore("MaxPetStorageSlots")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
-local AnimatedComponent = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedComponent)
+local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 
-local RootContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local Background = require(script:WaitForChild("Background"))
 local Content = require(script:WaitForChild("Content"))
 local PetIndicatorButton = require(script:WaitForChild("PetIndicatorButton"))
@@ -31,19 +30,17 @@ end
 
 function gui:render()
     return Roact.createElement(
-        RootContainer,
+        AnimatedContainer,
         {
-            [AnimatedComponent.TweenInfoOnMount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
-            [AnimatedComponent.TweenInfoOnUnmount] = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
-            [AnimatedComponent.TweenTargetsOnMount] = {
+            [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .8,
+            [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
+            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or {
                 Position = UDim2.new(.5, 0, .5, 0)
             },
-            [AnimatedComponent.TweenTargetsOnUnmount] = {
-                Position = UDim2.new(.5, 0, 1.5, 50)
-            },
-            InitialPosition = UDim2.new(.5, 0, 1.5, 50),
-            Size = UDim2.new(.8, 0, .8, 0),
-            Position = UDim2.new(.5, 0, .5, 0)
+            AnchorPoint = Vector2.new(.5, .5),
+            Size = UDim2.new(0.5, 0, 0.5, 0),
+            Position = UDim2.new(0.5, 0, 1.5, 0),
+            BackgroundTransparency = 1,
         },
         {
             UIAspectRatio = Roact.createElement(
@@ -68,21 +65,27 @@ function gui:render()
                     ZIndex = 10
                 }
             ),
-            PetStorageSlots = Roact.createElement(PetIndicatorButton, {
-                store = StorageSlotsStore,
-                TextGetter = function(val)
-                    return string.format("%d/%d", TableUtil.len(PetStore:getState() or {}), (type(val) == 'number' and val) or 0)
-                end,
-                Image = "http://www.roblox.com/asset/?id=5580151003",
-                Size = UDim2.new(.2, 0, .1, 0),
-                Position = UDim2.new(.9, 0, .1, 0),
-                AnchorPoint = Vector2.new(1, 0),
-                BackgroundColor3 = Color3.fromRGB(110, 160, 204),
-            }),
-            Content = Roact.createElement(Content, {
-                Position = UDim2.new(.03, 0, .17, 0),
-                Size = UDim2.new(.94, 0, .79, 0),
-            }),
+            PetStorageSlots = Roact.createElement(
+                PetIndicatorButton,
+                {
+                    store = StorageSlotsStore,
+                    TextGetter = function(val)
+                        return string.format("%d/%d", TableUtil.len(PetStore:getState() or {}), (type(val) == "number" and val) or 0)
+                    end,
+                    Image = "http://www.roblox.com/asset/?id=5580151003",
+                    Size = UDim2.new(.2, 0, .1, 0),
+                    Position = UDim2.new(.9, 0, .1, 0),
+                    AnchorPoint = Vector2.new(1, 0),
+                    BackgroundColor3 = Color3.fromRGB(110, 160, 204)
+                }
+            ),
+            Content = Roact.createElement(
+                Content,
+                {
+                    Position = UDim2.new(.03, 0, .17, 0),
+                    Size = UDim2.new(.94, 0, .79, 0)
+                }
+            ),
             CloseButton = Roact.createElement(
                 "ImageButton",
                 {
@@ -93,6 +96,14 @@ function gui:render()
                     Image = "http://www.roblox.com/asset/?id=5589393189",
                     BackgroundTransparency = 1,
                     [Roact.Event.MouseButton1Down] = function()
+                        self:setState({
+                            [AnimatedContainer.Damping] = 1,
+                            [AnimatedContainer.Frequency] = 2,
+                            [AnimatedContainer.Targets] = {
+                                Position = UDim2.new(.5, 0, 1.5, 0)
+                            },
+                        })
+                        wait(.3)
                         GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
                     end
                 },

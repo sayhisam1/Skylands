@@ -1,32 +1,57 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
+local spr = require(ReplicatedStorage.Lib.spr)
 local Roact = require(ReplicatedStorage.Lib.Roact)
-local AnimatedComponent = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedComponent)
+local Component = Roact.Component
 
-local Container = AnimatedComponent:extend("Container")
+local AnimatedContainer = Component:extend("AnimatedContainer")
 
-function Container:init()
+AnimatedContainer.Targets = "ANIMATED_TARGETS"
+AnimatedContainer.Damping = "ANIMATED_DAMPING"
+AnimatedContainer.Frequency = "ANIMATED_FREQUENCY"
+AnimatedContainer.ContainerType = "ANIMATED_CONTAINER_TYPE"
+
+function AnimatedContainer:_animate()
+    local instance = self.ref:getValue()
+    local targets = self.state[AnimatedContainer.Targets]
+    local damping = self.state[AnimatedContainer.Damping] or 1
+    local frequency = self.state[AnimatedContainer.Frequency] or 1
+    if instance and targets then
+        spr.target(instance, damping, frequency, targets)
+    end
+end
+
+function AnimatedContainer.getDerivedStateFromProps(props, state)
+    return {
+        [AnimatedContainer.Targets] = props[AnimatedContainer.Targets],
+        [AnimatedContainer.Damping] = props[AnimatedContainer.Damping],
+        [AnimatedContainer.Frequency] = props[AnimatedContainer.Frequency],
+    }
+end
+
+function AnimatedContainer:init()
     self.ref = Roact.createRef()
 end
 
-function Container:didMount()
-    local instance = self.ref:getValue()
-    instance.Position = self.props["InitialPosition"]
-    self:_animateOnMount()
+function AnimatedContainer:didMount()
+    self:_animate()
 end
 
-function Container:render()
-    return Roact.createElement(
-        "Frame",
-        {
-            ClipsDescendants = self.props.ClipsDescendants,
-            AnchorPoint = self.props.AnchorPoint or Vector2.new(.5, .5),
-            BackgroundTransparency = 1,
-            Position = self.props.Position or UDim2.new(.5, 0, .5, 0),
-            Size = self.props.Size or UDim2.new(1, 0, 1, 0),
-            -- roact specific --
-            [Roact.Ref] = self.ref,
-            [Roact.Children] = self.props[Roact.Children]
-        }
-    )
+function AnimatedContainer:didUpdate()
+    self:_animate()
 end
-return Container
+
+function AnimatedContainer:willUnmount()
+    spr.stop(self.ref:getValue())
+end
+
+function AnimatedContainer:render()
+    local newProps = TableUtil.shallow(self.props)
+    newProps = TableUtil.filter(newProps, function(k)
+        return k ~= AnimatedContainer.Targets and k ~= AnimatedContainer.Damping and k ~= AnimatedContainer.Frequency and k ~= AnimatedContainer.ContainerType
+    end)
+    newProps[Roact.Ref] = self.ref
+    return Roact.createElement(self.props[AnimatedContainer.ContainerType] or "Frame", newProps)
+end
+
+return AnimatedContainer
