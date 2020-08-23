@@ -6,6 +6,7 @@ local MainMenuButton = require(script.MainMenuButton)
 local MainMenu = Roact.Component:extend("MainMenu")
 local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local Background = require(script:WaitForChild("Background"))
+local spr = require(ReplicatedStorage.Lib.spr)
 
 local shopkeepAnimationId = "rbxassetid://4850764165"
 local shopkeepAnimation = Instance.new("Animation")
@@ -15,14 +16,7 @@ local shopkeepOverlayTweenInfo = TweenInfo.new(.3, Enum.EasingStyle.Linear, Enum
 function MainMenu:render()
     local shopkeepOverlay = self.props.shopkeepOverlayController:GetViewportFrame()
     local shopkeepCam = self.props.shopkeepOverlayController:GetCamera()
-    local shopkeepOverlayTween =
-        TweenService:Create(
-        shopkeepOverlay,
-        shopkeepOverlayTweenInfo,
-        {
-            Position = UDim2.new(0.25, 0, .1, 0)
-        }
-    )
+
     local shopkeepCamTween =
         TweenService:Create(
         shopkeepCam,
@@ -31,7 +25,9 @@ function MainMenu:render()
             CFrame = self.props.shopkeepOverlayController:GetCameraCFrame(Vector3.new(0, 2, -3), Vector3.new(0, 2, 0))
         }
     )
-    shopkeepOverlayTween:Play()
+    spr.target(shopkeepOverlay, .4, 2, {
+        Position = UDim2.new(0.25, 0, .1, 0)
+    })
     shopkeepCamTween:Play()
     self.props.shopkeepOverlayController:PlayAnimation(shopkeepAnimation)
 
