@@ -58,14 +58,6 @@ function Service:Load()
     self:HookPlayerAction(
         function(plr)
             self:Log(3, "Player joined", plr.Name)
-            local whitelist = require(script.Whitelist)
-            if
-                not self.TableUtil.contains(whitelist, plr.Name) and
-                    not self.TableUtil.contains(require(ReplicatedStorage.AdminDictionary), plr.UserId)
-             then
-                self:Log(3, "Player kicked", plr.Name)
-                plr:Kick("Sorry, you are not a beta tester. Apply to be one on the discord!")
-            end
             local lastVisitTime = self:GetStore(plr, "LastVisitTime")
             lastVisitTime:dispatch(
                 {

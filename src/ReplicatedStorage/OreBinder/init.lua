@@ -7,7 +7,7 @@ local Octree = require(ReplicatedStorage.Lib.Octree)
 local Binder = require(ReplicatedStorage.Objects.Shared.Binder)
 local Ore = require(script.Ore)
 
-local oreTree = Octree.new(Vector3.new(.5E5, 1E6, .5E5) * -1, Vector3.new(.5E5, 1E6, .5E5), 2)
+local oreTree = Octree.new(Vector3.new(.5E5, .6E6, .5E5) * -1, Vector3.new(.5E5, 1E6, .5E5), 2)
 
 local OreBinder = Binder.new(Enums.Tags.Ore, Ore)
 

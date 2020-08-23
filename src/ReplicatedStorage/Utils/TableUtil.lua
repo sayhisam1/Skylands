@@ -180,7 +180,7 @@ end
 newTable.map = function(tbl, lambda)
 	local newtbl = {}
 	for k, v in pairs(tbl) do
-		newtbl[k] = lambda(v)
+		newtbl[k] = lambda(k, v)
 	end
 	return newtbl
 end

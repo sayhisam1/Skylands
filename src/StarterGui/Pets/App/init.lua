@@ -1,10 +1,7 @@
 -- PET MENU --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = require(ReplicatedStorage.Services)
-local ClientPlayerData = Services.ClientPlayerData
 local GuiController = Services.GuiController
-local PetStore = ClientPlayerData:GetStore("Pets")
-local StorageSlotsStore = ClientPlayerData:GetStore("MaxPetStorageSlots")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
@@ -13,11 +10,24 @@ local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.
 local Background = require(script:WaitForChild("Background"))
 local Content = require(script:WaitForChild("Content"))
 local PetIndicatorButton = require(script:WaitForChild("PetIndicatorButton"))
-local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
+
+local CombinedPetStore = require(script:WaitForChild("CombinedPetStore"))
 
 local gui = Roact.Component:extend("Shop")
-
 function gui:render()
+    local closeGui = function()
+        self:setState(
+            {
+                [AnimatedContainer.Damping] = 1,
+                [AnimatedContainer.Frequency] = 2,
+                [AnimatedContainer.Targets] = {
+                    Position = UDim2.new(.5, 0, 1.5, 0)
+                }
+            }
+        )
+        wait(.3)
+        GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
+    end
     return Roact.createElement(
         AnimatedContainer,
         {
@@ -29,7 +39,7 @@ function gui:render()
                 },
             AnchorPoint = Vector2.new(.5, .5),
             Size = UDim2.new(0.7, 0, 0.7, 0),
-            Position = UDim2.new(0.5, 0, 1.5, 0),
+            Position = UDim2.new(0.5, 0, 1.7, 0),
             BackgroundTransparency = 1
         },
         {
@@ -58,15 +68,14 @@ function gui:render()
             PetStorageSlots = Roact.createElement(
                 PetIndicatorButton,
                 {
-                    store = StorageSlotsStore,
-                    TextGetter = function(val)
-                        return string.format("%d/%d", TableUtil.len(PetStore:getState() or {}), (type(val) == "number" and val) or 0)
-                    end,
                     Image = "http://www.roblox.com/asset/?id=5580151003",
                     Size = UDim2.new(.2, 0, .1, 0),
                     Position = UDim2.new(.9, 0, .1, 0),
                     AnchorPoint = Vector2.new(1, 0),
-                    BackgroundColor3 = Color3.fromRGB(110, 160, 204)
+                    BackgroundColor3 = Color3.fromRGB(110, 160, 204),
+                    TextGetter = function(state)
+                        return string.format("%d/%d", state.NumPets, state.MaxPetStorageSlots)
+                    end
                 }
             ),
             Content = Roact.createElement(
@@ -85,31 +94,14 @@ function gui:render()
                     ZIndex = 100,
                     Image = "http://www.roblox.com/asset/?id=5589393189",
                     BackgroundTransparency = 1,
-                    [Roact.Event.MouseButton1Down] = function()
-                        self:setState(
-                            {
-                                [AnimatedContainer.Damping] = 1,
-                                [AnimatedContainer.Frequency] = 2,
-                                [AnimatedContainer.Targets] = {
-                                    Position = UDim2.new(.5, 0, 1.5, 0)
-                                }
-                            }
-                        )
-                        wait(.3)
-                        GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
-                    end
+                    [Roact.Event.MouseButton1Down] = closeGui
                 },
                 {
-                    UIAspectRatio = Roact.createElement(
-                        "UIAspectRatioConstraint",
-                        {
-                            AspectRatio = 1
-                        }
-                    )
+                    UIAspectRatio = Roact.createElement("UIAspectRatioConstraint")
                 }
             )
         }
     )
 end
 
-return Roact.createElement(RoactRodux.StoreProvider, {store = PetStore}, {App = Roact.createElement(gui)})
+return Roact.createElement(RoactRodux.StoreProvider, {store = CombinedPetStore}, {App = Roact.createElement(gui)})

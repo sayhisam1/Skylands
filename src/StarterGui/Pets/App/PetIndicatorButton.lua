@@ -1,35 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 
 local PetIndicatorButton = Roact.Component:extend("PetIndicatorButton")
 
-function PetIndicatorButton:init()
-    self:setState(
-        {
-            maid = Maid.new(),
-            storeVal = nil
-        }
-    )
-end
-
 function PetIndicatorButton:render()
-    self.state.maid:Destroy()
-    local store = self.props.store
-    self.state.maid:GiveTask(
-        store.changed:connect(
-            function(val)
-                self:setState(
-                    {
-                        storeVal = val
-                    }
-                )
-            end
-        )
-    )
     return Roact.createElement(
         "Frame",
         {
@@ -61,7 +38,7 @@ function PetIndicatorButton:render()
                         "TextLabel",
                         {
                             Font = Enum.Font.GothamBold,
-                            Text = self.props.TextGetter(store:getState()),
+                            Text = self.props.Text,
                             TextScaled = true,
                             BackgroundTransparency = 1,
                             TextColor3 = Color3.new(1, 1, 1),
@@ -87,6 +64,9 @@ function PetIndicatorButton:render()
                     end,
                     [Roact.Event.MouseLeave] = function(ref)
                         ref:TweenSize(UDim2.new(.2, 0, .6, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
+                    end,
+                    [Roact.Event.MouseButton1Click] = function(ref)
+                        self.props.onClick(ref)
                     end
                 },
                 {
@@ -103,15 +83,11 @@ function PetIndicatorButton:render()
     )
 end
 
-function PetIndicatorButton:willUnmount()
-    self.state.maid:Destroy()
-end
-
 PetIndicatorButton =
     RoactRodux.connect(
-    function(pets, props)
+    function(state, props)
         return {
-            petsData = pets
+            Text = props.TextGetter(state)
         }
     end
 )(PetIndicatorButton)

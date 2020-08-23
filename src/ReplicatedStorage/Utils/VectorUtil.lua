@@ -39,7 +39,7 @@ function module.GetCubeNeighbors(n, vec, mult)
 	local list = getMemoizedCube(n)
 	return TableUtil.map(
 		list,
-		function(v)
+		function(_, v)
 			return vec + v * mult
 		end
 	)
@@ -85,7 +85,7 @@ function module.GetManhattanNeighbors(n, vec, mult)
 	local list = getMemoizedManhattan(n)
 	return TableUtil.map(
 		list,
-		function(v)
+		function(_, v)
 			return vec + v * mult
 		end
 	)
@@ -110,7 +110,7 @@ function module.MarkPoints(points)
 	local partClones =
 		TableUtil.map(
 		points,
-		function(pt)
+		function(_, pt)
 			local cloned = p:Clone()
 			cloned.CFrame = CFrame.new(pt)
 			cloned.Parent = Workspace
@@ -120,7 +120,7 @@ function module.MarkPoints(points)
 	return function()
 		TableUtil.map(
 			partClones,
-			function(part)
+			function(_, part)
 				part:Destroy()
 			end
 		)
