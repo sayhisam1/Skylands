@@ -1,7 +1,9 @@
 -- stores player inventories --
 
+local DataStoreService = game:GetService("DataStoreService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 local DEPENDENCIES = {}
 Service:AddDependencies(DEPENDENCIES)
@@ -15,14 +17,25 @@ local Rodux = require(ReplicatedStorage.Lib.Rodux)
 
 local KeysDir = script.Keys
 local KEYS = {}
-local DATASTORE_KEYS = {}
 for _, v in pairs(KeysDir:GetChildren()) do
     local req = require(v)
-    if req.Stateful then
-        DATASTORE_KEYS[#DATASTORE_KEYS + 1] = v.Name
-    end
     KEYS[v.Name] = req
 end
+local DATASTORE_KEYS =
+    TableUtil.filter(
+    KEYS,
+    function(k, v)
+        return v.Stateful and v
+    end
+)
+
+local ORDERED_DATASTORE_KEYS =
+    TableUtil.filter(
+    KEYS,
+    function(k, v)
+        return v.Ordered and v
+    end
+)
 
 DataStore2.Combine("DATA", unpack(DATASTORE_KEYS))
 
@@ -88,6 +101,10 @@ function Service:Load()
             while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
                 for _, plr in pairs(Players:GetPlayers()) do
                     DataStore2.SaveAll(plr)
+                    for k, v in pairs(ORDERED_DATASTORE_KEYS) do
+                        local ds = DataStoreService:GetOrderedDataStore(k)
+                        ds:SetAsync(plr.UserId, playerData[plr.UserId][k]:getState())
+                    end
                     wait()
                 end
             end
@@ -155,19 +172,12 @@ function Service:GetStore(plr, key)
 
         if keyData.Stateful then
             local ds = DataStore2(key, plr)
-            local function saveDataStore(state)
-                ds:Set(state)
-            end
-            local dsConnector =
-                playerData[plr.UserId][key].changed:connect(
-                function(new, old)
-                    saveDataStore(new)
-                end
-            )
             self._maid:GiveTask(
-                function()
-                    dsConnector:disconnect()
-                end
+                playerData[plr.UserId][key].changed:connect(
+                    function(new, old)
+                        ds:Set(new)
+                    end
+                )
             )
         end
     end
