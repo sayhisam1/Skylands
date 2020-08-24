@@ -1,9 +1,5 @@
 std = "roblox+testez"
 
-[selene]
-base = "lua51"
-name = "roblox-extra"
-
 [rules]
 #disable roact lints due to invalid warning
 roblox_incorrect_roact_usage = "warn"
