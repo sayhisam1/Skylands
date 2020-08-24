@@ -157,17 +157,11 @@ function Service:GetStore(plr, key)
         end
 
         if not plr:IsA("MockPlayer") then
-            local changeConnector =
-                playerData[plr.UserId][key].changed:connect(
+            self._maid:GiveTask(playerData[plr.UserId][key].changed:connect(
                 function(new, old)
                     updateClient(new)
                 end
-            )
-            self._maid:GiveTask(
-                function()
-                    changeConnector:disconnect()
-                end
-            )
+            ))
         end
 
         if keyData.Stateful then

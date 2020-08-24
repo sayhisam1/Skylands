@@ -15,11 +15,12 @@ function Service:Load()
 
     local function setupPlayer(plr)
         local pets = self.Services.PlayerData:GetStore(plr, "Pets")
-        local petChangedConnector =
+        maid:GiveTask(
             pets.changed:connect(
-            function(new)
-                self:SetPlayerPets(plr, new)
-            end
+                function(new)
+                    self:SetPlayerPets(plr, new)
+                end
+            )
         )
         maid:GiveTask(
             plr.CharacterAdded:Connect(
@@ -27,11 +28,6 @@ function Service:Load()
                     self:SetPlayerPets(plr, pets:getState())
                 end
             )
-        )
-        maid:GiveTask(
-            function()
-                petChangedConnector:disconnect()
-            end
         )
         self:ValidatePlayer(plr)
     end

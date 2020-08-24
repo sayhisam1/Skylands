@@ -23,35 +23,27 @@ function PickaxeButtons:init()
 end
 
 function PickaxeButtons:didMount()
-    local ownedPickaxeConnector =
+    self._maid:GiveTask(
         Services.ClientPlayerData:GetStore("OwnedPickaxes").changed:connect(
-        function(new, old)
-            self:setState(
-                {
-                    ownedPickaxes = new
-                }
-            )
-        end
+            function(new, old)
+                self:setState(
+                    {
+                        ownedPickaxes = new
+                    }
+                )
+            end
+        )
     )
-    local selectedPickaxeConnector =
+    self._maid:GiveTask(
         Services.ClientPlayerData:GetStore("SelectedPickaxe").changed:connect(
-        function(new, old)
-            self:setState(
-                {
-                    selectedPickaxe = new
-                }
-            )
-        end
-    )
-    self._maid:GiveTask(
-        function()
-            ownedPickaxeConnector:disconnect()
-        end
-    )
-    self._maid:GiveTask(
-        function()
-            selectedPickaxeConnector:disconnect()
-        end
+            function(new, old)
+                self:setState(
+                    {
+                        selectedPickaxe = new
+                    }
+                )
+            end
+        )
     )
 end
 
