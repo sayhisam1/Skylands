@@ -19,6 +19,8 @@ RunService.Heartbeat:Connect(
         local instance = (raycast_results and raycast_results.Instance)
         if instance then
             ore = OreBinder:LookupInstance(instance)
+        else
+            ore = nil
         end
     end
 )
