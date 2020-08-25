@@ -1,6 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local Services = require(ReplicatedStorage.Services)
+local ClientPlayerData = Services.ClientPlayerData
+local GuiController = Services.GuiController
 
 local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
 local MiningUtil = require(ReplicatedStorage.Utils.MiningUtil)
@@ -41,6 +44,12 @@ return function(tool)
 				maid:GiveTask(
 					UserInputService.InputBegan:Connect(
 						function(input, gameProcessedEvent)
+							local backpackCapacity = ClientPlayerData:GetStore("BackpackCapacity"):getState()
+							local plrOreCount = ClientPlayerData:GetStore("OreCount"):getState()
+							if plrOreCount >= backpackCapacity then
+								GuiController:PromptBackpackFull()
+								return
+							end
 							if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not gameProcessedEvent then
 								while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
 									toolInstance:Activate()

@@ -59,6 +59,15 @@ function Ore:Mine(plr, damage)
                     Amount = 1
                 }
             )
+
+            local totalOresMined = Services.PlayerData:GetStore(plr, "TotalOresMined")
+            totalOresMined:dispatch(
+                {
+                    type = "Increment",
+                    Amount = 1
+                }
+            )
+
             if self:GetAttribute("Value") then
                 local plrBackpackGoldValue = Services.PlayerData:GetStore(plr, "BackpackGoldValue")
                 local value = self:GetAttribute("Value")
