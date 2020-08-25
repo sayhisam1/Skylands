@@ -23,24 +23,28 @@ function BackpackList:init()
 end
 
 function BackpackList:didMount()
-    self._maid(Services.ClientPlayerData:GetStore("OwnedBackpacks").changed:connect(
-        function(new, old)
-            self:setState(
-                {
-                    ownedBackpacks = new
-                }
-            )
-        end
-    ))
-    self._maid(Services.ClientPlayerData:GetStore("SelectedBackpack").changed:connect(
-        function(new, old)
-            self:setState(
-                {
-                    selectedBackpack = new
-                }
-            )
-        end
-    ))
+    self._maid:GiveTask(
+        Services.ClientPlayerData:GetStore("OwnedBackpacks").changed:connect(
+            function(new, old)
+                self:setState(
+                    {
+                        ownedBackpacks = new
+                    }
+                )
+            end
+        )
+    )
+    self._maid:GiveTask(
+        Services.ClientPlayerData:GetStore("SelectedBackpack").changed:connect(
+            function(new, old)
+                self:setState(
+                    {
+                        selectedBackpack = new
+                    }
+                )
+            end
+        )
+    )
 end
 
 function BackpackList:willUnmount()
