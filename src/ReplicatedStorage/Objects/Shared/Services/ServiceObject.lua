@@ -121,6 +121,9 @@ function Service:HookPlayerAction(func)
         func(plr)
     end
     self._maid:GiveTask(Players.PlayerAdded:Connect(func))
+    self._maid:GiveTask(Players.PlayerRemoving:Connect(function(plr)
+        self._maid[plr]:Destroy()
+    end))
 end
 ------------------------------
 --// OVERLOADED FUNCTIONS \\--
