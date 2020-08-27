@@ -1,5 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
 local Roact = require(ReplicatedStorage.Lib.Roact)
 
 local ShadowedText = Roact.Component:extend("ShadowedText")

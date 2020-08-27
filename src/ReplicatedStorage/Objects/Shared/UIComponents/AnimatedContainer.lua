@@ -42,7 +42,10 @@ function AnimatedContainer:didUpdate()
 end
 
 function AnimatedContainer:willUnmount()
-    spr.stop(self.ref:getValue())
+    local instance = self.ref:getValue()
+    if instance then
+        spr.stop(instance)
+    end
 end
 
 function AnimatedContainer:render()

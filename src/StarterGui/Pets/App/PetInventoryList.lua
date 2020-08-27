@@ -5,9 +5,65 @@ local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 
 local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local PetInventoryButton = Roact.PureComponent:extend("PetInventoryButton")
+local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
+local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
+
+local AssetFinder = require(ReplicatedStorage.AssetFinder)
+
 function PetInventoryButton:render()
     local petData = self.props.petData
-    local empty = not petData
+    local empty = not petData.PetClass
+
+    local viewportContainer =
+        not empty and
+        Roact.createElement(
+            ViewportContainer,
+            {
+                Size = UDim2.new(1, 0, 1, 0),
+                Position = UDim2.new(.5, 0, .5, 0),
+                AnchorPoint = Vector2.new(.5, .5),
+                RenderedModel = not empty and AssetFinder.FindPet(petData.PetClass),
+                CameraCFrame = CFrame.new(0, 0, 1) * CFrame.Angles(math.pi / 4, math.pi / 4, math.pi / 4),
+                ZIndex = 22
+            },
+            {
+                PetName = Roact.createElement(
+                    ShadowedText,
+                    {
+                        Font = Enum.Font.GothamBold,
+                        Text = petData.PetClass,
+                        TextScaled = true,
+                        BackgroundTransparency = 1,
+                        TextColor3 = Color3.new(1, 1, 1),
+                        TextStrokeTransparency = 1,
+                        Size = UDim2.new(1, 0, .2, 0),
+                        Position = UDim2.new(.5, 0, 0, 0),
+                        AnchorPoint = Vector2.new(.5, 0),
+                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                        ZIndex = 1
+                    }
+                ),
+                SelectText = Roact.createElement(
+                    ShadowedText,
+                    {
+                        Font = Enum.Font.GothamBold,
+                        Text = petData.Selected and "SELECTED" or "",
+                        TextScaled = true,
+                        BackgroundTransparency = 1,
+                        TextColor3 = Color3.fromRGB(85, 109, 248),
+                        TextStrokeTransparency = 1,
+                        Size = UDim2.new(1, 0, 1, 0),
+                        Position = UDim2.new(.5, 0, 0.5, 0),
+                        AnchorPoint = Vector2.new(.5, .5),
+                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                        ZIndex = 100,
+                        Rotation = -20
+                    }
+                )
+            }
+        )
     return Roact.createElement(
         AnimatedContainer,
         {
@@ -17,8 +73,8 @@ function PetInventoryButton:render()
             BackgroundColor3 = Color3.fromRGB(97, 140, 177),
             Text = "",
             [Roact.Event.MouseButton1Click] = not empty and function()
-                    self.props.select(petData.Id)
-                end,
+                    self.props.setRenderedPet(petData)
+                end or nil,
             LayoutOrder = (not empty and (petData.Selected and 1 or 2)) or 3
         },
         {
@@ -31,12 +87,10 @@ function PetInventoryButton:render()
             UIAspectRatioConstraint = Roact.createElement(
                 "UIAspectRatioConstraint",
                 {
-                    AspectRatio = 1,
-                    AspectType = Enum.AspectType.ScaleWithParentSize,
-                    DominantAxis = Enum.DominantAxis.Width
+                    AspectType = Enum.AspectType.ScaleWithParentSize
                 }
             ),
-            (self.props[Roact.Children] and self.props[Roact.Children].Thumbnail)
+            viewportContainer
         }
     )
 end
@@ -46,26 +100,14 @@ local PetInventoryList = Roact.Component:extend("PetInventoryList")
 function PetInventoryList:render()
     local petComponents = {}
     for id, v in pairs(self.props.Pets) do
-        if v.PetClass then
-            petComponents[id] =
-                Roact.createElement(
-                PetInventoryButton,
-                {
-                    petData = v,
-                    select = self.props.updateRenderedPetId
-                },
-                self.props.PetComponents[id]
-            )
-        else
-            petComponents[id] =
-                Roact.createElement(
-                PetInventoryButton,
-                {
-                    petData = v,
-                    select = self.props.updateRenderedPetId
-                }
-            )
-        end
+        petComponents[id] =
+            Roact.createElement(
+            PetInventoryButton,
+            {
+                petData = v,
+                setRenderedPet = self.props.setRenderedPet
+            }
+        )
     end
     return Roact.createFragment(petComponents)
 end
@@ -84,8 +126,7 @@ PetInventoryList =
         end
 
         return {
-            Pets = pets,
-            PetComponents = state.PetComponents
+            Pets = pets
         }
     end
 )(PetInventoryList)

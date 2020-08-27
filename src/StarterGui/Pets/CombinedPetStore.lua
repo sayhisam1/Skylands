@@ -5,20 +5,9 @@ local ClientPlayerData = Services.ClientPlayerData
 local PetStore = ClientPlayerData:GetStore("Pets")
 local MaxSelectedPets = ClientPlayerData:GetStore("MaxSelectedPets")
 local MaxPetStorageSlots = ClientPlayerData:GetStore("MaxPetStorageSlots")
-local AssetFinder = require(ReplicatedStorage.AssetFinder)
 
 local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 local Rodux = require(ReplicatedStorage.Lib.Rodux)
-
-local function getPetComponents(petData)
-    local petInstance = AssetFinder.FindPet(petData.PetClass)
-    local PetThumbnailComponent = require(petInstance:FindFirstChild("PetThumbnailComponent"))(petData)
-    local PetViewportComponent = require(petInstance:FindFirstChild("PetViewportComponent"))(petData)
-    return {
-        Thumbnail = PetThumbnailComponent,
-        Viewport = PetViewportComponent,
-    }
-end
 
 local reducer =
     Rodux.createReducer(
@@ -28,7 +17,7 @@ local reducer =
         SelectedPets = {},
         MaxPetStorageSlots = 0,
         MaxSelectedPets = 0,
-        PetComponents = {}
+        Pets = {},
     },
     {
         UpdatePets = function(state, action)
@@ -44,13 +33,6 @@ local reducer =
                 end
             )
             newState.NumSelectedPets = TableUtil.len(newState.SelectedPets)
-            newState.PetComponents =
-                TableUtil.map(
-                newState.Pets,
-                function(k, v)
-                    return getPetComponents(v)
-                end
-            )
             return newState
         end,
         UpdateMaxSelectedPets = function(state, action)

@@ -8,27 +8,36 @@ local PetIndicatorButton = require(script.Parent:WaitForChild("PetIndicatorButto
 local PetContentComponent = Roact.Component:extend("PetContent")
 
 function PetContentComponent:init()
-    self:setState({
-        renderedPetId = 0
-    })
+    self:setState(
+        {
+            renderedPetId = 0
+        }
+    )
 end
 
 function PetContentComponent:render()
-    local function updateRenderedPetId(id)
-        self:setState({
-            renderedPetId = id
-        })
+    local function setRenderedPet(data)
+        self:setState(
+            {
+                renderedPet = data
+            }
+        )
     end
     return Roact.createFragment(
         {
             Content = Roact.createElement(
-                "Frame",
+                "ImageLabel",
                 {
                     Position = self.props.Position,
                     Size = self.props.Size,
                     BackgroundColor3 = Color3.fromRGB(110, 160, 204),
+                    BackgroundTransparency = 1,
                     BorderSizePixel = 0,
-                    ZIndex = 20
+                    ZIndex = 20,
+                    ScaleType = Enum.ScaleType.Tile,
+                    TileSize = UDim2.new(0, 64, 0, 64),
+                    Image = "rbxassetid://4651117489",
+                    ImageColor3 = Color3.fromRGB(110, 160, 204)
                 },
                 {
                     UICorner = Roact.createElement(
@@ -37,10 +46,10 @@ function PetContentComponent:render()
                             CornerRadius = UDim.new(.06, 0)
                         }
                     ),
-                    SelectedPets = Roact.createElement(
+                    NumSelectedPets = Roact.createElement(
                         PetIndicatorButton,
                         {
-                            Size = UDim2.new(.25, 0, .21, 0),
+                            Size = UDim2.new(.25, 0, .2, 0),
                             Position = UDim2.new(0.03, 0, 0.01, 0),
                             BackgroundColor3 = Color3.fromRGB(110, 160, 204),
                             Image = "http://www.roblox.com/asset/?id=5580190056",
@@ -69,7 +78,7 @@ function PetContentComponent:render()
                             PetList = Roact.createElement(
                                 PetInventoryList,
                                 {
-                                    updateRenderedPetId = updateRenderedPetId
+                                    setRenderedPet = setRenderedPet
                                 }
                             )
                         }
@@ -86,7 +95,9 @@ function PetContentComponent:render()
                             Viewport = Roact.createElement(
                                 PetViewport,
                                 {
-                                    renderedPetId = self.state.renderedPetId
+                                    renderedPet = self.state.renderedPet,
+                                    makePopup = self.props.makePopup,
+                                    setRenderedPet = setRenderedPet,
                                 }
                             ),
                             UICorner = Roact.createElement(

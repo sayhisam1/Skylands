@@ -56,6 +56,20 @@ function Service:Load()
             end
         )
     )
+    maid:GiveTask(
+        network_channel:Subscribe(
+            "DELETE_PET",
+            function(plr, petId)
+                local store = self.Services.PlayerData:GetStore(plr, "Pets")
+                store:dispatch(
+                    {
+                        type = "RemovePet",
+                        Id = petId
+                    }
+                )
+            end
+        )
+    )
 end
 
 local function removePets(plr)

@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
+local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 
 local PetIndicatorButton = Roact.Component:extend("PetIndicatorButton")
 
@@ -35,7 +36,7 @@ function PetIndicatorButton:render()
                 },
                 {
                     Slots = Roact.createElement(
-                        "TextLabel",
+                        ShadowedText,
                         {
                             Font = Enum.Font.GothamBold,
                             Text = self.props.Text,
@@ -43,6 +44,9 @@ function PetIndicatorButton:render()
                             BackgroundTransparency = 1,
                             TextColor3 = Color3.new(1, 1, 1),
                             Size = UDim2.new(1, 0, 1, 0),
+                            Position = UDim2.new(0, 0, 0, 0),
+                            ShadowOffset = UDim2.new(0.03, 0, 0.03, 0),
+                            ShadowTextColor3 = Color3.fromRGB(0, 119, 255),
                             ZIndex = 52
                         }
                     )
