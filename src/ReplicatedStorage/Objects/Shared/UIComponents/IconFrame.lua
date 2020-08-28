@@ -1,8 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
 local Roact = require(ReplicatedStorage.Lib.Roact)
 
-local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 local IconFrame = Roact.Component:extend("IconFrame")
 
 function IconFrame:render()
@@ -53,8 +51,7 @@ function IconFrame:render()
                         "UIAspectRatioConstraint",
                         {
                             AspectRatio = 1,
-                            AspectType = Enum.AspectType.ScaleWithParentSize,
-                            DominantAxis = Enum.DominantAxis.Height
+                            DominantAxis = Enum.DominantAxis.Width
                         }
                     )
                 }

@@ -6,9 +6,23 @@ local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.
 local AssetFinder = require(ReplicatedStorage.AssetFinder)
 local PetPopup = require(script.Parent:WaitForChild("PetPopup"))
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
-
+local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 local PetViewport = Roact.PureComponent:extend("PetViewport")
 
+local PET_MULTIPLIERS = {
+    {
+        Name = "Gold",
+        Image = "rbxassetid://5566037237"
+    },
+    {
+        Name = "Critical",
+        Image = "rbxassetid://5063940411"
+    },
+    {
+        Name = "Speed",
+        Image = "rbxassetid://3179225615"
+    }
+}
 function PetViewport:render()
     local data = self.props.renderedPet
     local children = {}
@@ -200,6 +214,65 @@ function PetViewport:render()
                         CornerRadius = UDim.new(.2, 0)
                     }
                 )
+            }
+        )
+
+        -- #TODO: Make this not messy xd
+        local petMultipliers = {}
+        for _, v in pairs(PET_MULTIPLIERS) do
+            local mult = instance:FindFirstChild(v.Name .. "Multiplier")
+            if mult and mult.Value ~= 1 then
+                petMultipliers[#petMultipliers + 1] =
+                    Roact.createElement(
+                    IconFrame,
+                    {
+                        ZIndex = 1000,
+                        Image = v.Image,
+                    },
+                    {
+                        GoldMultiplier = Roact.createElement(
+                            ShadowedText,
+                            {
+                                Font = Enum.Font.GothamBold,
+                                Text = string.format("%.3fx", mult.Value),
+                                TextScaled = true,
+                                TextColor3 = Color3.fromRGB(255, 255, 255),
+                                TextStrokeTransparency = 1,
+                                Size = UDim2.new(1, 0, 1, 0),
+                                Position = UDim2.new(0, 0, 0, 0),
+                                ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                                ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                                ZIndex = 100
+                            }
+                        )
+                    }
+                )
+            end
+        end
+        petMultipliers = Roact.createFragment(petMultipliers)
+        children["Multipliers"] =
+            Roact.createElement(
+            "ScrollingFrame",
+            {
+                Size = UDim2.new(1, 0, .25, 0),
+                Position = UDim2.new(.5, 0, .45, 0),
+                AnchorPoint = Vector2.new(.5, 0),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                CanvasSize = UDim2.new(0, 0, 1, 0)
+            },
+            {
+                UIGridLayout = Roact.createElement(
+                    "UIGridLayout",
+                    {
+                        CellSize = UDim2.new(.8, 0, .1, 0),
+                        CellPadding = UDim2.new(0, 0, 0, 0),
+                        FillDirection = Enum.FillDirection.Horizontal,
+                        VerticalAlignment = Enum.VerticalAlignment.Top,
+                        HorizontalAlignment = Enum.HorizontalAlignment.Left
+                    }
+                ),
+                petMultipliers
             }
         )
     end
