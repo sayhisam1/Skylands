@@ -1,6 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local OreBinder = require(ReplicatedStorage.OreBinder)
-local Services = require(ReplicatedStorage.Services)
 
 return function(context, ore)
 	local clone = ore:Clone()
