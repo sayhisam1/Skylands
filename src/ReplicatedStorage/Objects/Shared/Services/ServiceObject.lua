@@ -122,9 +122,7 @@ function Service:HookPlayerAction(func)
     end
     self._maid:GiveTask(Players.PlayerAdded:Connect(func))
     self._maid:GiveTask(Players.PlayerRemoving:Connect(function(plr)
-        if self._maid[plr] then
-            self._maid[plr]:Destroy()
-        end
+        self._maid[plr] = nil
     end))
 end
 ------------------------------
