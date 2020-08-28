@@ -1,5 +1,7 @@
 -- loads pets --
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Enums = require(ReplicatedStorage.Enums)
 local AssetSetup = require(ReplicatedStorage.Objects.AssetSetup)
 local ModelUtil = require(ReplicatedStorage.Utils.ModelUtil)
 
@@ -31,6 +33,12 @@ setup:AddSetupTask(
 setup:AddSetupTask(
 	function(pet)
 		pet.Parent = script.Parent
+	end
+)
+
+setup:AddSetupTask(
+	function(pet)
+		CollectionService:AddTag(pet, Enums.Tags.Pet)
 	end
 )
 

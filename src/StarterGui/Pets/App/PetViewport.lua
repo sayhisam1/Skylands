@@ -3,7 +3,6 @@ local Services = require(ReplicatedStorage.Services)
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
-local AssetFinder = require(ReplicatedStorage.AssetFinder)
 local PetPopup = require(script.Parent:WaitForChild("PetPopup"))
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
@@ -26,8 +25,9 @@ local PET_MULTIPLIERS = {
 function PetViewport:render()
     local data = self.props.renderedPet
     local children = {}
-    if data then
-        local instance = AssetFinder.FindPet(data.PetClass)
+    if data and data.Pet:GetInstance() then
+        local pet = data.Pet
+        local petName = pet:GetAttribute("DisplayName") or pet:GetInstance().Name
         children["ViewportContainer"] =
             Roact.createElement(
             ViewportContainer,
@@ -35,7 +35,7 @@ function PetViewport:render()
                 Size = UDim2.new(1, 0, .4, 0),
                 Position = UDim2.new(.5, 0, 0, 0),
                 AnchorPoint = Vector2.new(.5, 0),
-                RenderedModel = instance,
+                RenderedModel = pet:GetInstance(),
                 CameraCFrame = CFrame.new(0, 0, 1)
             },
             {
@@ -43,7 +43,7 @@ function PetViewport:render()
                     ShadowedText,
                     {
                         Font = Enum.Font.GothamBold,
-                        Text = data.PetClass,
+                        Text = petName,
                         TextScaled = true,
                         BackgroundTransparency = 1,
                         TextColor3 = Color3.new(1, 1, 1),
@@ -80,7 +80,7 @@ function PetViewport:render()
             Roact.createElement(
             "TextButton",
             {
-                Text = data and ((data.Selected and " UNEQUIP ") or " EQUIP "),
+                Text = data.Selected and " UNEQUIP " or " EQUIP ",
                 Size = UDim2.new(.9, 0, .1, 0),
                 AnchorPoint = Vector2.new(.5, 1),
                 BorderSizePixel = 0,
@@ -91,9 +91,9 @@ function PetViewport:render()
                 Font = Enum.Font.GothamBold,
                 BackgroundColor3 = Color3.fromRGB(67, 161, 4),
                 TextScaled = true,
-                [Roact.Event.MouseButton1Down] = data and function()
+                [Roact.Event.MouseButton1Down] = pet and function()
                         local petServiceNetworkChannel = Services.ClientPlayerData:GetServerNetworkChannel("PetService")
-                        petServiceNetworkChannel:Publish((data.Selected and "UNSELECT_PET") or "SELECT_PET", data.Id)
+                        petServiceNetworkChannel:Publish((data.Selected and "UNSELECT_PET") or "SELECT_PET", pet:GetAttribute("Id"))
                     end or nil
             },
             {
@@ -120,7 +120,7 @@ function PetViewport:render()
                 Font = Enum.Font.GothamBold,
                 BackgroundColor3 = Color3.fromRGB(160, 7, 7),
                 TextScaled = true,
-                [Roact.Event.MouseButton1Down] = data and
+                [Roact.Event.MouseButton1Down] = pet and
                     function()
                         local popup =
                             Roact.createElement(
@@ -131,7 +131,7 @@ function PetViewport:render()
                                     ShadowedText,
                                     {
                                         Font = Enum.Font.GothamBold,
-                                        Text = string.format("Are you sure you want to delete %s?", data.PetClass),
+                                        Text = string.format("Are you sure you want to delete %s?", petName),
                                         TextScaled = true,
                                         BackgroundTransparency = 1,
                                         TextColor3 = Color3.new(1, 1, 1),
@@ -162,7 +162,7 @@ function PetViewport:render()
                                             self.props.makePopup(Roact.None)
                                             self.props.setRenderedPet(Roact.None)
                                             local petServiceNetworkChannel = Services.ClientPlayerData:GetServerNetworkChannel("PetService")
-                                            petServiceNetworkChannel:Publish("DELETE_PET", data.Id)
+                                            petServiceNetworkChannel:Publish("DELETE_PET", pet:GetAttribute("Id"))
                                         end
                                     },
                                     {
@@ -220,8 +220,8 @@ function PetViewport:render()
         -- #TODO: Make this not messy xd
         local petMultipliers = {}
         for _, v in pairs(PET_MULTIPLIERS) do
-            local mult = instance:FindFirstChild(v.Name .. "Multiplier")
-            if mult and mult.Value ~= 1 then
+            local mult = pet:GetAttribute(v.Name .. "Multiplier")
+            if mult and mult ~= 1 then
                 petMultipliers[#petMultipliers + 1] =
                     Roact.createElement(
                     IconFrame,
@@ -234,7 +234,7 @@ function PetViewport:render()
                             ShadowedText,
                             {
                                 Font = Enum.Font.GothamBold,
-                                Text = string.format("%.3fx", mult.Value),
+                                Text = string.format("%.3fx", mult),
                                 TextScaled = true,
                                 TextColor3 = Color3.fromRGB(255, 255, 255),
                                 TextStrokeTransparency = 1,

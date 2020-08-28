@@ -24,7 +24,8 @@ return function(pet)
 			local welding = pet:GetAttribute("PetWeld") or script.Parent.PetWeld
 			require(welding)(pet, character)
 		end
-	)
+	):catch(function()
+	end)
 
 	pet._maid:GiveTask(
 		function()

@@ -1,7 +1,26 @@
+local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
+local ASSET_TEMP_DIR
+if RunService:IsServer() or not RunService:IsRunning() then
+    if not ServerStorage:FindFirstChild("TEMPORARY_ASSETS") then
+        local dir = Instance.new("Folder")
+        dir.Name = "TEMPORARY_ASSETS"
+        dir.Parent = ServerStorage
+    end
+    ASSET_TEMP_DIR =  ServerStorage:FindFirstChild("TEMPORARY_ASSETS")
+else
+    if not Lighting:FindFirstChild("TEMPORARY_ASSETS") then
+        local dir = Instance.new("Folder")
+        dir.Name = "TEMPORARY_ASSETS"
+        dir.Parent = Lighting
+    end
+    ASSET_TEMP_DIR = Lighting:FindFirstChild("TEMPORARY_ASSETS")
+end
+ASSET_TEMP_DIR:ClearAllChildren()
 local AssetFinder = {}
 
 local ORES,
@@ -44,12 +63,19 @@ function AssetFinder.GetPickaxes()
     return PICKAXES
 end
 
+local PetBinder = require(ReplicatedStorage.PetBinder)
 function AssetFinder.FindPet(name)
     local asset = PETS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
         error("Couldn't find pet " .. name)
     end
-    return asset
+    asset = asset:Clone()
+    asset.Parent = ASSET_TEMP_DIR
+    if RunService:IsClient() or not RunService:IsRunning() then
+        return PetBinder:BindClient(asset)
+    end
+    return PetBinder:Bind(asset)
+
 end
 
 function AssetFinder.GetPets()

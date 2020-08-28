@@ -8,62 +8,71 @@ local PetInventoryButton = Roact.PureComponent:extend("PetInventoryButton")
 local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 
-local AssetFinder = require(ReplicatedStorage.AssetFinder)
-
 function PetInventoryButton:render()
-    local petData = self.props.petData
-    local empty = not petData.PetClass
+    local pet = self.props.Pet
+    local selected = self.props.Selected
+    local empty = not pet
 
-    local viewportContainer =
-        not empty and
-        Roact.createElement(
+    local children = {}
+    if not empty then
+        local petName = pet:GetAttribute("DisplayName") or pet:GetInstance().Name
+        local viewportChildren = {
+            PetName = Roact.createElement(
+                ShadowedText,
+                {
+                    Font = Enum.Font.GothamBold,
+                    Text = petName,
+                    TextScaled = true,
+                    BackgroundTransparency = 1,
+                    TextColor3 = Color3.new(1, 1, 1),
+                    TextStrokeTransparency = 1,
+                    Size = UDim2.new(1, 0, .2, 0),
+                    Position = UDim2.new(.5, 0, 0, 0),
+                    AnchorPoint = Vector2.new(.5, 0),
+                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                    ZIndex = 1
+                }
+            )
+        }
+        if selected then
+            viewportChildren[#viewportChildren + 1] =
+                Roact.createElement(
+                ShadowedText,
+                {
+                    Font = Enum.Font.GothamBold,
+                    Text = "SELECTED",
+                    TextScaled = true,
+                    BackgroundTransparency = 1,
+                    TextColor3 = Color3.fromRGB(85, 109, 248),
+                    TextStrokeTransparency = 1,
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Position = UDim2.new(.5, 0, 0.5, 0),
+                    AnchorPoint = Vector2.new(.5, .5),
+                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                    ZIndex = 100,
+                    Rotation = -20
+                }
+            )
+        end
+        children[#children + 1] =
+            Roact.createElement(
             ViewportContainer,
             {
                 Size = UDim2.new(1, 0, 1, 0),
                 Position = UDim2.new(.5, 0, .5, 0),
                 AnchorPoint = Vector2.new(.5, .5),
-                RenderedModel = not empty and AssetFinder.FindPet(petData.PetClass),
+                RenderedModel = pet:GetInstance(),
                 CameraCFrame = CFrame.new(0, 0, 1) * CFrame.Angles(math.pi / 4, math.pi / 4, math.pi / 4),
                 ZIndex = 22
             },
             {
-                PetName = Roact.createElement(
-                    ShadowedText,
-                    {
-                        Font = Enum.Font.GothamBold,
-                        Text = petData.PetClass,
-                        TextScaled = true,
-                        BackgroundTransparency = 1,
-                        TextColor3 = Color3.new(1, 1, 1),
-                        TextStrokeTransparency = 1,
-                        Size = UDim2.new(1, 0, .2, 0),
-                        Position = UDim2.new(.5, 0, 0, 0),
-                        AnchorPoint = Vector2.new(.5, 0),
-                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
-                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                        ZIndex = 1
-                    }
-                ),
-                SelectText = Roact.createElement(
-                    ShadowedText,
-                    {
-                        Font = Enum.Font.GothamBold,
-                        Text = petData.Selected and "SELECTED" or "",
-                        TextScaled = true,
-                        BackgroundTransparency = 1,
-                        TextColor3 = Color3.fromRGB(85, 109, 248),
-                        TextStrokeTransparency = 1,
-                        Size = UDim2.new(1, 0, 1, 0),
-                        Position = UDim2.new(.5, 0, 0.5, 0),
-                        AnchorPoint = Vector2.new(.5, .5),
-                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
-                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                        ZIndex = 100,
-                        Rotation = -20
-                    }
-                )
+                Roact.createFragment(viewportChildren)
             }
         )
+    end
+
     return Roact.createElement(
         AnimatedContainer,
         {
@@ -72,10 +81,17 @@ function PetInventoryButton:render()
             BorderSizePixel = 0,
             BackgroundColor3 = Color3.fromRGB(97, 140, 177),
             Text = "",
-            [Roact.Event.MouseButton1Click] = not empty and function()
-                    self.props.setRenderedPet(petData)
-                end or nil,
-            LayoutOrder = (not empty and (petData.Selected and 1 or 2)) or 3
+            [Roact.Event.MouseButton1Click] = not empty and
+                function()
+                    self.props.setRenderedPet(
+                        {
+                            Pet = pet,
+                            Selected = selected
+                        }
+                    )
+                end or
+                nil,
+            LayoutOrder = selected and 1 or (not empty and 2 or 3)
         },
         {
             UICorner = Roact.createElement(
@@ -90,7 +106,7 @@ function PetInventoryButton:render()
                     AspectType = Enum.AspectType.ScaleWithParentSize
                 }
             ),
-            viewportContainer
+            Roact.createFragment(children)
         }
     )
 end
@@ -104,29 +120,40 @@ function PetInventoryList:render()
             Roact.createElement(
             PetInventoryButton,
             {
-                petData = v,
+                Pet = v,
                 setRenderedPet = self.props.setRenderedPet
             }
         )
     end
+    for id, v in pairs(self.props.SelectedPets) do
+        petComponents[id] =
+            Roact.createElement(
+            PetInventoryButton,
+            {
+                Pet = v,
+                setRenderedPet = self.props.setRenderedPet,
+                Selected = true
+            }
+        )
+    end
+    for i = 1, self.props.NumEmptySlots do
+        petComponents[i] = Roact.createElement(PetInventoryButton)
+    end
+
     return Roact.createFragment(petComponents)
 end
 
 PetInventoryList =
     RoactRodux.connect(
-    function(state, props)
+    function(state)
         local numPets = state.NumPets
         local maxPetSlots = state.MaxPetStorageSlots
-        local pets = {}
-        for k, v in pairs(state.Pets) do
-            pets[k] = v
-        end
-        for i = 1, maxPetSlots - numPets do
-            pets[i] = {}
-        end
-
+        local ownedPets = state.Pets
+        local selectedPets = state.SelectedPets
         return {
-            Pets = pets
+            Pets = ownedPets,
+            SelectedPets = selectedPets,
+            NumEmptySlots = maxPetSlots - numPets
         }
     end
 )(PetInventoryList)

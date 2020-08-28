@@ -83,9 +83,9 @@ end
 
 local function addPet(plr, pet)
     assert(plr and plr:IsA("Player"), "Invalid player")
-    assert(pet and pet:IsA("Model"), "Invalid pet")
-    pet.Parent = plr
-    CollectionService:AddTag(pet, Enums.Tags.Pet)
+    assert(pet, "Invalid pet")
+    local instance = pet:GetInstance()
+    instance.Parent = plr
 end
 
 function Service:SelectPet(plr, petId)
@@ -124,7 +124,7 @@ end
 
 function Service:LoadPetFromData(data)
     local petclass = data.PetClass
-    return AssetFinder.FindPet(petclass):Clone()
+    return AssetFinder.FindPet(petclass)
 end
 
 function Service:ValidatePlayer(plr)

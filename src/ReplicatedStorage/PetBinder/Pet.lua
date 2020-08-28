@@ -34,7 +34,7 @@ function Pet:GetCharacter()
 end
 
 function Pet:Setup()
-    if self._isSetup then
+    if self._isSetup or self._destroyed then
         return
     end
     if not self._instance:IsDescendantOf(Players) then

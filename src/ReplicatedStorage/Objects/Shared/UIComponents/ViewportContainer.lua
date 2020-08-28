@@ -69,7 +69,11 @@ local function viewportUpdate(self)
             v:Destroy()
         end
     end
-    local renderedModel = self.props.RenderedModel:Clone()
+    local renderedModel = self.props.RenderedModel
+    if not renderedModel then
+        return
+    end
+    renderedModel = renderedModel:Clone()
     local modelCFrame = self.props.ModelCFrame or CFrame.new(0, 0, 0)
     if renderedModel:IsA("Tool") then
         if renderedModel:FindFirstChild("Parts") then
