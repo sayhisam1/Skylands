@@ -139,9 +139,11 @@ end
 
 function Service:CreatePetData(petName)
     assert(petName and typeof(petName) == "string", "Invalid pet name!")
-    local instance = AssetFinder.FindPet(petName)
+    local pet = AssetFinder.FindPet(petName)
+    assert(pet, "Invalid pet!")
+
     local data = {
-        PetClass = instance.Name,
+        PetClass = petName,
         Id = HttpService:GenerateGUID(false)
     }
     return data
@@ -149,6 +151,11 @@ end
 
 function Service:GivePlayerPet(plr, petName)
     assert(plr and plr:IsA("Player"), "Invalid player")
+    local maxPetStorageSlots = self.Services.PlayerData:GetStore(plr, "MaxPetStorageSlots"):getState()
+    local currentPetCount = self.TableUtil.len(self.Services.PlayerData:GetStore(plr, "Pets"):getState())
+    if currentPetCount >= maxPetStorageSlots then
+        error(plr.Name.."has too many pets!")
+    end
     local petData = self:CreatePetData(petName)
     local store = self.Services.PlayerData:GetStore(plr, "Pets")
     store:dispatch(

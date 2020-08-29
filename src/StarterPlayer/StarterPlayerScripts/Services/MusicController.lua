@@ -72,8 +72,4 @@ function Service:PopMusic()
     end
 end
 
-function Service:SetMusicVolume(vol)
-    assert(typeof(vol) == "number", "Invalid volume!")
-end
-
 return Service

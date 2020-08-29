@@ -102,7 +102,7 @@ function gui:render()
                     Position = UDim2.new(1, 0, 0, 0),
                     AnchorPoint = Vector2.new(1, 0),
                     ZIndex = 100,
-                    Image = "http://www.roblox.com/asset/?id=5589393189",
+                    Image = "http://www.roblox.com/asset/?id=5617680082",
                     BackgroundTransparency = 1,
                     [Roact.Event.MouseButton1Down] = closeGui
                 },

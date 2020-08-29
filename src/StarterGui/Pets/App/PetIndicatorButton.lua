@@ -43,10 +43,11 @@ function PetIndicatorButton:render()
                             TextScaled = true,
                             BackgroundTransparency = 1,
                             TextColor3 = Color3.new(1, 1, 1),
-                            Size = UDim2.new(1, 0, 1, 0),
-                            Position = UDim2.new(0, 0, 0, 0),
+                            Size = UDim2.new(.8, 0, 1, 0),
+                            Position = UDim2.new(.5, 0, 0, 0),
                             ShadowOffset = UDim2.new(0.03, 0, 0.03, 0),
                             ShadowTextColor3 = Color3.fromRGB(0, 119, 255),
+                            AnchorPoint = Vector2.new(.5, 0),
                             ZIndex = 52
                         }
                     )

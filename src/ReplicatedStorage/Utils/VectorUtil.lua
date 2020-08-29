@@ -36,13 +36,16 @@ local function getMemoizedCube(n)
 end
 
 function module.GetCubeNeighbors(n, vec, mult)
+	mult = mult or 1
 	local list = getMemoizedCube(n)
-	return TableUtil.map(
-		list,
-		function(_, v)
-			return vec + v * mult
+	local i = 0
+	local len = #list
+	return function()
+		i = i+1
+		if i <= len then
+			return i, vec + (list[i] * mult)
 		end
-	)
+	end
 end
 
 function module.GetHollowCubeNeighbors(n, vec, mult)

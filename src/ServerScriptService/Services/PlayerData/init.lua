@@ -37,7 +37,8 @@ local ORDERED_DATASTORE_KEYS =
     end
 )
 
-DataStore2.Combine("DATA", unpack(DATASTORE_KEYS))
+
+DataStore2.Combine("BETA_DATA", unpack(DATASTORE_KEYS))
 
 local playerData = {}
 function Service:Load()
@@ -45,13 +46,13 @@ function Service:Load()
 
     -- Setup Client requests
     local network_channel = self:GetNetworkChannel()
-    self:Log(2, "Initialized with keys", self.TableUtil.keys(KEYS))
+    self:Log(1, "Initialized with keys", self.TableUtil.keys(KEYS))
     -- setup endpoints
     maid:GiveTask(
         network_channel:Subscribe(
             "GET",
             function(plr)
-                self:Log(2, "Servicing GET request for", plr)
+                self:Log(1, "Servicing GET request for", plr)
                 for key, v in pairs(KEYS) do
                     local store = self:GetStore(plr, key)
                     network_channel:PublishPlayer(
@@ -70,7 +71,7 @@ function Service:Load()
 
     self:HookPlayerAction(
         function(plr)
-            self:Log(3, "Player joined", plr.Name)
+            self:Log(1, "Player joined", plr.Name)
             local lastVisitTime = self:GetStore(plr, "LastVisitTime")
             lastVisitTime:dispatch(
                 {
@@ -138,7 +139,7 @@ function Service:GetStore(plr, key)
             end
         end
 
-        self:Log(3, plr, "Initial data get for key", key, ":", initialState)
+        self:Log(1, plr, "Initial data get for key", key, ":", initialState)
 
         playerData[plr.UserId][key] = Rodux.Store.new(reducer, initialState)
         playerData[plr.UserId][key]:dispatch(

@@ -75,7 +75,6 @@ function AssetFinder.FindPet(name)
         return PetBinder:BindClient(asset)
     end
     return PetBinder:Bind(asset)
-
 end
 
 function AssetFinder.GetPets()

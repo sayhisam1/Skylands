@@ -80,7 +80,7 @@ function PetViewport:render()
             Roact.createElement(
             "TextButton",
             {
-                Text = data.Selected and " UNEQUIP " or " EQUIP ",
+                Text="",
                 Size = UDim2.new(.9, 0, .1, 0),
                 AnchorPoint = Vector2.new(.5, 1),
                 BorderSizePixel = 0,
@@ -94,6 +94,7 @@ function PetViewport:render()
                 [Roact.Event.MouseButton1Down] = pet and function()
                         local petServiceNetworkChannel = Services.ClientPlayerData:GetServerNetworkChannel("PetService")
                         petServiceNetworkChannel:Publish((data.Selected and "UNSELECT_PET") or "SELECT_PET", pet:GetAttribute("Id"))
+                        self.props.setRenderedPet(nil)
                     end or nil
             },
             {
@@ -102,14 +103,27 @@ function PetViewport:render()
                     {
                         CornerRadius = UDim.new(.2, 0)
                     }
-                )
+                ),
+                ShadowedText = Roact.createElement(ShadowedText, {
+                    Font = Enum.Font.GothamBold,
+                    Text = data.Selected and " UNEQUIP " or " EQUIP ",
+                    TextScaled = true,
+                    BackgroundTransparency = 1,
+                    TextColor3 = Color3.new(1, 1, 1),
+                    TextStrokeTransparency = 1,
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Position = UDim2.new(.5, 0, 0, 0),
+                    AnchorPoint = Vector2.new(.5, 0),
+                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                })
             }
         )
         children["Delete"] =
             Roact.createElement(
             "TextButton",
             {
-                Text = "DELETE",
+                Text = "",
                 Size = UDim2.new(.9, 0, .1, 0),
                 AnchorPoint = Vector2.new(.5, 1),
                 BorderSizePixel = 0,
@@ -213,7 +227,20 @@ function PetViewport:render()
                     {
                         CornerRadius = UDim.new(.2, 0)
                     }
-                )
+                ),
+                ShadowedText = Roact.createElement(ShadowedText, {
+                    Font = Enum.Font.GothamBold,
+                    Text = "DELETE",
+                    TextScaled = true,
+                    BackgroundTransparency = 1,
+                    TextColor3 = Color3.new(1, 1, 1),
+                    TextStrokeTransparency = 1,
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Position = UDim2.new(.5, 0, 0, 0),
+                    AnchorPoint = Vector2.new(.5, 0),
+                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
+                })
             }
         )
 
@@ -252,20 +279,19 @@ function PetViewport:render()
         petMultipliers = Roact.createFragment(petMultipliers)
         children["Multipliers"] =
             Roact.createElement(
-            "ScrollingFrame",
+            "Frame",
             {
                 Size = UDim2.new(1, 0, .25, 0),
                 Position = UDim2.new(.5, 0, .45, 0),
                 AnchorPoint = Vector2.new(.5, 0),
                 BorderSizePixel = 0,
                 BackgroundTransparency = 1,
-                CanvasSize = UDim2.new(0, 0, 1, 0)
             },
             {
                 UIGridLayout = Roact.createElement(
                     "UIGridLayout",
                     {
-                        CellSize = UDim2.new(.8, 0, .1, 0),
+                        CellSize = UDim2.new(1, 0, .33, 0),
                         CellPadding = UDim2.new(0, 0, 0, 0),
                         FillDirection = Enum.FillDirection.Horizontal,
                         VerticalAlignment = Enum.VerticalAlignment.Top,

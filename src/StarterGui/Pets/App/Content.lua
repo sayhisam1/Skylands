@@ -19,7 +19,7 @@ function PetContentComponent:render()
     local function setRenderedPet(data)
         self:setState(
             {
-                renderedPet = data
+                renderedPet = data or Roact.None
             }
         )
     end
@@ -59,7 +59,7 @@ function PetContentComponent:render()
                         }
                     ),
                     PetList = Roact.createElement(
-                        "ScrollingFrame",
+                        "Frame",
                         {
                             BackgroundTransparency = 1,
                             Size = UDim2.new(.6, 0, .7, 0),
@@ -70,8 +70,8 @@ function PetContentComponent:render()
                             UIGrid = Roact.createElement(
                                 "UIGridLayout",
                                 {
-                                    CellSize = UDim2.new(0, 100, 0, 100),
-                                    CellPadding = UDim2.new(0, 5, 0, 5),
+                                    CellSize = UDim2.new(.21, 0, .3, 0),
+                                    CellPadding = UDim2.new(.01, 0, 0.01, 0),
                                     SortOrder = Enum.SortOrder.LayoutOrder
                                 }
                             ),

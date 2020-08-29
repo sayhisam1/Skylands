@@ -5,7 +5,7 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {}
 Service:AddDependencies(DEPENDENCIES)
 
-local BINDERS = {ReplicatedStorage.OreBinder, ReplicatedStorage.PickaxeBinder, ReplicatedStorage.BackpackBinder, ReplicatedStorage.PetBinder}
+local BINDERS = {ReplicatedStorage.OreBinder, ReplicatedStorage.PickaxeBinder, ReplicatedStorage.BackpackBinder, ReplicatedStorage.PetBinder, ReplicatedStorage.PetDispenserBinder}
 for _, v in pairs(BINDERS) do
     require(v)
 end

@@ -28,10 +28,14 @@ function InstanceWrapper:Destroy()
     local instance = self._instance
     self._instance = nil
 
-    RunService.Heartbeat:Wait()
-    if instance and instance.Parent then
-        instance:Destroy()
-    end
+    coroutine.wrap(
+        function()
+            RunService.Heartbeat:Wait()
+            if instance and instance.Parent then
+                instance:Destroy()
+            end
+        end
+    )()
 end
 
 function InstanceWrapper:SetCFrame(cframe)

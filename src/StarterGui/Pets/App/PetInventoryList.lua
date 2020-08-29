@@ -26,7 +26,7 @@ function PetInventoryButton:render()
                     BackgroundTransparency = 1,
                     TextColor3 = Color3.new(1, 1, 1),
                     TextStrokeTransparency = 1,
-                    Size = UDim2.new(1, 0, .2, 0),
+                    Size = UDim2.new(.95, 0, .2, 0),
                     Position = UDim2.new(.5, 0, 0, 0),
                     AnchorPoint = Vector2.new(.5, 0),
                     ShadowTextColor3 = Color3.fromRGB(0, 0, 0),

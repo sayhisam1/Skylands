@@ -21,11 +21,35 @@ function ProbabilityGenerator:AddChoices(choices)
     for choice, weight in pairs(choices) do
         self._choices[choice] = weight
     end
+    self._normalizedChoices = self:GetNormalizedProbabilities()
 end
 
 -- Sample n things from the probability generator
 function ProbabilityGenerator:Sample(n)
     n = n or 1
+
+    -- select the n choices
+    local selected = {}
+    for i = 1, n do
+        local rand = math.random()
+        local curr_sum = 0
+        for choice, normalized_weight in pairs(self._normalizedChoices) do
+            curr_sum = curr_sum + normalized_weight
+            if rand <= curr_sum then
+                selected[#selected + 1] = choice
+                break
+            end
+        end
+    end
+
+    return selected
+end
+
+function ProbabilityGenerator:GetChoices()
+    return self.TableUtil.keys(self._choices)
+end
+
+function ProbabilityGenerator:GetNormalizedProbabilities()
     -- get total weight first
     local total_weight = 0
     for _, weight in pairs(self._choices) do
@@ -37,22 +61,8 @@ function ProbabilityGenerator:Sample(n)
     for choice, weight in pairs(self._choices) do
         normalized_choices[choice] = weight / total_weight
     end
-
-    -- select the n choices
-    local selected = {}
-    for i = 1, n do
-        local rand = math.random()
-        local curr_sum = 0
-        for choice, normalized_weight in pairs(normalized_choices) do
-            curr_sum = curr_sum + normalized_weight
-            if rand <= curr_sum then
-                selected[#selected + 1] = choice
-                break
-            end
-        end
-    end
-
-    return selected
+    self._normalizedChoices = normalized_choices
+    return normalized_choices
 end
 
 return ProbabilityGenerator

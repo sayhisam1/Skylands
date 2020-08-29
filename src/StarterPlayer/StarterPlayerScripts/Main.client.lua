@@ -21,3 +21,7 @@ ServiceLoader:LoadAllServices()
 --     local TestRunner = require(ReplicatedStorage.Tests.TestRunner)
 --     TestRunner:RunAll()
 -- end
+
+-- local Rain = require(ReplicatedStorage.Lib.Rain)
+-- Rain:Enable()
+-- Rain:SetIntensityRatio(.1)

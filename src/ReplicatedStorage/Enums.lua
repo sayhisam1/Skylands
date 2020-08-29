@@ -7,6 +7,7 @@ return {
         ShopController = "SHOP_CONTROLLER",
         Pickaxe = "PICKAXE",
         Backpack = "BACKPACK",
-        Pet = "PET"
+        Pet = "PET",
+        PetDispenser = "PET_DISPENSER",
     }
 }

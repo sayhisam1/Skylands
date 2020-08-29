@@ -44,7 +44,8 @@ function IconFrame:render()
                     Position = UDim2.new(0, 0, .5, 0),
                     Size = UDim2.new(1, 0, 1 * (self.props.ImageScale or 1), 0),
                     Image = self.props.Image,
-                    ZIndex = zindex + 1
+                    ZIndex = zindex + 1,
+                    LayoutOrder = 1,
                 },
                 {
                     UIAspectRatioConstraint = Roact.createElement(

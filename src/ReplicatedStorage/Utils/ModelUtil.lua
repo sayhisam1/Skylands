@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Welding = require(ReplicatedStorage.Utils.Welding)
 local module = {}
 
-function module.AutosetPrimaryPart(model)
+function module.GetCentermostPart(model)
     assert(model:IsA("Model"), "Need to pass a model!")
 
     local parts = {}

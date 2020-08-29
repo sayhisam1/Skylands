@@ -9,7 +9,7 @@ local setup = AssetSetup.new("Pets", script:GetChildren())
 
 setup:AddSetupTask(
 	function(pet)
-		pet.PrimaryPart = pet.PrimaryPart or ModelUtil.AutosetPrimaryPart(pet)
+		pet.PrimaryPart = pet.PrimaryPart or ModelUtil.GetCentermostPart(pet)
 		ModelUtil.WeldTogether(pet)
 	end
 )
