@@ -28,3 +28,6 @@
 [submodule "module/spr"]
 	path = module/spr
 	url = https://github.com/Fraktality/spr
+[submodule "module/Rain"]
+	path = module/Rain
+	url = https://github.com/buildthomas/Rain
