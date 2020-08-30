@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Promise = require(ReplicatedStorage.Lib.Promise)
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
@@ -120,12 +121,36 @@ function InstanceWrapper:RunModule(module_name, ...)
 end
 
 function InstanceWrapper:GetNetworkChannel()
-    if not self._instance then
+    if not self._instance or self._destroyed then
         return
     end
     if not self._remoteEvent then
         if RunService:IsClient() then
-            self._remoteEvent = self:GetInstance():WaitForChild("COMM_EVENT")
+            -- promisify the waitforchild, to disconnect on object destruction
+            local promise = Promise.new(function(resolve, _, onCancel)
+                local COMM_EVENT = self:GetInstance():FindFirstChild("COMM_EVENT")
+                if not COMM_EVENT then
+                    local event
+                    event = self:GetInstance().DescendantAdded:Connect(function(descendant)
+                        if descendant.Name == "COMM_EVENT" and descendant:IsA("RemoteEvent") then
+                            event:Disconnect()
+                            resolve(descendant)
+                        end
+                    end)
+                    onCancel(
+                        function()
+                            event:Disconnect()
+                        end
+                    )
+                else
+                    resolve(COMM_EVENT)
+                end
+            end)
+            self._maid:GiveTask(function()
+                promise:cancel()
+            end)
+            local _, re = promise:await()
+            self._remoteEvent = re
         else
             if self:FindFirstChild("COMM_EVENT") then
                 self._remoteEvent = self:FindFirstChild("COMM_EVENT")
