@@ -58,6 +58,32 @@ function InstanceWrapper:FindFirstChild(...)
     return self:GetInstance():FindFirstChild(...)
 end
 
+function InstanceWrapper:WaitForChildPromise(child)
+    local promise = Promise.new(function(resolve, _, onCancel)
+        local found = self:GetInstance():FindFirstChild(child)
+        if not found then
+            local event
+            event = self:GetInstance().DescendantAdded:Connect(function(descendant)
+                if descendant.Name == child then
+                    event:Disconnect()
+                    resolve(descendant)
+                end
+            end)
+            onCancel(
+                function()
+                    event:Disconnect()
+                end
+            )
+        else
+            resolve(found)
+        end
+    end)
+    self._maid:GiveTask(function()
+        promise:cancel()
+    end)
+    return promise
+end
+
 function InstanceWrapper:GetAttribute(attribute_name)
     if not self._instance then
         return
@@ -126,31 +152,7 @@ function InstanceWrapper:GetNetworkChannel()
     end
     if not self._remoteEvent then
         if RunService:IsClient() then
-            -- promisify the waitforchild, to disconnect on object destruction
-            local promise = Promise.new(function(resolve, _, onCancel)
-                local COMM_EVENT = self:GetInstance():FindFirstChild("COMM_EVENT")
-                if not COMM_EVENT then
-                    local event
-                    event = self:GetInstance().DescendantAdded:Connect(function(descendant)
-                        if descendant.Name == "COMM_EVENT" and descendant:IsA("RemoteEvent") then
-                            event:Disconnect()
-                            resolve(descendant)
-                        end
-                    end)
-                    onCancel(
-                        function()
-                            event:Disconnect()
-                        end
-                    )
-                else
-                    resolve(COMM_EVENT)
-                end
-            end)
-            self._maid:GiveTask(function()
-                promise:cancel()
-            end)
-            local _, re = promise:await()
-            self._remoteEvent = re
+            self._remoteEvent = self:WaitForChildPromise("COMM_EVENT"):expect()
         else
             if self:FindFirstChild("COMM_EVENT") then
                 self._remoteEvent = self:FindFirstChild("COMM_EVENT")
@@ -164,6 +166,7 @@ function InstanceWrapper:GetNetworkChannel()
     end
     if not self._networkChannel then
         self._networkChannel = NetworkChannel.new(self.Name, self._remoteEvent)
+        self._maid:GiveTask(self._networkChannel)
     end
     return self._networkChannel
 end
