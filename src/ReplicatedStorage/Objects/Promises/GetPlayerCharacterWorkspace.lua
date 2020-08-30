@@ -19,7 +19,7 @@ return function(player)
                     end
                 )
             else
-                resolve(player.Character)
+                resolve(player.Character, player)
             end
         end
     )
