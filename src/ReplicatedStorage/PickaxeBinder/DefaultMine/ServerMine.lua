@@ -31,7 +31,7 @@ return function(tool)
         function(effect, caller, animation)
             assert(player == caller, "Called by unexpected player!")
             local animation_effect =
-                require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(animation, humanoid, nil, nil, speed)
+                require(ReplicatedStorage.Objects.Combat.Effects.Yielding.AnimationEffect).new(animation, humanoid, nil, nil, speed * 1.1)
             animation_effect:Start()
             wait(animation_effect:GetTotalTime())
             effect:Yield()
@@ -44,7 +44,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "HIT",
-        1 / speed / 5,
+        1/60,
         function(effect, caller, part, pos)
             assert(player == caller, "Called by unexpected player!")
             if not part then

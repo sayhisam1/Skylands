@@ -44,17 +44,9 @@ return function(tool)
 				maid:GiveTask(
 					UserInputService.InputBegan:Connect(
 						function(input, gameProcessedEvent)
-							local backpackCapacity = ClientPlayerData:GetStore("BackpackCapacity"):getState()
-							local plrOreCount = ClientPlayerData:GetStore("OreCount"):getState()
-							if plrOreCount >= backpackCapacity then
-								GuiController:PromptBackpackFull()
-								return
-							end
+
 							if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not gameProcessedEvent then
-								while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-									toolInstance:Activate()
-									wait(.2)
-								end
+								toolInstance:Activate()
 							end
 						end
 					)
@@ -86,12 +78,27 @@ return function(tool)
 	tool._maid:GiveTask(
 		toolInstance.Activated:Connect(
 			function()
+				local backpackCapacity = ClientPlayerData:GetStore("BackpackCapacity"):getState()
+				local plrOreCount = ClientPlayerData:GetStore("OreCount"):getState()
+				if plrOreCount >= backpackCapacity then
+					GuiController:PromptBackpackFull()
+					return
+				end
 				local character = toolInstance.Parent
 				if character ~= game.Players.LocalPlayer.Character then
 					return
 				end
 				local action = tool:GetAttribute("MineAction") or script.Parent.DefaultMine
-				pickaxeAttackContext:MakeAttack(require(action)(tool))
+				action = require(action)(tool)
+				if pickaxeAttackContext:CanMakeAttack(action) then
+					action.Stopped:Connect(function()
+						if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+							RunService.Heartbeat:Wait()
+							toolInstance:Activate()
+						end
+					end)
+					pickaxeAttackContext:MakeAttack(action)
+				end
 			end
 		)
 	)

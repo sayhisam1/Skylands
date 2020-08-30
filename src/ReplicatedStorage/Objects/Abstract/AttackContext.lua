@@ -22,11 +22,7 @@ local function isTableEmpty(tbl)
     return true
 end
 
-function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
-    if not self._enabled then
-        return false
-    end
-    cooldown = math.abs(cooldown or 0)
+function AttackContext:CanMakeAttack(attack, is_exclusive)
     is_exclusive = is_exclusive or true
     local name = attack.Name
     if self._coolingDownAttacks[name] or self._runningAttacks[name] then
@@ -37,11 +33,28 @@ function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
         self:Log(1, "Attack", name, "is already running!")
         return false
     end
+    return true
+end
+
+function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
+    if not self._enabled then
+        self:Log(1, "Failed to make attack - disabled!")
+        return false
+    end
+    cooldown = math.abs(cooldown or 0)
+    is_exclusive = is_exclusive or true
+    local name = attack.Name
+    self:Log(1, "Attempting to make attack", name)
+
+    if not self:CanMakeAttack(attack, is_exclusive) then
+        return false
+    end
 
     self._runningAttacks[name] = attack
     self._maid:GiveTask(
         attack.Stopped:Connect(
             function()
+                self:Log(1, "Attack", name, "stopping!", tick())
                 self._runningAttacks[name] = nil
                 self._maid[attack] = nil
                 if cooldown > 0.03 then
@@ -54,8 +67,8 @@ function AttackContext:MakeAttack(attack, cooldown, is_exclusive)
             end
         )
     )
-    self._maid[attack] = attack
-    self:Log(1, "Attack", name, "starting!")
+    self._maid[name] = attack
+    self:Log(1, "Attack", name, "starting!", tick())
     attack:Start()
     return attack
 end

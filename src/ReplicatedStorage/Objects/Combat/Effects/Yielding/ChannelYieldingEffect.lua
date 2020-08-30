@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local YieldingEffect = require(ReplicatedStorage.Objects.Combat.Abstract.YieldingEffect)
 
@@ -34,7 +35,7 @@ function ChannelYieldingEffect:Wait()
 
     local start_t = tick()
     while tick() - start_t < MAX_YIELD_TIME and self._running and completed == false do
-        wait()
+        RunService.Heartbeat:Wait()
     end
 
     return completed or ((tick() - start_t < MAX_YIELD_TIME) and self._running)
