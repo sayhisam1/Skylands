@@ -9,5 +9,6 @@ return {
         Backpack = "BACKPACK",
         Pet = "PET",
         PetDispenser = "PET_DISPENSER",
+        Title = "TITLE"
     }
 }

@@ -15,8 +15,8 @@ return function(target)
             SelectedPets = {
                 [1000] = clank1
             },
-            MaxPetStorageSlots = 10,
-            MaxSelectedPets = 10,
+            MaxPetStorageSlots = 13,
+            MaxSelectedPets = 24,
             Pets = {
                 [1001] = clank2
             },

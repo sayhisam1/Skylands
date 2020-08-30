@@ -115,28 +115,38 @@ local PetInventoryList = Roact.Component:extend("PetInventoryList")
 
 function PetInventoryList:render()
     local petComponents = {}
-    for id, v in pairs(self.props.Pets) do
-        petComponents[id] =
-            Roact.createElement(
-            PetInventoryButton,
-            {
-                Pet = v,
-                setRenderedPet = self.props.setRenderedPet
-            }
-        )
-    end
+    local skip = (self.props.CurrentPage - 1) * 12
+    local buttons = 0
     for id, v in pairs(self.props.SelectedPets) do
-        petComponents[id] =
-            Roact.createElement(
-            PetInventoryButton,
-            {
-                Pet = v,
-                setRenderedPet = self.props.setRenderedPet,
-                Selected = true
-            }
-        )
+        skip = skip - 1
+        if skip < 0 then
+            buttons = buttons + 1
+            petComponents[id] =
+                Roact.createElement(
+                PetInventoryButton,
+                {
+                    Pet = v,
+                    setRenderedPet = self.props.setRenderedPet,
+                    Selected = true
+                }
+            )
+        end
     end
-    for i = 1, self.props.NumEmptySlots do
+    for id, v in pairs(self.props.Pets) do
+        skip = skip - 1
+        if skip < 0 then
+            buttons = buttons + 1
+            petComponents[id] =
+                Roact.createElement(
+                PetInventoryButton,
+                {
+                    Pet = v,
+                    setRenderedPet = self.props.setRenderedPet
+                }
+            )
+        end
+    end
+    for i = 1, 12 - buttons do
         petComponents[i] = Roact.createElement(PetInventoryButton)
     end
 

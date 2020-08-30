@@ -60,7 +60,7 @@ function gui:render()
                     ShadowedText,
                     {
                         Font = Enum.Font.GothamBold,
-                        Text = string.format("%.1f%%", v * 100),
+                        Text = string.format("%3.1f%%", v * 100),
                         TextScaled = true,
                         BackgroundTransparency = 1,
                         TextColor3 = Color3.new(1, 1, 1),
@@ -146,23 +146,26 @@ function gui:render()
                 {
                     Size = UDim2.new(.35, 0, .3, 0),
                     Position = UDim2.new(0.15, 0, .65, 0),
-                    Image = "rbxassetid://5013924810"
+                    Image = "rbxassetid://5629921147"
                 },
                 {
-                    ShadowText = Roact.createElement(ShadowedText, {
-                        Font = Enum.Font.GothamBold,
-                        Text = string.format("%d", self.props.Dispenser:GetAttribute("GemCost")),
-                        TextScaled = true,
-                        BackgroundTransparency = 1,
-                        TextColor3 = Color3.fromRGB(248, 110, 110),
-                        TextStrokeColor3 = Color3.fromRGB(255, 255, 255),
-                        TextStrokeTransparency = 0,
-                        Size = UDim2.new(1,0,1,0),
-                        Position = UDim2.new(0, 0, 0, 0),
-                        ShadowTextColor3 = Color3.fromRGB(255, 255, 255),
-                        ShadowOffset = UDim2.new(0.02, 0, 0.02, 0),
-                        ZIndex = 10
-                    })
+                    ShadowText = Roact.createElement(
+                        ShadowedText,
+                        {
+                            Font = Enum.Font.GothamBold,
+                            Text = string.format("%d", self.props.Dispenser:GetAttribute("GemCost")),
+                            TextScaled = true,
+                            BackgroundTransparency = 1,
+                            TextColor3 = Color3.fromRGB(248, 110, 110),
+                            TextStrokeColor3 = Color3.fromRGB(255, 255, 255),
+                            TextStrokeTransparency = 0,
+                            Size = UDim2.new(1, 0, 1, 0),
+                            Position = UDim2.new(0, 0, 0, 0),
+                            ShadowTextColor3 = Color3.fromRGB(255, 255, 255),
+                            ShadowOffset = UDim2.new(0.02, 0, 0.02, 0),
+                            ZIndex = 10
+                        }
+                    )
                 }
             ),
             BuyButton = Roact.createElement(

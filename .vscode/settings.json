@@ -3,5 +3,8 @@
     "files.trimFinalNewlines": true,
     "lua.format.lineWidth": 150,
     "lua.luacheckPath": "",
-    "lua.format.linebreakMultipleAssignments": true
+    "lua.format.linebreakMultipleAssignments": true,
+    "Lua.diagnostics.ignore": [
+        "Playername"
+    ]
 }

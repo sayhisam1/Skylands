@@ -26,17 +26,20 @@ local AssetFinder = {}
 local ORES,
     PICKAXES,
     BACKPACKS,
-    PETS
+    PETS,
+    TITLES
 if RunService:IsRunning() then
     ORES = ReplicatedStorage:WaitForChild("Ores")
     PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
     PETS = ReplicatedStorage:WaitForChild("Pets")
     BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
+    TITLES = ReplicatedStorage:WaitForChild("Titles")
 else
     ORES = Workspace:WaitForChild("Ores")
     PICKAXES = Workspace:WaitForChild("Pickaxes")
     PETS = Workspace:WaitForChild("Pets")
     BACKPACKS = Workspace:WaitForChild("Backpacks")
+    TITLES = Workspace:WaitForChild("Titles")
 end
 
 function AssetFinder.FindOre(name)
@@ -91,6 +94,24 @@ end
 
 function AssetFinder.GetBackpacks()
     return BACKPACKS
+end
+
+
+local SORTED_TITLES = TITLES:GetChildren()
+
+table.sort(SORTED_TITLES, function(a, b)
+    return a.TotalOresMined.Value < b.TotalOresMined.Value
+end)
+
+function AssetFinder.GetTitleForCount(count)
+    local currTitle = SORTED_TITLES[1]
+    for _, v in pairs(SORTED_TITLES) do
+        if v.TotalOresMined.Value > count then
+            break
+        end
+        currTitle = v
+    end
+    return currTitle:FindFirstChildWhichIsA("BillboardGui")
 end
 
 return AssetFinder

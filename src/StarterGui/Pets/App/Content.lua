@@ -4,13 +4,15 @@ local Roact = require(ReplicatedStorage.Lib.Roact)
 local PetInventoryList = require(script.Parent:WaitForChild("PetInventoryList"))
 local PetViewport = require(script.Parent:WaitForChild("PetViewport"))
 local PetIndicatorButton = require(script.Parent:WaitForChild("PetIndicatorButton"))
+local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 
 local PetContentComponent = Roact.Component:extend("PetContent")
-
+local PageSelector = require(script.Parent.PageSelector)
 function PetContentComponent:init()
     self:setState(
         {
-            renderedPetId = 0
+            renderedPetId = 0,
+            currentPage = 1
         }
     )
 end
@@ -20,6 +22,13 @@ function PetContentComponent:render()
         self:setState(
             {
                 renderedPet = data or Roact.None
+            }
+        )
+    end
+    local function setCurrentPage(pagenum)
+        self:setState(
+            {
+                currentPage = pagenum
             }
         )
     end
@@ -58,6 +67,20 @@ function PetContentComponent:render()
                             end
                         }
                     ),
+                    PageSelection = Roact.createElement(
+                        "Frame",
+                        {
+                            Size = UDim2.new(.25, 0, .2, 0),
+                            Position = UDim2.new(0.3, 0, 0.01, 0),
+                            BackgroundTransparency = 1,
+                        },
+                        {
+                            Roact.createElement(PageSelector, {
+                                setCurrentPage = setCurrentPage,
+                                CurrentPage = self.state.currentPage
+                            })
+                        }
+                    ),
                     PetList = Roact.createElement(
                         "Frame",
                         {
@@ -78,18 +101,24 @@ function PetContentComponent:render()
                             PetList = Roact.createElement(
                                 PetInventoryList,
                                 {
-                                    setRenderedPet = setRenderedPet
+                                    setRenderedPet = setRenderedPet,
+                                    CurrentPage = self.state.currentPage
                                 }
                             )
                         }
                     ),
                     PetViewport = Roact.createElement(
-                        "Frame",
+                        AnimatedContainer,
                         {
-                            Size = UDim2.new(.32, 0, .9, 0),
+                            [AnimatedContainer.Damping] = self.state[AnimatedContainer.Damping] or .7,
+                            [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
+                            [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or
+                                {
+                                    Size = self.state.renderedPet and UDim2.new(.32, 0, .9, 0) or UDim2.new(0,0,0,0),
+                                },
                             Position = UDim2.new(.65, 0, .05, 0),
-                            BackgroundColor3 = Color3.fromRGB(97, 140, 177),
-                            BorderSizePixel = 0
+                            Size = self.state.renderedPet and UDim2.new(0, 0, 0, 0) or UDim2.new(.32, 0, .9, 0),
+                            BackgroundTransparency = 1,
                         },
                         {
                             Viewport = Roact.createElement(
@@ -97,7 +126,7 @@ function PetContentComponent:render()
                                 {
                                     renderedPet = self.state.renderedPet,
                                     makePopup = self.props.makePopup,
-                                    setRenderedPet = setRenderedPet,
+                                    setRenderedPet = setRenderedPet
                                 }
                             ),
                             UICorner = Roact.createElement(

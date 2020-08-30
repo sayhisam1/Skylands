@@ -80,7 +80,7 @@ function PetViewport:render()
             Roact.createElement(
             "TextButton",
             {
-                Text="",
+                Text = "",
                 Size = UDim2.new(.9, 0, .1, 0),
                 AnchorPoint = Vector2.new(.5, 1),
                 BorderSizePixel = 0,
@@ -104,19 +104,22 @@ function PetViewport:render()
                         CornerRadius = UDim.new(.2, 0)
                     }
                 ),
-                ShadowedText = Roact.createElement(ShadowedText, {
-                    Font = Enum.Font.GothamBold,
-                    Text = data.Selected and " UNEQUIP " or " EQUIP ",
-                    TextScaled = true,
-                    BackgroundTransparency = 1,
-                    TextColor3 = Color3.new(1, 1, 1),
-                    TextStrokeTransparency = 1,
-                    Size = UDim2.new(1, 0, 1, 0),
-                    Position = UDim2.new(.5, 0, 0, 0),
-                    AnchorPoint = Vector2.new(.5, 0),
-                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
-                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                })
+                ShadowedText = Roact.createElement(
+                    ShadowedText,
+                    {
+                        Font = Enum.Font.GothamBold,
+                        Text = data.Selected and " UNEQUIP " or " EQUIP ",
+                        TextScaled = true,
+                        BackgroundTransparency = 1,
+                        TextColor3 = Color3.new(1, 1, 1),
+                        TextStrokeTransparency = 1,
+                        Size = UDim2.new(1, 0, 1, 0),
+                        Position = UDim2.new(.5, 0, 0, 0),
+                        AnchorPoint = Vector2.new(.5, 0),
+                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0)
+                    }
+                )
             }
         )
         children["Delete"] =
@@ -228,19 +231,22 @@ function PetViewport:render()
                         CornerRadius = UDim.new(.2, 0)
                     }
                 ),
-                ShadowedText = Roact.createElement(ShadowedText, {
-                    Font = Enum.Font.GothamBold,
-                    Text = "DELETE",
-                    TextScaled = true,
-                    BackgroundTransparency = 1,
-                    TextColor3 = Color3.new(1, 1, 1),
-                    TextStrokeTransparency = 1,
-                    Size = UDim2.new(1, 0, 1, 0),
-                    Position = UDim2.new(.5, 0, 0, 0),
-                    AnchorPoint = Vector2.new(.5, 0),
-                    ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
-                    ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                })
+                ShadowedText = Roact.createElement(
+                    ShadowedText,
+                    {
+                        Font = Enum.Font.GothamBold,
+                        Text = "DELETE",
+                        TextScaled = true,
+                        BackgroundTransparency = 1,
+                        TextColor3 = Color3.new(1, 1, 1),
+                        TextStrokeTransparency = 1,
+                        Size = UDim2.new(1, 0, 1, 0),
+                        Position = UDim2.new(.5, 0, 0, 0),
+                        AnchorPoint = Vector2.new(.5, 0),
+                        ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
+                        ShadowOffset = UDim2.new(0.01, 0, 0.01, 0)
+                    }
+                )
             }
         )
 
@@ -254,14 +260,14 @@ function PetViewport:render()
                     IconFrame,
                     {
                         ZIndex = 1000,
-                        Image = v.Image,
+                        Image = v.Image
                     },
                     {
                         GoldMultiplier = Roact.createElement(
                             ShadowedText,
                             {
                                 Font = Enum.Font.GothamBold,
-                                Text = string.format("%.3fx", mult),
+                                Text = string.format("%3.2fx", mult),
                                 TextScaled = true,
                                 TextColor3 = Color3.fromRGB(255, 255, 255),
                                 TextStrokeTransparency = 1,
@@ -285,7 +291,7 @@ function PetViewport:render()
                 Position = UDim2.new(.5, 0, .45, 0),
                 AnchorPoint = Vector2.new(.5, 0),
                 BorderSizePixel = 0,
-                BackgroundTransparency = 1,
+                BackgroundTransparency = 1
             },
             {
                 UIGridLayout = Roact.createElement(

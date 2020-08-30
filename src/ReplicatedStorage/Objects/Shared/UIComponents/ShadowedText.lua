@@ -8,6 +8,12 @@ ShadowedText.defaultProps = {
     TextScaled = true,
     TextSize = 12,
     ZIndex = 1,
+    TextStrokeTransparency = 1,
+    TextColor3 = Color3.fromRGB(255, 255, 255),
+    Font = Enum.Font.GothamBold,
+    Size = UDim2.new(1, 0, 1, 0),
+    Position = UDim2.new(0, 0, 0, 0),
+    ShadowOffset = UDim2.new(.1, 0, .1, 0)
 }
 function ShadowedText:render()
     return Roact.createFragment(
@@ -33,7 +39,7 @@ function ShadowedText:render()
             ShadowText = Roact.createElement(
                 "TextLabel",
                 {
-                    BackgroundTransparency = 1,
+                    BackgroundTransparency = self.props.BackgroundTransparency,
                     TextStrokeColor3 = self.props.ShadowTextStrokeColor3,
                     TextStrokeTransparency = self.props.ShadowTextStrokeTransparency,
                     TextColor3 = self.props.ShadowTextColor3,
