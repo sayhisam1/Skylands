@@ -119,7 +119,7 @@ function PetInventoryList:render()
     local buttons = 0
     for id, v in pairs(self.props.SelectedPets) do
         skip = skip - 1
-        if skip < 0 then
+        if skip < 0 and buttons < 12 then
             buttons = buttons + 1
             petComponents[id] =
                 Roact.createElement(
@@ -134,7 +134,7 @@ function PetInventoryList:render()
     end
     for id, v in pairs(self.props.Pets) do
         skip = skip - 1
-        if skip < 0 then
+        if skip < 0 and buttons < 12 then
             buttons = buttons + 1
             petComponents[id] =
                 Roact.createElement(

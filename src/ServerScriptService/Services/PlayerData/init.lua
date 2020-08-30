@@ -117,6 +117,26 @@ function Service:Unload()
     self._maid:Destroy()
 end
 
+function Service:SetLeaderstat(plr, statname, val)
+    local leaderstats = plr:FindFirstChild("leaderstats")
+    if not leaderstats then
+        leaderstats = Instance.new("Folder")
+        leaderstats.Name = "leaderstats"
+        leaderstats.Parent = plr
+    end
+    local stat = leaderstats:FindFirstChild(statname)
+    if not stat then
+        if typeof(val) == "number" then
+            stat = Instance.new("NumberValue")
+        elseif typeof(val) == "string" then
+            stat = Instance.new("StringValue")
+        end
+        stat.Name = statname
+        stat.Parent = leaderstats
+    end
+    stat.Value = val
+end
+
 function Service:GetStore(plr, key)
     assert(plr and plr:IsA("Player"), "Not a player!")
     assert(KEYS[key], string.format("%s is not a valid key!", key))
@@ -171,6 +191,19 @@ function Service:GetStore(plr, key)
                 playerData[plr.UserId][key].changed:connect(
                     function(new, old)
                         ds:Set(new)
+                    end
+                )
+            )
+        end
+
+        if keyData.Leaderstat then
+            self._maid:GiveTask(
+                playerData[plr.UserId][key].changed:connect(
+                    function(new, old)
+                        if keyData.LeaderstatFunction then
+                            new = keyData.LeaderstatFunction(new)
+                        end
+                        self:SetLeaderstat(plr, keyData.LeaderstatName, new)
                     end
                 )
             )

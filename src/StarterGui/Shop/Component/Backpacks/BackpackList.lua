@@ -1,4 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local NumberToStr = require(ReplicatedStorage.Utils.NumberToStr)
+
 local BACKPACKS = ReplicatedStorage:WaitForChild("Backpacks")
 
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
@@ -297,7 +299,7 @@ function BackpackList:render()
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedBackpackData.GoldCost),
+                                            Text = string.format("%s", NumberToStr(highlightedBackpackData.GoldCost)),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -317,7 +319,7 @@ function BackpackList:render()
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedBackpackData.Capacity),
+                                            Text = string.format("%s", NumberToStr(highlightedBackpackData.Capacity)),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -392,7 +394,7 @@ function BackpackList:render()
                         ZIndex = 999
                     },
                     TextProps = {
-                        Text = string.format("Your coins: %d", Services.ClientPlayerData:GetStore("Gold"):getState()),
+                        Text = string.format("Your coins: %s", NumberToStr(Services.ClientPlayerData:GetStore("Gold"):getState())),
                         TextColor3 = Color3.fromRGB(255, 255, 255),
                         ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
                         Font = Enum.Font.GothamBold,

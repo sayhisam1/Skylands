@@ -19,11 +19,16 @@ return function(pet)
 			return GetPlayerCharacterWorkspace(plr)
 		end
 	):andThen(
-		function(character)
+		function(character, player)
 			local welding = pet:GetAttribute("PetWeld") or script.Parent.PetWeld
 			require(welding)(pet, character)
+			local abilities = require(pet:WaitForChildPromise("Abilities"):expect())
+			for name, v in pairs(abilities) do
+				pet._maid[name] = v.LoadClient(pet, player)
+			end
 		end
-	):catch(function()
+	):catch(function(...)
+		pet:Log(3, "[CRITICAL] Failed client setup with error:\n", ...)
 	end)
 
 	pet._maid:GiveTask(

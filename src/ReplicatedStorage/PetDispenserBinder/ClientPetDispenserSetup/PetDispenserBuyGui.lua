@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
+local NumberToStr = require(ReplicatedStorage.Utils.NumberToStr)
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 
@@ -153,7 +153,7 @@ function gui:render()
                         ShadowedText,
                         {
                             Font = Enum.Font.GothamBold,
-                            Text = string.format("%d", self.props.Dispenser:GetAttribute("GemCost")),
+                            Text = string.format("%s", NumberToStr(self.props.Dispenser:GetAttribute("GemCost"))),
                             TextScaled = true,
                             BackgroundTransparency = 1,
                             TextColor3 = Color3.fromRGB(248, 110, 110),

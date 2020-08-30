@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local NumberToStr = require(ReplicatedStorage.Utils.NumberToStr)
 local PICKAXES = ReplicatedStorage:WaitForChild("Pickaxes")
 
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
@@ -298,7 +299,7 @@ function PickaxeButtons:render()
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedPickaxeData.GoldCost),
+                                            Text = string.format("%s", NumberToStr(highlightedPickaxeData.GoldCost)),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -319,7 +320,7 @@ function PickaxeButtons:render()
                                         "TextLabel",
                                         {
                                             Size = UDim2.new(1, 0, 1, 0),
-                                            Text = string.format(" %d", highlightedPickaxeData.Damage),
+                                            Text = string.format("%s", NumberToStr(highlightedPickaxeData.Damage)),
                                             TextColor3 = Color3.fromRGB(255, 187, 0),
                                             BackgroundTransparency = 1,
                                             Font = Enum.Font.GothamBold,
@@ -415,7 +416,7 @@ function PickaxeButtons:render()
                         ZIndex = 999
                     },
                     TextProps = {
-                        Text = string.format("Your coins: %d", Services.ClientPlayerData:GetStore("Gold"):getState()),
+                        Text = string.format("Your coins: %s", NumberToStr(Services.ClientPlayerData:GetStore("Gold"):getState())),
                         TextColor3 = Color3.fromRGB(255, 255, 255),
                         ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
                         Font = Enum.Font.GothamBold,

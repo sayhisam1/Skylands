@@ -54,7 +54,7 @@ return function(tool)
             if not ore and pos then
                 -- add lag compensaton by predicton which block the player meant to mine
                 local dirVec = (pos - caller.Character.PrimaryPart.Position).Unit
-                ore = OreBinder:GetNearestOreNeighbor(dirVec * 3.5 + pos)
+                ore = OreBinder:GetNearestOreNeighbor(dirVec * 5 + pos)
             end
             assert(ore, "Unabled to reference ore " .. part:GetFullName())
             local critChance = tool:GetAttribute("CritChance")

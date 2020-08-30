@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
 local Pet = setmetatable({}, InstanceWrapper)
 
@@ -33,12 +34,26 @@ function Pet:GetCharacter()
     return self:GetInstance().Parent
 end
 
+function Pet:GetAbilityContext()
+    if not self._abilityContext then
+        self._abilityContext = AttackContext.new()
+        self._maid["AbilityContext"] = self._abilityContext
+    end
+    return self._abilityContext
+end
+
 function Pet:Setup()
     if self._isSetup or self._destroyed then
         return
     end
     if not self._instance:IsDescendantOf(Players) then
         return
+    end
+    if RunService:IsClient() then
+        local PlayerGui = game.Players.LocalPlayer.PlayerGui
+        if self._instance:IsDescendantOf(PlayerGui) then
+            return
+        end
     end
     self._maid["SetupHook"] = nil
     self._isSetup = true
