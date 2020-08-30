@@ -20,7 +20,7 @@ setup:AddSetupTask(
 	end
 )
 
-local titles = script.Parent:GetChildren()
+local titles = AssetSetup.RecursiveFilterIgnoreRoot(script.Parent, "Folder")
 setup:Setup(titles)
 
 local dummies = AssetSetup.RecursiveFilter(script.Parent, "Model")

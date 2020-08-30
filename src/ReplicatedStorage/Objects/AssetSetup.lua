@@ -77,4 +77,27 @@ function AssetSetup.RecursiveFilter(root, type, ignored_types, ret)
     return ret
 end
 
+function AssetSetup.RecursiveFilterIgnoreRoot(root, type, ignored_types, ret)
+    ignored_types = ignored_types or {"Script", "ModuleScript", "LocalScript"}
+    ret = ret or {}
+    for _, child in pairs(root:GetChildren()) do
+        if child:IsA(type) then
+            ret[#ret + 1] = child
+        else
+            local ignored = false
+            for _, t in pairs(ignored_types) do
+                if root:IsA(t) then
+                    ignored = true
+                    break
+                end
+            end
+            if not ignored then
+                AssetSetup.RecursiveFilter(child, type, ignored_types, ret)
+            end
+        end
+    end
+
+    return ret
+end
+
 return AssetSetup
