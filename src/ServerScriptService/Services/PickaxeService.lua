@@ -25,12 +25,14 @@ function Service:Load()
             )
         )
         self:ValidatePlayer(plr)
+        local pickaxe = self:LookupPickaxe(selectedPickaxe:getState())
+        self:SetPlayerPickaxe(plr, pickaxe)
     end
     self:HookPlayerAction(setupPlayer)
 end
 
 local function removePickaxes(plr)
-    local starterGear = plr.StarterGear
+    local starterGear = plr:WaitForChild("StarterGear")
     for _, v in pairs(starterGear:GetChildren()) do
         v:Destroy()
     end
@@ -55,7 +57,7 @@ local function addPickaxe(plr, pickaxe)
 end
 
 function Service:SetPlayerPickaxe(plr, pickaxe)
-    self:Log(2, "SETTING PICKAXE", plr, pickaxe)
+    self:Log(3, "SETTING PICKAXE", plr, pickaxe)
     removePickaxes(plr)
     addPickaxe(plr, pickaxe)
 end

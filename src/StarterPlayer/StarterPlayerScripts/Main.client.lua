@@ -1,27 +1,19 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local WaitForChildPromise = require(ReplicatedStorage.Objects.Promises.WaitForChildPromise)
+local Player = game:GetService("Players").LocalPlayer
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local RunService = game:GetService("RunService")
-local DEBUGMODE = RunService:IsStudio()
+WaitForChildPromise(Player, "DataLoaded"):andThen(function()
+    ReplicatedStorage:WaitForChild("GameLoaded")
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-ReplicatedStorage:WaitForChild("GameLoaded")
+    local PlayerScripts = Player:WaitForChild("PlayerScripts")
+    local SERVICE_DIR = PlayerScripts:WaitForChild("Services")
+    local ServiceLoader = require(ReplicatedStorage.Objects.Shared.Services.ServiceLoader).new(SERVICE_DIR)
+    _G.Services = ServiceLoader.ServiceTable
 
-local Player = game:GetService("Players").LocalPlayer
-local PlayerScripts = Player:WaitForChild("PlayerScripts")
-local SERVICE_DIR = PlayerScripts:WaitForChild("Services")
-local ServiceLoader = require(ReplicatedStorage.Objects.Shared.Services.ServiceLoader).new(SERVICE_DIR)
-_G.Services = ServiceLoader.ServiceTable
-
-ServiceLoader:PrefetchServices()
-ServiceLoader:LoadAllServices()
-
--- if DEBUGMODE then
---     local TestRunner = require(ReplicatedStorage.Tests.TestRunner)
---     TestRunner:RunAll()
--- end
-
--- local Rain = require(ReplicatedStorage.Lib.Rain)
--- Rain:Enable()
--- Rain:SetIntensityRatio(.1)
+    ServiceLoader:PrefetchServices()
+    ServiceLoader:LoadAllServices()
+end)

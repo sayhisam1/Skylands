@@ -87,7 +87,7 @@ function Service:_getGuiMaid(name)
     return self._maids[name]
 end
 
-function Service:SetGuiVisible(gui_name, visible)
+function Service:SetGuiVisible(gui_name, visible, ...)
     local maid = self:_getGuiMaid(gui_name)
     if visible and maid["Close"] then
         return
@@ -99,7 +99,7 @@ function Service:SetGuiVisible(gui_name, visible)
     local gui = PlayerGui:WaitForChild(gui_name, 5)
     assert(gui, "Invalid gui_name " .. gui_name)
     if gui:FindFirstChild("Load") then
-        maid["Close"] = require(gui:FindFirstChild("Load"))()
+        maid["Close"] = require(gui:FindFirstChild("Load"))(...)
     else
         gui.Enabled = true
         maid["Close"] = function()
@@ -108,9 +108,9 @@ function Service:SetGuiVisible(gui_name, visible)
     end
 end
 
-function Service:SetGuiGroupVisible(group, visible)
+function Service:SetGuiGroupVisible(group, visible, ...)
     for _, v in pairs(group) do
-        self:SetGuiVisible(v, visible)
+        self:SetGuiVisible(v, visible, ...)
     end
     if group == self.GUI_GROUPS.Core then
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, visible)

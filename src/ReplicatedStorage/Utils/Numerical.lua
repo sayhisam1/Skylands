@@ -41,4 +41,15 @@ function module.randSpherical()
 	return Vector3.new(module.sphericalToCartesian(theta, phi))
 end
 
+-- returns a parabola generator from start -> end, given acceleration
+function module.BallisticMotion(s, e, accel)
+	local d = e-s
+	-- d(t) = v_i*t + 1/2*a*t^2
+	-- need to find vi s.t. d(1) + s = e
+	local v_i = -.5*accel + d
+	return function(t)
+		return s + v_i*t + .5*accel*t^2
+	end
+end
+
 return module

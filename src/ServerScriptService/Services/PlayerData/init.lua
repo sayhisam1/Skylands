@@ -72,6 +72,9 @@ function Service:Load()
     self:HookPlayerAction(
         function(plr)
             self:Log(1, "Player joined", plr.Name)
+            for key, v in pairs(KEYS) do
+                local store = self:GetStore(plr, key)
+            end
             local lastVisitTime = self:GetStore(plr, "LastVisitTime")
             lastVisitTime:dispatch(
                 {
@@ -79,6 +82,10 @@ function Service:Load()
                     Value = tick()
                 }
             )
+            local DataLoaded = Instance.new("BoolValue")
+            DataLoaded.Name = "DataLoaded"
+            DataLoaded.Value = true
+            DataLoaded.Parent = plr
         end
     )
 

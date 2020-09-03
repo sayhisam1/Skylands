@@ -1,6 +1,14 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local NumberToStr = require(ReplicatedStorage.Utils.NumberToStr)
+
 return {
     Stateful = true,
     DEFAULT_VALUE = 0,
+    Leaderstat = true,
+    LeaderstatName = "Gold",
+    LeaderstatFunction = function(num)
+        return NumberToStr(num)
+    end,
     Reducer = function(currentState, action)
         if action.type == "Set" then
             assert(action.Value, "Invalid Value!")

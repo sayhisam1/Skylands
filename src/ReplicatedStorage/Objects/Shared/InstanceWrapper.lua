@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local Promise = require(ReplicatedStorage.Lib.Promise)
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
+local WaitForChildPromise = require(ReplicatedStorage.Objects.Promises.WaitForChildPromise)
 local InstanceWrapper = setmetatable({}, BaseObject)
 
 InstanceWrapper.__index = InstanceWrapper
@@ -59,25 +59,7 @@ function InstanceWrapper:FindFirstChild(...)
 end
 
 function InstanceWrapper:WaitForChildPromise(child)
-    local promise = Promise.new(function(resolve, _, onCancel)
-        local found = self:GetInstance():FindFirstChild(child)
-        if not found then
-            local event
-            event = self:GetInstance().DescendantAdded:Connect(function(descendant)
-                if descendant.Name == child then
-                    event:Disconnect()
-                    resolve(descendant)
-                end
-            end)
-            onCancel(
-                function()
-                    event:Disconnect()
-                end
-            )
-        else
-            resolve(found)
-        end
-    end)
+    local promise = WaitForChildPromise(self:GetInstance(), child)
     self._maid:GiveTask(function()
         promise:cancel()
     end)

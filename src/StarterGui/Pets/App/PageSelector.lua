@@ -46,7 +46,7 @@ function PageSelector:render()
                     Text = Roact.createElement(
                         ShadowedText,
                         {
-                            ShadowOffset = UDim2.new(.04, 0, .03, 0),
+                            ShadowOffset = UDim2.new(.03, 0, .03, 0),
                             Size = UDim2.new(.8, 0, .8, 0),
                             Position = UDim2.new(.5, 0, .5, 0),
                             AnchorPoint = Vector2.new(.5, .5),

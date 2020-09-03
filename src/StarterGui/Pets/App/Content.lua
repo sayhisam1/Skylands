@@ -61,7 +61,7 @@ function PetContentComponent:render()
                             Size = UDim2.new(.25, 0, .2, 0),
                             Position = UDim2.new(0.03, 0, 0.01, 0),
                             BackgroundColor3 = Color3.fromRGB(110, 160, 204),
-                            Image = "http://www.roblox.com/asset/?id=5580190056",
+                            Image = "rbxassetid://5644766906",
                             TextGetter = function(state)
                                 return string.format("%d/%d", state.NumSelectedPets, state.MaxSelectedPets)
                             end

@@ -6,7 +6,7 @@ return {
     Ordered = true,
     DEFAULT_VALUE = 0,
     Leaderstat = true,
-    LeaderstatName = "Blocks Mined",
+    LeaderstatName = "Ores Mined",
     LeaderstatFunction = function(num)
         return NumberToStr(num)
     end,

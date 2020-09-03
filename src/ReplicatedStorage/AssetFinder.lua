@@ -11,7 +11,7 @@ if RunService:IsServer() or not RunService:IsRunning() then
         dir.Name = "TEMPORARY_ASSETS"
         dir.Parent = ServerStorage
     end
-    ASSET_TEMP_DIR =  ServerStorage:FindFirstChild("TEMPORARY_ASSETS")
+    ASSET_TEMP_DIR = ServerStorage:FindFirstChild("TEMPORARY_ASSETS")
 else
     if not Lighting:FindFirstChild("TEMPORARY_ASSETS") then
         local dir = Instance.new("Folder")
@@ -96,22 +96,26 @@ function AssetFinder.GetBackpacks()
     return BACKPACKS
 end
 
+if RunService:IsRunning() then
+    local SORTED_TITLES = TITLES:GetChildren()
 
-local SORTED_TITLES = TITLES:GetChildren()
-
-table.sort(SORTED_TITLES, function(a, b)
-    return a.TotalOresMined.Value < b.TotalOresMined.Value
-end)
-
-function AssetFinder.GetTitleForCount(count)
-    local currTitle = SORTED_TITLES[1]
-    for _, v in pairs(SORTED_TITLES) do
-        if v.TotalOresMined.Value > count then
-            break
+    table.sort(
+        SORTED_TITLES,
+        function(a, b)
+            return a.TotalOresMined.Value < b.TotalOresMined.Value
         end
-        currTitle = v
+    )
+
+    function AssetFinder.GetTitleForCount(count)
+        local currTitle = SORTED_TITLES[1]
+        for _, v in pairs(SORTED_TITLES) do
+            if v.TotalOresMined.Value > count then
+                break
+            end
+            currTitle = v
+        end
+        return currTitle:FindFirstChildWhichIsA("BillboardGui")
     end
-    return currTitle:FindFirstChildWhichIsA("BillboardGui")
 end
 
 return AssetFinder
