@@ -12,7 +12,7 @@ local Players = game:GetService("Players")
 local DataStore2 = require(ReplicatedStorage.Lib.DataStore2)
 
 local DATA_SAVE_TIMER = 60
-
+local Promise = require(ReplicatedStorage.Lib.Promise)
 local Rodux = require(ReplicatedStorage.Lib.Rodux)
 
 local KeysDir = script.Keys
@@ -71,21 +71,26 @@ function Service:Load()
     self:HookPlayerAction(
         function(plr)
             self:Log(1, "Player joined", plr.Name)
+            local promises = {}
             for key, v in pairs(KEYS) do
-                local store = self:GetStore(plr, key)
-                self:Log(1, "\t", key, "store loaded with val", store:getState())
+                promises[#promises + 1] = Promise.new(function(resolve)
+                    local store = self:GetStore(plr, key)
+                    resolve(store)
+                end)
             end
-            local lastVisitTime = self:GetStore(plr, "LastVisitTime")
-            lastVisitTime:dispatch(
-                {
-                    type = "Set",
-                    Value = tick()
-                }
-            )
-            local DataLoaded = Instance.new("BoolValue")
-            DataLoaded.Name = "DataLoaded"
-            DataLoaded.Value = true
-            DataLoaded.Parent = plr
+            Promise.all(promises):andThen(function()
+                local lastVisitTime = self:GetStore(plr, "LastVisitTime")
+                lastVisitTime:dispatch(
+                    {
+                        type = "Set",
+                        Value = tick()
+                    }
+                )
+                local DataLoaded = Instance.new("BoolValue")
+                DataLoaded.Name = "DataLoaded"
+                DataLoaded.Value = true
+                DataLoaded.Parent = plr
+            end)
         end
     )
 
