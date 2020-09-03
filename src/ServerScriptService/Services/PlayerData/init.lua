@@ -74,6 +74,7 @@ function Service:Load()
             self:Log(1, "Player joined", plr.Name)
             for key, v in pairs(KEYS) do
                 local store = self:GetStore(plr, key)
+                self:Log(1, "\t", key, "store loaded with val", store:getState())
             end
             local lastVisitTime = self:GetStore(plr, "LastVisitTime")
             lastVisitTime:dispatch(
