@@ -72,6 +72,9 @@ function InstanceWrapper:GetAttribute(attribute_name)
     end
     local attribute = self:GetInstance():FindFirstChild(attribute_name)
     if attribute then
+        if attribute:IsA("ModuleScript") then
+            return attribute
+        end
         return attribute.Value
     end
 end
