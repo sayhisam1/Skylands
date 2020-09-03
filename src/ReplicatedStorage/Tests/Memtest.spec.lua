@@ -3,7 +3,7 @@ return function()
     -- local Services = require(ReplicatedStorage.Services)
     -- local ORES = ReplicatedStorage:WaitForChild("Ores")
     -- local TEST_ORE = ORES:WaitForChild("Rubiksium")
-    -- local OreBinder = require(ReplicatedStorage.OreBinder)
+    -- local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
     -- describe(
     --     "memtest",
     --     function()

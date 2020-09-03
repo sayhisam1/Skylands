@@ -37,7 +37,6 @@ local ORDERED_DATASTORE_KEYS =
     end
 )
 
-
 DataStore2.Combine("BETA_DATA", unpack(DATASTORE_KEYS))
 
 local playerData = {}

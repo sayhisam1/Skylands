@@ -46,6 +46,7 @@ function Service:GetStore(key)
                 end
             end
         )
+        self:FlushCache()
     end
     self:Log(1, "Getting store for", key, self._stores[key]:getState())
     return self._stores[key]

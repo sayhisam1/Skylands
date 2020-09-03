@@ -4,7 +4,7 @@ local WALL_MATERIAL = ORES:WaitForChild("Bedrock")
 
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 
-local OreBinder = require(ReplicatedStorage.OreBinder)
+local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
 local SPAWNED_ORES = OreBinder:GetOresDirectory()
 
 local Quarry = setmetatable({}, BaseObject)

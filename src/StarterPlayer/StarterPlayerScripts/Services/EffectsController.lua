@@ -5,8 +5,6 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"ClientPlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
-local player = game.Players.LocalPlayer
-local PlayerScripts = player:WaitForChild("PlayerScripts")
 local CLIENT_HOOKS = ReplicatedStorage:WaitForChild("CLIENT_HOOKS")
 
 local registeredEffects = {}

@@ -66,7 +66,7 @@ function AssetFinder.GetPickaxes()
     return PICKAXES
 end
 
-local PetBinder = require(ReplicatedStorage.PetBinder)
+local PetBinder = require(ReplicatedStorage.Binders.PetBinder)
 function AssetFinder.FindPet(name)
     local asset = PETS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then

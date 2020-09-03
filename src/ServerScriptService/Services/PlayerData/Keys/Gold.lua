@@ -5,7 +5,7 @@ return {
     Stateful = true,
     DEFAULT_VALUE = 0,
     Leaderstat = true,
-    LeaderstatName = "Gold",
+    LeaderstatName = "Gold 💰",
     LeaderstatFunction = function(num)
         return NumberToStr(num)
     end,

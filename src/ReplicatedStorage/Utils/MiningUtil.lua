@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local OreBinder = require(ReplicatedStorage.OreBinder)
+local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
 local SPAWNED_ORES = OreBinder:GetOresDirectory()
 
 local module = {}

@@ -4,7 +4,7 @@ return function()
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local ORES = ReplicatedStorage:WaitForChild("Ores")
     local MockPlayer = require(ReplicatedStorage.Objects.Shared.MockPlayer)
-    local OreBinder = require(ReplicatedStorage.OreBinder)
+    local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
     -- monkeypatch IsPlayer --
     -- local ds2 = ReplicatedStorage.Lib.DataStore2
     -- local isplayer = ds2.IsPlayer

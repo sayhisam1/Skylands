@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local OreBinder = require(ReplicatedStorage.OreBinder)
+local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
 
 local BLOCK_SIZE = 7
 return function(context, depth)

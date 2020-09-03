@@ -4,7 +4,7 @@ local ATTACK_NAME = "Mining"
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local OreBinder = require(ReplicatedStorage.OreBinder)
+local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
 local Attack = require(ReplicatedStorage.Objects.Combat.Abstract.Attack)
 local AttackPhase = require(ReplicatedStorage.Objects.Combat.Abstract.AttackPhase)
 local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
