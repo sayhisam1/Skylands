@@ -8,9 +8,9 @@ Chest.__index = Chest
 Chest.ClassName = script.Name
 
 function Chest.new(instance)
-    assert(type(instance) == "userdata" and instance:IsA("Tool"), "Invalid Chest!")
+    assert(type(instance) == "userdata" and instance:IsA("Model"), "Invalid Chest!")
     local self = setmetatable(InstanceWrapper.new(instance), Chest)
-
+    self:Log(3, "Creating chest", instance:GetFullName())
     self:Setup()
     return self
 end
