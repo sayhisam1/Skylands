@@ -1,5 +1,4 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
 local Services = require(ReplicatedStorage.Services)
 
 local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
@@ -18,7 +17,7 @@ function Ore.new(instance)
 end
 
 function Ore:IsMineable()
-    return not self:GetAttribute("Unmineable") and not self._destroyed and self:GetInstance():IsDescendantOf(Workspace)
+    return not self:GetAttribute("Unmineable") and not self._destroyed
 end
 
 function Ore:SetCFrame(cframe)
