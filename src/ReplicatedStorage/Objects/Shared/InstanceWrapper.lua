@@ -4,6 +4,7 @@ local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
 local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
 local WaitForChildPromise = require(ReplicatedStorage.Objects.Promises.WaitForChildPromise)
+local MakeRobloxVal = require(ReplicatedStorage.Utils.MakeRobloxVal)
 local InstanceWrapper = setmetatable({}, BaseObject)
 
 InstanceWrapper.__index = InstanceWrapper
@@ -85,18 +86,7 @@ function InstanceWrapper:SetAttribute(attribute_name, value)
     end
     local attribute = self:GetInstance():FindFirstChild(attribute_name)
     if not attribute then
-        if typeof(value) == "number" then
-            attribute = Instance.new("NumberValue")
-        elseif typeof(value) == "string" then
-            attribute = Instance.new("StringValue")
-        elseif typeof(value) == "Vector3" then
-            attribute = Instance.new("Vector3Value")
-        elseif typeof(value) == "boolean" then
-            attribute = Instance.new("BoolValue")
-        elseif value:IsA("Instance") then
-            attribute = Instance.new("ObjectValue")
-        end
-        attribute.Name = attribute_name
+        attribute = MakeRobloxVal(attribute_name, value)
         attribute.Parent = self:GetInstance()
     end
     attribute.Value = value
