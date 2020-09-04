@@ -2,7 +2,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
-local DEPENDENCIES = {}
+local DEPENDENCIES = {"ClientPlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
 local BINDERS = ReplicatedStorage.Binders:GetChildren()
