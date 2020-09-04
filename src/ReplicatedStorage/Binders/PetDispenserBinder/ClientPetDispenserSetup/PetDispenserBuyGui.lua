@@ -28,6 +28,17 @@ function gui:render()
     local petChoices = require(self.props.Dispenser:FindFirstChild("PetProbabilities")):GetNormalizedProbabilities()
     local choices = {}
     for k, v in pairs(petChoices) do
+        choices[#choices+1] = {
+            Pet = k,
+            Probability = v
+        }
+    end
+    table.sort(choices, function(a,b)
+        return a.Probability > b.Probability
+    end)
+    for i, curr in pairs(choices) do
+        local k = curr.Pet
+        local v = curr.Probability
         local petName = k:GetAttribute("DisplayName")
         local component =
             Roact.createElement(
@@ -36,7 +47,8 @@ function gui:render()
                 Size = UDim2.new(1, 0, 1, 0),
                 Position = UDim2.new(.5, 0, 0, 0),
                 RenderedModel = k:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 1)
+                CameraCFrame = CFrame.new(0, 0, 1),
+                LayoutOrder = i,
             },
             {
                 PetName = Roact.createElement(
@@ -76,7 +88,7 @@ function gui:render()
                 UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint")
             }
         )
-        choices[#choices + 1] = component
+        choices[i] = component
     end
     choices = Roact.createFragment(choices)
 
@@ -229,7 +241,8 @@ function gui:render()
                                 "UIGridLayout",
                                 {
                                     CellSize = UDim2.new(0, 100, 0, 100),
-                                    CellPadding = UDim2.new(0, 10, 0, 10)
+                                    CellPadding = UDim2.new(0, 10, 0, 10),
+                                    SortOrder = Enum.SortOrder.LayoutOrder
                                 }
                             ),
                             choices
