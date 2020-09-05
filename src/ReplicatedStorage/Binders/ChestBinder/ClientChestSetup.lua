@@ -80,7 +80,7 @@ return function(chest)
 				if min == 0 and sec == 0 then
 					textLabel.Text = string.format("%s", "READY!")
 				else
-					textLabel.Text = string.format("%d:%d", min, sec)
+					textLabel.Text = string.format("%.2d:%.2d", min, sec)
 				end
 			end
 			wait(.5)

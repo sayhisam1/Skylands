@@ -1,3 +1,4 @@
+local Debris = game:GetService("Debris")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = require(ReplicatedStorage.Services)
@@ -18,9 +19,10 @@ return function(chest)
 				type="Set",
 				Value=currTime
 			})
-			local meteor = CreateMeteor("Daily Reward", 1, 1000, 0)
+			local meteor = CreateMeteor("Daily Reward", 1, 1000, math.ceil(math.random()*500 + 300))
 			meteor:GetInstance().Parent = plr
-			chestChannel:Publish("OpenClient", meteor:GetInstance())
+			chestChannel:PublishPlayer(plr, "OpenClient", meteor:GetInstance())
+			Debris:AddItem(meteor:GetInstance(), 60)
 		end
 	end)
 end
