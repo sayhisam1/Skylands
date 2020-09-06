@@ -118,7 +118,7 @@ function Service:Load()
                         local ds = DataStoreService:GetOrderedDataStore(k)
                         ds:SetAsync(plr.UserId, playerData[plr.UserId][k]:getState())
                     end
-                    wait()
+                    wait(1)
                 end
             end
         end

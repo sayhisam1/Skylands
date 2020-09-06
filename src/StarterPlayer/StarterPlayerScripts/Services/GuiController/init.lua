@@ -23,6 +23,9 @@ Service.GUI_GROUPS = {
     Pets = {
         "Pets"
     },
+    Rebirth = {
+        "Rebirth"
+    },
     Core = {}
 }
 
