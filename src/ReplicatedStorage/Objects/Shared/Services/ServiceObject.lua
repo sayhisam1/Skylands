@@ -61,6 +61,7 @@ function Service.new(name)
         event.Name = self.Name
         event.Parent = REMOTE_DIR
         self._networkchannel = NetworkChannel.new(self.Name, event)
+        self._maid:GiveTask(self._networkchannel)
     end
     if IsClient then
         self._serverChannels = {}
