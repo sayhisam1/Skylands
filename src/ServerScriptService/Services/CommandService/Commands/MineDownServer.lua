@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local OreBinder = require(ReplicatedStorage.Binders.OreBinder)
 
 local BLOCK_SIZE = 7
@@ -13,6 +14,9 @@ return function(context, depth)
 				local ore = OreBinder:GetNearestOreNeighbor(blockPos)
 				if ore then
 					ore:Destroy()
+					if i%10 == 0 then
+						RunService.Heartbeat:Wait()
+					end
 				end
 			end
 		end
