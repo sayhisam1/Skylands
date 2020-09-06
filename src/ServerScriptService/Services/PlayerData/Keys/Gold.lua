@@ -4,6 +4,7 @@ local NumberToStr = require(ReplicatedStorage.Utils.NumberToStr)
 return {
     Stateful = true,
     DEFAULT_VALUE = 0,
+    Ordered = true,
     Leaderstat = true,
     LeaderstatName = "Gold 💰",
     LeaderstatFunction = function(num)
