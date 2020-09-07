@@ -74,7 +74,7 @@ function Service:Load()
             local promises = {}
             for key, v in pairs(KEYS) do
                 promises[#promises + 1] = Promise.new(function(resolve)
-                    local store = self:GetStore(plr, key)
+                    local store = self:InitializeStore(plr, key)
                     resolve(store)
                 end)
             end
@@ -149,7 +149,7 @@ function Service:SetLeaderstat(plr, statname, val)
     stat.Value = val
 end
 
-function Service:GetStore(plr, key)
+function Service:InitializeStore(plr, key)
     assert(plr and plr:IsA("Player"), "Not a player!")
     assert(KEYS[key], string.format("%s is not a valid key!", key))
     if not playerData[plr.UserId] then
@@ -224,6 +224,21 @@ function Service:GetStore(plr, key)
 
     self:Log(1, "Got player data", key, playerData[plr.UserId][key]:getState())
     return playerData[plr.UserId][key]
+end
+
+function Service:GetStore(plr, key)
+    assert(plr and plr:IsA("Player"), "Not a player!")
+    assert(KEYS[key], string.format("%s is not a valid key!", key))
+    local promise = Promise.new(function(resolve)
+        while not playerData[plr.UserId] do
+            RunService.Heartbeat:Wait()
+        end
+        while not playerData[plr.UserId][key] do
+            RunService.Heartbeat:Wait()
+        end
+        resolve(playerData[plr.UserId][key])
+    end)
+    return promise:expect()
 end
 
 function Service:ResetPlayerDataKey(plr, key)
