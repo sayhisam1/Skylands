@@ -1,7 +1,7 @@
-
 local module = {}
 module.CalculateCost = function(n)
-    local cost = 1E6 * n^2
+    n = n + 1
+    local cost = 1E6 * n ^ 2
     return cost
 end
 
