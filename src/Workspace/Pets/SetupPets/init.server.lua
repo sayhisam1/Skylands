@@ -23,6 +23,33 @@ setup:AddRequiredChild(
 	end
 )
 
+setup:AddRequiredChild(
+	"GoldMultiplier",
+	function(pet)
+		local numVal = Instance.new("NumberValue")
+		numVal.Value = 1
+		return numVal
+	end
+)
+
+setup:AddRequiredChild(
+	"CriticalMultiplier",
+	function(pet)
+		local numVal = Instance.new("NumberValue")
+		numVal.Value = 1
+		return numVal
+	end
+)
+
+setup:AddRequiredChild(
+	"SpeedMultiplier",
+	function(pet)
+		local numVal = Instance.new("NumberValue")
+		numVal.Value = 1
+		return numVal
+	end
+)
+
 setup:AddSetupTask(
 	function(pet)
 		ModelUtil.SetAnchored(pet, false)
