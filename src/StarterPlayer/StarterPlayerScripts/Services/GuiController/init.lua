@@ -26,6 +26,9 @@ Service.GUI_GROUPS = {
     Rebirth = {
         "Rebirth"
     },
+    BackpackFull = {
+        "BackpackFull"
+    },
     Core = {}
 }
 
@@ -74,10 +77,7 @@ function Service:Unload()
 end
 
 function Service:PromptBackpackFull()
-    local backpackFullGui = PlayerGui:FindFirstChild("BackpackFull")
-    if not backpackFullGui.Enabled then
-        backpackFullGui.Enabled = true
-    end
+    self:SetGuiVisible("BackpackFull", true)
 end
 
 function Service:_getGuiMaid(name)
