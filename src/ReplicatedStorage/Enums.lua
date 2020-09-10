@@ -10,6 +10,7 @@ return {
         Pet = "PET",
         PetDispenser = "PET_DISPENSER",
         Title = "TITLE",
-        Chest = "CHEST"
+        Chest = "CHEST",
+        Leaderboard = "LEADERBOARD",
     }
 }
