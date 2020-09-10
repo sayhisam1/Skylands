@@ -100,6 +100,10 @@ function Service:Load()
                 if not RunService:IsStudio() then
                     DataStore2.SaveAll(plr)
                 end
+                for k, v in pairs(ORDERED_DATASTORE_KEYS) do
+                    local ds = DataStoreService:GetOrderedDataStore(k)
+                    ds:SetAsync(plr.UserId, playerData[plr.UserId][k]:getState())
+                end
                 for _, v in pairs(playerData[plr.UserId]) do
                     v:destruct()
                 end
