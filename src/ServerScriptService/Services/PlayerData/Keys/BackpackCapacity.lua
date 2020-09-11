@@ -1,5 +1,4 @@
 return {
-    Stateful = true,
     DEFAULT_VALUE = 0,
     Reducer = function(currentState, action)
         if action.type == "Set" then
