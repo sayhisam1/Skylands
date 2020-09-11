@@ -17,9 +17,9 @@ if IsServer then
         return state[category] and state[category]["TOTAL_MULTIPLIER"] or 1
     end
 
-    function module.AddPlayerMultiplier(player, category, multiplier)
+    function module.AddPlayerMultiplier(player, category, multiplier, id)
         local store = PlayerData:GetStore(player, "ActiveMultipliers")
-        local id = HttpService:GenerateGUID(false)
+        id = id or HttpService:GenerateGUID(false)
         store:dispatch(
             {
                 type = "AddMultiplier",

@@ -14,6 +14,8 @@ function Service:Load()
     local maid = self._maid
 
     local function setupPlayer(plr)
+        self:Log(3, "Setup plr pets", plr)
+        self:ValidatePlayer(plr)
         local pets = self.Services.PlayerData:GetStore(plr, "Pets")
         maid:GiveTask(
             pets.changed:connect(
@@ -29,7 +31,7 @@ function Service:Load()
                 end
             )
         )
-        self:ValidatePlayer(plr)
+        self:SetPlayerPets(plr, pets:getState())
     end
     self:HookPlayerAction(setupPlayer)
 

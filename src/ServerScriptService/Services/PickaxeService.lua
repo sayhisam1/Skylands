@@ -15,6 +15,7 @@ function Service:Load()
 
     local function setupPlayer(plr)
         self:Log(2, "Setting up pickaxe for", plr)
+        self:ValidatePlayer(plr)
         local selectedPickaxe = PlayerData:GetStore(plr, "SelectedPickaxe")
         maid:GiveTask(
             selectedPickaxe.changed:connect(
@@ -24,7 +25,6 @@ function Service:Load()
                 end
             )
         )
-        self:ValidatePlayer(plr)
         local pickaxe = self:LookupPickaxe(selectedPickaxe:getState())
         self:SetPlayerPickaxe(plr, pickaxe)
     end

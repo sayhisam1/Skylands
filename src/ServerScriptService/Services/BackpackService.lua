@@ -15,6 +15,7 @@ function Service:Load()
 
     local function setupPlayer(plr)
         self:Log(2, "Setting up backpacks for", plr)
+        self:ValidatePlayer(plr)
         local selectedBackpack = PlayerData:GetStore(plr, "SelectedBackpack")
         maid:GiveTask(
             selectedBackpack.changed:connect(
@@ -30,7 +31,7 @@ function Service:Load()
                 end
             )
         )
-        self:ValidatePlayer(plr)
+        self:SetPlayerBackpack(plr, AssetFinder.FindBackpack(selectedBackpack:getState()))
     end
     self:HookPlayerAction(setupPlayer)
 end
