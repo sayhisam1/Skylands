@@ -265,8 +265,8 @@ function PickaxeButtons:render()
                     BackgroundTransparency = 1,
                     Size = UDim2.new(.3, 0, .7, 0),
                     Position = UDim2.new(.4, 0, .15, 0),
-                    CameraCFrame = CFrame.new(0, 0, 6),
-                    ModelCFrame = CFrame.Angles(0, math.pi / 8, math.pi / 8),
+                    CameraCFrame = CFrame.new(0, 0, 5),
+                    -- ModelCFrame = CFrame.Angles(0, math.pi / 8, math.pi / 8),
                     BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 },
                 {

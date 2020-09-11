@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Roact = require(ReplicatedStorage.Lib.Roact)
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
 local ViewportContainer = Roact.Component:extend("ViewportContainer")
@@ -93,12 +94,23 @@ local function viewportUpdate(self)
     camera.CFrame = CFrame.new(camera.CFrame.Position, modelCFrame.Position)
     ref.CurrentCamera = camera
     renderedModel.Parent = ref
+    self.renderedModel = renderedModel
     self.state.maid:GiveTask(camera)
     self.state.maid:GiveTask(renderedModel)
 end
 
 function ViewportContainer:didMount()
     viewportUpdate(self)
+    self.running = true
+    coroutine.wrap(function()
+        while self.running do
+            if self.renderedModel then
+                local old_cf = self.renderedModel.PrimaryPart.CFrame
+                self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/200, 0))
+            end
+            RunService.Heartbeat:Wait()
+        end
+    end)()
 end
 
 function ViewportContainer:didUpdate()
@@ -106,6 +118,8 @@ function ViewportContainer:didUpdate()
 end
 
 function ViewportContainer:willUnmount()
+    self.running = false
+    self.renderedModel = nil
     self.state.maid:Destroy()
 end
 

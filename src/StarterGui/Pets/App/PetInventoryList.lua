@@ -64,7 +64,7 @@ function PetInventoryButton:render()
                 Position = UDim2.new(.5, 0, .5, 0),
                 AnchorPoint = Vector2.new(.5, .5),
                 RenderedModel = pet:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 1) * CFrame.Angles(math.pi / 4, math.pi / 4, math.pi / 4),
+                CameraCFrame = CFrame.new(0, 0, 3),
                 ZIndex = 22
             },
             {

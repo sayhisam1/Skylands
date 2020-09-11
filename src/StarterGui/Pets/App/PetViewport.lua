@@ -36,7 +36,7 @@ function PetViewport:render()
                 Position = UDim2.new(.5, 0, 0, 0),
                 AnchorPoint = Vector2.new(.5, 0),
                 RenderedModel = pet:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 1)
+                CameraCFrame = CFrame.new(0, 0, 3)
             },
             {
                 PetName = Roact.createElement(

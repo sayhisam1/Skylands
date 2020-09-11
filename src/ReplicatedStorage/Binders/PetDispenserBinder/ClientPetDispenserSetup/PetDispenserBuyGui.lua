@@ -47,7 +47,7 @@ function gui:render()
                 Size = UDim2.new(1, 0, 1, 0),
                 Position = UDim2.new(.5, 0, 0, 0),
                 RenderedModel = k:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 1),
+                CameraCFrame = CFrame.new(0, 0, 3),
                 LayoutOrder = i,
             },
             {
