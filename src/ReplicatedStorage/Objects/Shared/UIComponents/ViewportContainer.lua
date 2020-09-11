@@ -37,6 +37,16 @@ local function setInstanceCFrame(instance, cframe)
     end
 end
 
+ViewportContainer.defaultProps = {
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 1, 0),
+    Position = UDim2.new(.5, 0, .5, 0),
+    AnchorPoint = Vector2.new(.5, .5),
+    ShadowOffset = UDim2.new(.1, 0, .1, 0),
+    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+    BorderSizePixel = 0,
+}
+
 function ViewportContainer:init()
     self.viewportRef = Roact.createRef()
     self:setState(
@@ -50,12 +60,12 @@ function ViewportContainer:render()
     return Roact.createElement(
         "ViewportFrame",
         {
-            BackgroundTransparency = self.props.BackgroundTransparency or 1,
+            BackgroundTransparency = self.props.BackgroundTransparency,
             Size = self.props.Size,
             Position = self.props.Position,
-            AnchorPoint = self.props.AnchorPoint or Vector2.new(0, 0),
-            BackgroundColor3 = self.props.BackgroundColor3 or Color3.fromRGB(0, 0, 0),
-            BorderSizePixel = self.props.BorderSizePixel or 0,
+            AnchorPoint = self.props.AnchorPoint,
+            BackgroundColor3 = self.props.BackgroundColor3,
+            BorderSizePixel = self.props.BorderSizePixel,
             [Roact.Ref] = self.viewportRef
         },
         self.props[Roact.Children]
