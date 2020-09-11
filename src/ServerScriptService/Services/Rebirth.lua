@@ -3,6 +3,7 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"PlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 local CalculateRebirth = require(ReplicatedStorage.StoreWrappers.CalculateRebirth)
+local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
 
 local REBIRTH_ID = "REBIRTH_MULT"
 function Service:Load()
@@ -54,14 +55,7 @@ function Service:AddRebirthMultipliers(plr, rebirths)
     )
     local newMultipliers = CalculateRebirth.CalculateMultipliers(rebirths)
     for category, mult in pairs(newMultipliers) do
-        multipliers:dispatch(
-            {
-                type = "AddMultiplier",
-                Category = category,
-                Id = REBIRTH_ID,
-                Multiplier = mult
-            }
-        )
+        Multipliers.AddPlayerMultiplier(plr, category, mult, REBIRTH_ID)
     end
 end
 
