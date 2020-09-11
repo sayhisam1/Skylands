@@ -19,7 +19,7 @@ return function(chest)
 				type="Set",
 				Value=currTime
 			})
-			local meteor = CreateMeteor("Daily Reward", 1, 1000, math.ceil(math.random()*500 + 300))
+			local meteor = CreateMeteor("Reward Chest", 1, 1000, math.ceil(math.random()*500 + 300))
 			meteor:GetInstance().Parent = plr
 			chestChannel:PublishPlayer(plr, "OpenClient", meteor:GetInstance())
 			Debris:AddItem(meteor:GetInstance(), 60)

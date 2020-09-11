@@ -52,7 +52,7 @@ function AssetSetup:Setup(assets)
     local be = Instance.new("BindableEvent")
     for name, msg in pairs(errors) do
         local conn = be.Event:Connect(error)
-        be:Fire("Failed to setup" .. name .. " with error:\n" .. msg)
+        be:Fire("Failed to setup " .. name .. " with error:\n" .. msg)
         conn:Disconnect()
     end
     be:Destroy()
