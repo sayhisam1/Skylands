@@ -34,13 +34,18 @@ return function(leaderboard)
                                 Players:GetUserThumbnailAsync(tonumber(curr.key), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
                             newText.CharacterPic.Image = headshot
                         end
-                    )
+                    ):catch(function()
+
+                    end)
+
                     Promise.new(
                         function(resolve)
                             local name = Players:GetNameFromUserIdAsync(tonumber(curr.key))
                             newText.PlayerName.Text = name
                         end
-                    )
+                    ):catch(function()
+
+                    end)
                     newText.Value.Text = NumberToStr(curr.value)
                     newText.LayoutOrder = i
                     newText.Parent = sf
