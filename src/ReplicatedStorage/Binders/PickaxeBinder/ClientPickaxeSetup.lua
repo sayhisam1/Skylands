@@ -58,8 +58,16 @@ return function(tool)
 				maid:GiveTask(
 					UserInputService.InputBegan:Connect(
 						function(input, gameProcessedEvent)
-
-							if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not gameProcessedEvent then
+							if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent then
+								toolInstance:Activate()
+							end
+						end
+					)
+				)
+				maid:GiveTask(
+					UserInputService.TouchTapInWorld:Connect(
+						function(_, processedByUI)
+							if not processedByUI then
 								toolInstance:Activate()
 							end
 						end
