@@ -17,10 +17,5 @@ return function(pet)
 			maid:GiveTask(Multipliers.AddPlayerMultiplier(petPlayer, m, mult))
 		end
 	end
-	if pet:FindFirstChild("Abilities") then
-		local abilities = require(pet:FindFirstChild("Abilities"))
-		for i, v in pairs(abilities) do
-			pet._maid[i] = v.LoadServer(pet, petPlayer)
-		end
-	end
+	pet:SetupAbilities(petPlayer)
 end

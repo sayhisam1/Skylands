@@ -25,6 +25,7 @@ function Service:Load()
             event:Disconnect()
             event2:disconnect()
         end
+        self:GiveTitle(plr)
     end)
 end
 

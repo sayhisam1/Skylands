@@ -11,7 +11,7 @@ Service:AddDependencies(DEPENDENCIES)
 local Players = game:GetService("Players")
 local DataStore2 = require(ReplicatedStorage.Lib.DataStore2)
 
-local DATA_SAVE_TIMER = 60
+local DATA_SAVE_TIMER = 300
 local Promise = require(ReplicatedStorage.Lib.Promise)
 local Rodux = require(ReplicatedStorage.Lib.Rodux)
 
@@ -37,7 +37,7 @@ local ORDERED_DATASTORE_KEYS =
     end
 )
 
-DataStore2.Combine("BETA_DATA", unpack(DATASTORE_KEYS))
+DataStore2.Combine("BETA_DATA", unpack(TableUtil.keys(DATASTORE_KEYS)))
 
 local playerData = {}
 function Service:Load()
@@ -70,7 +70,7 @@ function Service:Load()
 
     self:HookPlayerAction(
         function(plr)
-            self:Log(1, "Player joined", plr.Name)
+            self:Log(3, "Player joined", plr.Name)
             local promises = {}
             for key, v in pairs(KEYS) do
                 promises[#promises + 1] = Promise.new(function(resolve)
@@ -161,6 +161,7 @@ function Service:InitializeStore(plr, key)
     end
 
     if not playerData[plr.UserId][key] then
+        self:Log(3, "Initialize store", plr, key)
         local keyData = KEYS[key]
         local reducer = keyData.Reducer
         local defaultValue = keyData.DEFAULT_VALUE

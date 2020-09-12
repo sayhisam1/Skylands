@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
+local Event = require(ReplicatedStorage.Objects.Shared.Event)
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
 local Pet = setmetatable({}, InstanceWrapper)
 
@@ -34,12 +34,37 @@ function Pet:GetCharacter()
     return self:GetInstance().Parent
 end
 
-function Pet:GetAbilityContext()
-    if not self._abilityContext then
-        self._abilityContext = AttackContext.new()
-        self._maid["AbilityContext"] = self._abilityContext
+function Pet:GetAbilityButtonPressedSignal()
+    assert(RunService:IsClient(), "Can only be called on client!")
+    local Services = require(ReplicatedStorage.Services)
+    local GuiController = Services.GuiController
+    if not self._abilityButtonPressed then
+        self._abilityButtonPressed = Event.new()
+        self._maid["AbilityButtonPressed"] = self._abilityButtonPressed
+        local destroy, transparency = GuiController:AddPetAbilityButton(self:GetInstance(), function(...)
+            self._abilityButtonPressed:Fire(...)
+        end)
+        self._maid["AbilityButton"] = destroy
+        self._updateTransparency = transparency
     end
-    return self._abilityContext
+    return self._abilityButtonPressed, self._updateTransparency
+end
+
+function Pet:SetupAbilities(player)
+    local abilities
+    if RunService:IsClient() and game.Players.LocalPlayer == player then
+        abilities = self:WaitForChildPromise("Abilities"):expect()
+    else
+        abilities = self:FindFirstChild("Abilities")
+    end
+    self:Log(3, "Setup abilities", abilities:GetChildren())
+    for _, v in pairs(abilities:GetChildren()) do
+        if RunService:IsClient() then
+            self._maid[v.Name] = require(v).LoadClient(self, player)
+        else
+            self._maid[v.Name] = require(v).LoadServer(self, player)
+        end
+    end
 end
 
 function Pet:Setup()

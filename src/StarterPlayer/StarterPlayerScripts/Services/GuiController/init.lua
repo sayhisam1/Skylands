@@ -32,8 +32,12 @@ Service.GUI_GROUPS = {
     Core = {}
 }
 
+local Sidebar, PetAbilities = nil, nil
+
 function Service:Load()
     local maid = self._maid
+    Sidebar = PlayerGui:WaitForChild("Sidebar")
+    PetAbilities = Sidebar:WaitForChild("Left"):WaitForChild("PetAbilities")
     local plr = game.Players.LocalPlayer
     if self.TableUtil.contains(ADMINS, plr.UserId) then
         local Cmdr = require(ReplicatedStorage:WaitForChild("CmdrClient"))
@@ -50,15 +54,10 @@ function Service:Load()
         )
     )
 
-    local ClientPlayerData = self.Services.ClientPlayerData
-    local coinStore = ClientPlayerData:GetStore("Gold")
-    maid:GiveTask(
-        coinStore.changed:connect(
-            function(new, old)
-                CoinRain:Run(game.Players.LocalPlayer)
-            end
-        )
-    )
+    local store_nc = self:GetServerNetworkChannel("Shop")
+    store_nc:Subscribe("COIN_RAIN", function()
+        CoinRain:Run(game.Players.LocalPlayer)
+    end)
 
     local function resetGuis()
         for _, v in pairs(self.GUI_GROUPS) do
@@ -74,6 +73,22 @@ end
 function Service:Unload()
     self._maid:Destroy()
     PlayerGui:ClearAllChildren()
+end
+
+function Service:GetPetAbilitiesGui()
+    return PetAbilities
+end
+
+function Service:AddPetAbilityButton(model, callback)
+    local CreatePetAbility = require(script:WaitForChild("CreatePetAbility"))
+    return CreatePetAbility(model, callback)
+end
+
+function Service:GetBlockIndicatorRender()
+    local BlockIndicator = PlayerGui:WaitForChild("BlockIndicator")
+    local Container = BlockIndicator:WaitForChild("Container")
+    local Render = Container:WaitForChild("Render")
+    return require(Render)
 end
 
 function Service:PromptBackpackFull()

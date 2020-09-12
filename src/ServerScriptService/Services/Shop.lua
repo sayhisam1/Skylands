@@ -13,6 +13,8 @@ local CollectionService = game:GetService("CollectionService")
 function Service:Load()
     local maid = self._maid
 
+    local network_channel = self:GetNetworkChannel()
+
     local function loadShop(shop_part)
         maid:GiveTask(
             shop_part.Touched:Connect(
@@ -44,6 +46,7 @@ function Service:Load()
                                     Value = 0
                                 }
                             )
+                            network_channel:PublishPlayer(plr, "COIN_RAIN")
                         end
                     end
                 end
@@ -63,7 +66,6 @@ function Service:Load()
         loadShop(part)
     end
 
-    local network_channel = self:GetNetworkChannel()
     maid:GiveTask(
         network_channel:Subscribe(
             "REQUEST_SHOP_TELEPORT",

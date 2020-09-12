@@ -5,6 +5,9 @@ local Services = require(ReplicatedStorage.Services)
 local ClientPlayerData = Services.ClientPlayerData
 local GuiController = Services.GuiController
 
+local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
+local BlockIndicatorRender = GuiController:GetBlockIndicatorRender()
+
 local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
 local MiningUtil = require(ReplicatedStorage.Utils.MiningUtil)
 local Maid = require(ReplicatedStorage.Objects.Shared.Maid)
@@ -34,8 +37,19 @@ return function(tool)
 							local ore = MiningUtil.GetTargetOre(character.PrimaryPart.Position, range)
 							if ore and ore:IsMineable() then
 								SelectionBox.Adornee = ore:GetInstance().PrimaryPart
+								local name = ore:GetAttribute("DisplayName")
+								local nameColor = ore:GetAttribute("TextColor")
+
+								local health = ore:GetAttribute("Health")
+								local totalHealth = ore:GetAttribute("TotalHealth")
+								local goldValue = ore:GetAttribute("Value") or 0
+								goldValue = goldValue * Multipliers.GetMultiplier("Gold")
+
+								local gemValue = ore:GetAttribute("GemValue") or 0
+								BlockIndicatorRender(name, nameColor, health, totalHealth, goldValue, gemValue)
 							else
 								SelectionBox.Adornee = nil
+								BlockIndicatorRender()
 							end
 						end
 					)
@@ -70,6 +84,7 @@ return function(tool)
 		toolInstance.Unequipped:Connect(
 			function()
 				pickaxeAttackContext:Disable()
+				BlockIndicatorRender()
 				maid:Destroy()
 			end
 		)
