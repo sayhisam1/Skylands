@@ -26,6 +26,9 @@ Service.GUI_GROUPS = {
     Rebirth = {
         "Rebirth"
     },
+    Twitter = {
+        "TwitterCode"
+    },
     BackpackFull = {
         "BackpackFull"
     },
