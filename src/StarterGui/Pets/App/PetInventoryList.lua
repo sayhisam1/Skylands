@@ -5,7 +5,6 @@ local RoactRodux = require(ReplicatedStorage.Lib.RoactRodux)
 
 local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.AnimatedContainer)
 local PetInventoryButton = Roact.PureComponent:extend("PetInventoryButton")
-local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 
 function PetInventoryButton:render()
@@ -31,7 +30,7 @@ function PetInventoryButton:render()
                     AnchorPoint = Vector2.new(.5, 0),
                     ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
                     ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                    ZIndex = 1
+                    ZIndex = 99
                 }
             )
         }
@@ -56,21 +55,7 @@ function PetInventoryButton:render()
                 }
             )
         end
-        children[#children + 1] =
-            Roact.createElement(
-            ViewportContainer,
-            {
-                Size = UDim2.new(1, 0, 1, 0),
-                Position = UDim2.new(.5, 0, .5, 0),
-                AnchorPoint = Vector2.new(.5, .5),
-                RenderedModel = pet:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 3),
-                ZIndex = 22
-            },
-            {
-                Roact.createFragment(viewportChildren)
-            }
-        )
+        children[#children + 1] = pet:MakePetViewport(viewportChildren, Color3.fromRGB(97, 140, 177))
     end
 
     return Roact.createElement(

@@ -265,7 +265,7 @@ function BackpackList:render()
                     Size = UDim2.new(.3, 0, .6, 0),
                     Position = UDim2.new(.4, 0, .15, 0),
                     AnchorPoint = Vector2.new(0, 0),
-                    CameraCFrame = CFrame.new(0, 0, 3)
+                    CameraCFrame = CFrame.new(0, 0, -3)
                 },
                 {
                     UICorner = Roact.createElement(

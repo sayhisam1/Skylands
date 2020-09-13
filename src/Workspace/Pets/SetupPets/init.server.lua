@@ -24,6 +24,15 @@ setup:AddRequiredChild(
 )
 
 setup:AddRequiredChild(
+	"BorderColor",
+	function(pet)
+		local colorVal = Instance.new("Color3Value")
+		colorVal.Value = Color3.fromRGB(255, 255, 255)
+		return colorVal
+	end
+)
+
+setup:AddRequiredChild(
 	"GoldMultiplier",
 	function(pet)
 		local numVal = Instance.new("NumberValue")

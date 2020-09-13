@@ -40,16 +40,7 @@ function gui:render()
         local k = curr.Pet
         local v = curr.Probability
         local petName = k:GetAttribute("DisplayName")
-        local component =
-            Roact.createElement(
-            ViewportContainer,
-            {
-                Size = UDim2.new(1, 0, 1, 0),
-                Position = UDim2.new(.5, 0, 0, 0),
-                RenderedModel = k:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 3),
-                LayoutOrder = i,
-            },
+        local component = k:MakePetViewport(
             {
                 PetName = Roact.createElement(
                     ShadowedText,

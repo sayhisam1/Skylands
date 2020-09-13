@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = require(ReplicatedStorage.Services)
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
-local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
 local PetPopup = require(script.Parent:WaitForChild("PetPopup"))
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
@@ -30,13 +29,12 @@ function PetViewport:render()
         local petName = pet:GetAttribute("DisplayName") or pet:GetInstance().Name
         children["ViewportContainer"] =
             Roact.createElement(
-            ViewportContainer,
+            "Frame",
             {
                 Size = UDim2.new(1, 0, .4, 0),
                 Position = UDim2.new(.5, 0, 0, 0),
                 AnchorPoint = Vector2.new(.5, 0),
-                RenderedModel = pet:GetInstance(),
-                CameraCFrame = CFrame.new(0, 0, 3)
+                BackgroundTransparency = 1,
             },
             {
                 PetName = Roact.createElement(
@@ -53,7 +51,7 @@ function PetViewport:render()
                         AnchorPoint = Vector2.new(.5, 0),
                         ShadowTextColor3 = Color3.fromRGB(0, 0, 0),
                         ShadowOffset = UDim2.new(0.01, 0, 0.01, 0),
-                        ZIndex = 1
+                        ZIndex = 99
                     }
                 ),
                 SelectText = Roact.createElement(
@@ -73,7 +71,8 @@ function PetViewport:render()
                         ZIndex = 100,
                         Rotation = -20
                     }
-                )
+                ),
+                PetViewport = pet:MakePetViewport()
             }
         )
         children["Button"] =

@@ -3,6 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
+
+local Roact = require(ReplicatedStorage.Lib.Roact)
+local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
+
 local InstanceWrapper = require(ReplicatedStorage.Objects.Shared.InstanceWrapper)
 local Pet = setmetatable({}, InstanceWrapper)
 
@@ -91,4 +95,36 @@ function Pet:Setup()
     require(setup)(self)
 end
 
+function Pet:MakePetViewport(children, background_color)
+    children = children or {}
+    local vp = Roact.createElement(ViewportContainer, {
+        Size = UDim2.new(1, -6, 1, -6),
+        Position = UDim2.new(.5, 0, .5, 0),
+        AnchorPoint = Vector2.new(.5, .5),
+        RenderedModel = self:GetInstance(),
+        CameraCFrame = CFrame.new(0, 0, -1 * (self:GetAttribute("ViewportCameraDistance") or 3)),
+    })
+    children["Viewport"] = vp
+    children["UICorner"] = Roact.createElement("UICorner", {
+        CornerRadius = UDim.new(.1, 0)
+    })
+    local innerFrame = Roact.createElement("Frame", {
+        Size = UDim2.new(1, -4, 1, -4),
+        Position = UDim2.new(.5, 0, .5, 0),
+        AnchorPoint = Vector2.new(.5, .5),
+        BackgroundColor3 = background_color,
+        BorderSizePixel = 0,
+    }, children)
+    return Roact.createElement("Frame", {
+        Size = UDim2.new(1, 0, 1, 0),
+        BorderSizePixel = 0,
+        BackgroundColor3 = self:GetAttribute("BorderColor"),
+    },
+    {
+        Inner = innerFrame,
+        UICorner = Roact.createElement("UICorner", {
+            CornerRadius = UDim.new(.1, 0)
+        })
+    })
+end
 return Pet
