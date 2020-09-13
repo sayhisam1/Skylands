@@ -6,10 +6,10 @@ return function(num)
     minutes = minutes % 60
     hours = hours % 60
     if days > 0 then
-        return string.format("%dD %dH %dM", days, hours, minutes)
+        return string.format("%dD %dH %dMin.", days, hours, minutes)
     elseif hours > 0 then
-        return string.format("%dH %dM", hours, minutes)
+        return string.format("%dH %dMin.", hours, minutes)
     else
-        return string.format("%dM", minutes)
+        return string.format("%dMin.", minutes)
     end
 end
