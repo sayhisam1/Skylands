@@ -46,7 +46,8 @@ return function(leaderboard)
                     ):catch(function()
 
                     end)
-                    newText.Value.Text = NumberToStr(curr.value)
+                    local formatter = (leaderboard:GetAttribute("Formatter") and require(leaderboard:GetAttribute("Formatter"))) or NumberToStr
+                    newText.Value.Text = formatter(curr.value)
                     newText.LayoutOrder = i
                     newText.Parent = sf
                     local rank = i + (pagenum - 1) * 10

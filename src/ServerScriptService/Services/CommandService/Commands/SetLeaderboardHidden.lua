@@ -1,5 +1,5 @@
 return {
-	Name = "setleaderboardenabled",
+	Name = "setleaderboardhidden",
 	Aliases = {"slb"},
 	Description = "Enables/disables leaderboard stats for the player",
 	Group = "DefaultAdmin",

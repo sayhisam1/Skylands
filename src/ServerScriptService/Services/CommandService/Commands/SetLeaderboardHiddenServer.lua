@@ -8,5 +8,5 @@ return function(context, plr, val)
 		type="Set",
 		Value=val
 	})
-	return string.format("Set %s store LeaderboardHidden to %s", plr.Name, tostring(val))
+	return string.format("Set %s LeaderboardHidden to %s", plr.Name, tostring(val))
 end

@@ -91,12 +91,15 @@ function Service:Load()
                 DataLoaded.Value = true
                 DataLoaded.Parent = plr
             end)
+            self:UpdateTimePlayed(plr)
         end
     )
 
     self._maid:GiveTask(
         Players.PlayerRemoving:Connect(
             function(plr)
+                self:UpdateTimePlayed(plr)
+                self:ClearTimePlayed(plr)
                 self:SaveData(plr)
                 for _, v in pairs(playerData[plr.UserId]) do
                     v:destruct()
@@ -111,6 +114,7 @@ function Service:Load()
         function()
             while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
                 for _, plr in pairs(Players:GetPlayers()) do
+                    self:UpdateTimePlayed(plr)
                     self:SaveData(plr)
                     wait(1)
                 end
@@ -268,4 +272,23 @@ function Service:ResetPlayerData(plr)
     end
 end
 
+local lastTimePlayedUpdate = {}
+function Service:UpdateTimePlayed(plr)
+    local t = tick()
+    if not lastTimePlayedUpdate[plr] then
+        lastTimePlayedUpdate[plr] = t
+        return
+    end
+    local diff = math.floor(t - lastTimePlayedUpdate[plr])
+    local store = self:GetStore(plr, "TotalTimePlayed")
+    store:dispatch({
+        type="Increment",
+        Amount = diff,
+    })
+    lastTimePlayedUpdate[plr] = t
+end
+
+function Service:ClearTimePlayed(plr)
+    lastTimePlayedUpdate[plr] = nil
+end
 return Service

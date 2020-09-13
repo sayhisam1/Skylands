@@ -126,7 +126,9 @@ end
 
 function Service:LoadPetFromData(data)
     local petclass = data.PetClass
-    return AssetFinder.FindPet(petclass)
+    local pet = AssetFinder.FindPet(petclass)
+    pet:SetAttribute("Id", data.Id)
+    return pet
 end
 
 function Service:ValidatePlayer(plr)
