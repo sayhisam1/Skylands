@@ -6,7 +6,6 @@ local ClientPlayerData = Services.ClientPlayerData
 local GuiController = Services.GuiController
 
 local Multipliers = require(ReplicatedStorage.StoreWrappers.Multipliers)
-local BlockIndicatorRender = GuiController:GetBlockIndicatorRender()
 
 local AttackContext = require(ReplicatedStorage.Objects.Abstract.AttackContext)
 local MiningUtil = require(ReplicatedStorage.Utils.MiningUtil)
@@ -22,6 +21,8 @@ return function(tool)
 	tool._maid:GiveTask(
 		toolInstance.Equipped:Connect(
 			function()
+				local BlockIndicatorRender = GuiController:GetBlockIndicatorRender()
+
 				local character = toolInstance.Parent
 				if character ~= game.Players.LocalPlayer.Character then
 					return
@@ -91,6 +92,7 @@ return function(tool)
 	tool._maid:GiveTask(
 		toolInstance.Unequipped:Connect(
 			function()
+				local BlockIndicatorRender = GuiController:GetBlockIndicatorRender()
 				pickaxeAttackContext:Disable()
 				BlockIndicatorRender()
 				maid:Destroy()
