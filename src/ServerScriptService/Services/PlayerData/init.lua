@@ -97,13 +97,7 @@ function Service:Load()
     self._maid:GiveTask(
         Players.PlayerRemoving:Connect(
             function(plr)
-                if not RunService:IsStudio() then
-                    DataStore2.SaveAll(plr)
-                end
-                for k, v in pairs(ORDERED_DATASTORE_KEYS) do
-                    local ds = DataStoreService:GetOrderedDataStore(k)
-                    ds:SetAsync(plr.UserId, playerData[plr.UserId][k]:getState())
-                end
+                self:SaveData(plr)
                 for _, v in pairs(playerData[plr.UserId]) do
                     v:destruct()
                 end
@@ -117,11 +111,7 @@ function Service:Load()
         function()
             while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
                 for _, plr in pairs(Players:GetPlayers()) do
-                    DataStore2.SaveAll(plr)
-                    for k, v in pairs(ORDERED_DATASTORE_KEYS) do
-                        local ds = DataStoreService:GetOrderedDataStore(k)
-                        ds:SetAsync(plr.UserId, playerData[plr.UserId][k]:getState())
-                    end
+                    self:SaveData(plr)
                     wait(1)
                 end
             end
@@ -131,6 +121,18 @@ end
 
 function Service:Unload()
     self._maid:Destroy()
+end
+
+function Service:SaveData(plr)
+    DataStore2.SaveAll(plr)
+    local leaderboardHidden = self:GetStore(plr, "LeaderboardHidden"):getState()
+    for k, v in pairs(ORDERED_DATASTORE_KEYS) do
+        local ds = DataStoreService:GetOrderedDataStore(k)
+        local store = self:GetStore(plr, k)
+        local val = not leaderboardHidden and store:getState() or v.DEFAULT_VALUE
+        self:Log(1, plr, "setordered", k, val)
+        ds:SetAsync(plr.UserId, val)
+    end
 end
 
 function Service:SetLeaderstat(plr, statname, val)
