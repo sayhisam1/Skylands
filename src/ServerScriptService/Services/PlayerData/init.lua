@@ -128,7 +128,9 @@ function Service:Unload()
 end
 
 function Service:SaveData(plr)
-    DataStore2.SaveAll(plr)
+    if not RunService:IsStudio() then
+        DataStore2.SaveAll(plr)
+    end
     local leaderboardHidden = self:GetStore(plr, "LeaderboardHidden"):getState()
     for k, v in pairs(ORDERED_DATASTORE_KEYS) do
         local ds = DataStoreService:GetOrderedDataStore(k)
