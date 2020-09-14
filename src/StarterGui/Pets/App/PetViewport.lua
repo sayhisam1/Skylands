@@ -72,7 +72,7 @@ function PetViewport:render()
                         Rotation = -20
                     }
                 ),
-                PetViewport = pet:MakePetViewport()
+                PetViewport = pet:MakePetViewport(nil, Color3.fromRGB(97, 140, 177))
             }
         )
         children["Button"] =

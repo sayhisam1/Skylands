@@ -112,7 +112,7 @@ function Pet:MakePetViewport(children, background_color)
         Size = UDim2.new(1, -4, 1, -4),
         Position = UDim2.new(.5, 0, .5, 0),
         AnchorPoint = Vector2.new(.5, .5),
-        BackgroundColor3 = background_color,
+        BackgroundColor3 = background_color or Color3.fromRGB(255, 255, 255),
         BorderSizePixel = 0,
     }, children)
     return Roact.createElement("Frame", {

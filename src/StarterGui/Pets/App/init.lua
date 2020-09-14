@@ -25,7 +25,7 @@ function gui:render()
                 }
             }
         )
-        wait(.3)
+        wait(.2)
         GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
     end
     local makePopup = function(popup)

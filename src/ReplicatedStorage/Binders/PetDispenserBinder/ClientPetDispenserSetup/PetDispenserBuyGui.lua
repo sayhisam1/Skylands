@@ -77,7 +77,7 @@ function gui:render()
                     }
                 ),
                 UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint")
-            }
+            }, Color3.fromRGB(143, 203, 255)
         )
         choices[i] = component
     end

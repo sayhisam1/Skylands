@@ -1,6 +1,7 @@
 -- stores player inventories --
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 local DEPENDENCIES = {"ClientPlayerData"}
 Service:AddDependencies(DEPENDENCIES)
@@ -138,6 +139,9 @@ function Service:SetGuiGroupVisible(group, visible, ...)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, visible)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, visible)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, visible)
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, visible)
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.EmotesMenu, visible)
+        UserInputService.ModalEnabled = visible
     end
 end
 
