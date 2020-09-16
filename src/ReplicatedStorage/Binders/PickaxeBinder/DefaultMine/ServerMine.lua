@@ -27,7 +27,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "ANIM",
-        1 / speed / 5,
+        1 / speed,
         function(effect, caller, animation)
             assert(player == caller, "Called by unexpected player!")
             local animation_effect =
