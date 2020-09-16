@@ -134,10 +134,14 @@ function Service:SaveData(plr)
     local leaderboardHidden = self:GetStore(plr, "LeaderboardHidden"):getState()
     for k, v in pairs(ORDERED_DATASTORE_KEYS) do
         local ds = DataStoreService:GetOrderedDataStore(k)
-        local store = self:GetStore(plr, k)
-        local val = not leaderboardHidden and store:getState() or v.DEFAULT_VALUE
-        self:Log(1, plr, "setordered", k, val)
-        ds:SetAsync(plr.UserId, val)
+        if not leaderboardHidden then
+            local store = self:GetStore(plr, k)
+            local val = store:getState()
+            self:Log(1, plr, "setordered", k, val)
+            ds:SetAsync(plr.UserId, val)
+        else
+            ds:RemoveAsync(plr.UserId)
+        end
     end
 end
 
