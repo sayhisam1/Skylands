@@ -30,6 +30,9 @@ Service.GUI_GROUPS = {
     Twitter = {
         "TwitterCode"
     },
+    Settings = {
+        "Settings"
+    },
     BackpackFull = {
         "BackpackFull"
     },
