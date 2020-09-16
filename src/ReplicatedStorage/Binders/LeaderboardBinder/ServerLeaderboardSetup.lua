@@ -14,11 +14,9 @@ return function(leaderboard)
     local function refreshData()
         leaderboard:Log(3, "Getting category", leaderboardCategory)
         local page = data:GetSortedAsync(false, 10)
-        for i = 1, 10 do
-            pageCache[i] = page:GetCurrentPage()
-            page:AdvanceToNextPageAsync()
-        end
-        currPageNum = 11
+        pageCache[1] = page:GetCurrentPage()
+        page:AdvanceToNextPageAsync()
+        currPageNum = 2
         currPage = page
     end
     nc:Subscribe(
@@ -26,7 +24,7 @@ return function(leaderboard)
         function(plr, pagenum)
             pagenum = pagenum or currPageNum + 5
             if not pageCache[pagenum] then
-                while currPageNum < pagenum do
+                while currPageNum <= pagenum do
                     pageCache[currPageNum] = currPage:GetCurrentPage()
                     currPage:AdvanceToNextPageAsync()
                     currPageNum = currPageNum + 1
