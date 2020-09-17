@@ -1,6 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local DEBUGMODE = RunService:IsStudio()
+
 local WaitForChildPromise = require(ReplicatedStorage.Objects.Promises.WaitForChildPromise)
-local Player = game:GetService("Players").LocalPlayer
+local Player = Players.LocalPlayer
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -16,4 +21,25 @@ WaitForChildPromise(Player, "DataLoaded"):andThen(function()
 
     ServiceLoader:PrefetchServices()
     ServiceLoader:LoadAllServices()
+
+    if DEBUGMODE then
+        print("RUNNING TESTS")
+        local TestEZ = require(ReplicatedStorage.Lib.TestEZ)
+        local IGNORED_TEST_DIRS = {ReplicatedStorage.Lib}
+        local tests = {}
+        for _, v in pairs(ReplicatedStorage:GetDescendants()) do
+            if v.Name:match(".spec") then
+                local toTest = true
+                for _, ignored in pairs(IGNORED_TEST_DIRS) do
+                    if v:IsDescendantOf(ignored) then
+                        toTest = false
+                    end
+                end
+                if toTest then
+                    tests[#tests + 1] = v
+                end
+            end
+        end
+        TestEZ.TestBootstrap:run(tests)
+    end
 end)
