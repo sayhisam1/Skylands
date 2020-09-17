@@ -6,5 +6,11 @@
     "lua.format.linebreakMultipleAssignments": true,
     "Lua.diagnostics.ignore": [
         "Playername"
+    ],
+    "Lua.diagnostics.globals": [
+        "describe",
+        "it",
+        "expect",
+        "itSKIP"
     ]
 }
