@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Services = require(ReplicatedStorage.Services)
 
 local Event = require(ReplicatedStorage.Objects.Shared.Event)
 
@@ -56,7 +57,10 @@ end
 
 function Pet:SetupAbilities(player)
     local abilities
-    if RunService:IsClient() and game.Players.LocalPlayer == player then
+    if RunService:IsClient() then
+        if game.Players.LocalPlayer ~= player then
+            return
+        end
         abilities = self:WaitForChildPromise("Abilities"):expect()
     else
         abilities = self:FindFirstChild("Abilities")
@@ -68,6 +72,27 @@ function Pet:SetupAbilities(player)
         else
             self._maid[v.Name] = require(v).LoadServer(self, player)
         end
+    end
+end
+
+function Pet:UseAbility(player, ability_name, cooldown)
+    local id = self:GetAttribute("Id")
+    if not id then
+        -- can't
+        return
+    end
+    local petCooldownsStore
+    if RunService:IsClient() then
+        petCooldownsStore = Services.ClientPlayerData:GetStore("PetCooldowns")
+    else
+        petCooldownsStore = Services.PlayerData:GetStore(player, "PetCooldowns")
+    end
+    local abilityCooldowns = petCooldownsStore:getState()
+    local lastTime = abilityCooldowns[id] and abilityCooldowns[id][ability_name] or 0
+    local currTime = os.time()
+    if currTime - lastTime >= cooldown then
+        abilityCooldowns[id] = abilityCooldowns[id] or {}
+        abilityCooldowns[id][ability_name] = currTime
     end
 end
 

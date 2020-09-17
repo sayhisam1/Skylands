@@ -3,6 +3,7 @@ local RunService = game:GetService("RunService")
 local Services = require(ReplicatedStorage.Services)
 local PlayerData = Services.PlayerData
 local PetService = Services.PetService
+local EffectsService = Services.EffectsService
 
 return function(dispenser)
 	assert(RunService:IsServer(), "Can only be called on server!")
@@ -26,7 +27,9 @@ return function(dispenser)
 						Amount = -1 * gemCost
 					}
 				)
-				nc:PublishPlayer(plr, "BOUGHT_PET", petToAward)
+				local petInst = petToAward:GetInstance():Clone()
+				EffectsService:AddTemporarySharedInstance(petInst, 10)
+				nc:PublishPlayer(plr, "BOUGHT_PET", petInst)
 			end
 		)
 	)
