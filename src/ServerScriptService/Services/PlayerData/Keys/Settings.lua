@@ -12,7 +12,7 @@ tbl = {
             assert(action.Value and typeof(action.Value) == "table", "Invalid Value!")
             return action.Value
         elseif action.type == "SetSetting" then
-            assert(action.Setting and tbl.DEFAULT_VALUE[action.Setting] ~= nil, "Invalid setting!")
+            assert(action.Setting and tbl.DEFAULT_VALUE[action.Setting] ~= nil, "Invalid setting "..action.Setting)
             assert(typeof(action.Value) == typeof(tbl.DEFAULT_VALUE[action.Setting]), "Invalid value!")
             -- clone state --
             local newState = TableUtil.shallow(currentState)

@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
-local DEPENDENCIES = {}
+local DEPENDENCIES = {"SettingsController", "ClientPlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
 local SoundService = game:GetService("SoundService")
@@ -8,9 +8,15 @@ local Stack = require(ReplicatedStorage.Objects.Shared.Stack)
 
 local musicStack = Stack.new()
 local musicRegistry = {}
+
+local MUSIC_SOUND_GROUP = Instance.new("SoundGroup")
+MUSIC_SOUND_GROUP.Name = "MusicGroup"
+MUSIC_SOUND_GROUP.Parent = SoundService
+MUSIC_SOUND_GROUP.Volume = 1
+
 function Service:Load()
     local maid = self._maid
-    local default_music = SoundService.Music:GetChildren()
+    local default_music = SoundService:WaitForChild("Music"):GetChildren()
     maid:GiveTask(
         function()
             while musicStack:GetSize() > 0 do
@@ -34,6 +40,27 @@ function Service:Load()
         )
     end
     self:PushMusic(default_music[1])
+
+    local ClientPlayerData = self.Services.ClientPlayerData
+    local settingStore = ClientPlayerData:GetStore("Settings")
+    local init = settingStore:getState()
+    if init then
+        init = init['Music']
+        if init then
+            MUSIC_SOUND_GROUP.Volume = 1
+        else
+            MUSIC_SOUND_GROUP.Volume = 0
+        end
+    end
+
+    settingStore.changed:connect(function(new)
+        local music = new['Music']
+        if music then
+            MUSIC_SOUND_GROUP.Volume = 1
+        else
+            MUSIC_SOUND_GROUP.Volume = 0
+        end
+    end)
 end
 
 function Service:Unload()
@@ -43,6 +70,7 @@ end
 function Service:_lookupMusic(music)
     if not musicRegistry[music] then
         local newMusic = music:Clone()
+        newMusic.SoundGroup = MUSIC_SOUND_GROUP
         newMusic.Parent = SoundService
         musicRegistry[music] = newMusic
     end
