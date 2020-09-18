@@ -117,16 +117,18 @@ function ViewportContainer:didMount()
     self.running = true
     local i = 0
     coroutine.wrap(function()
-        while self.running and i%3 == 0 do
-            i=0
-            print("UPDATE")
-            if self.renderedModel then
-                local old_cf = self.renderedModel.PrimaryPart.CFrame
-                self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/100, 0))
+        while self.running do
+            if i%3 ==0 then
+                i=0
+                if self.renderedModel then
+                    local old_cf = self.renderedModel.PrimaryPart.CFrame
+                    self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/100, 0))
+                end
             end
+            i = i + 1
             RunService.Heartbeat:Wait()
+
         end
-        i = i + 1
     end)()
 end
 
