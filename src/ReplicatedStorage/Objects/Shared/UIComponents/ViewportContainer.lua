@@ -75,6 +75,9 @@ end
 local function viewportUpdate(self)
     self.state.maid:Destroy()
     local ref = self.viewportRef:getValue()
+    if not ref then
+        return
+    end
     for _, v in pairs(ref:GetChildren()) do
         if v:IsA("Model") or v:IsA("BasePart") then
             v:Destroy()
@@ -112,14 +115,18 @@ end
 function ViewportContainer:didMount()
     viewportUpdate(self)
     self.running = true
+    local i = 0
     coroutine.wrap(function()
-        while self.running do
+        while self.running and i%3 == 0 do
+            i=0
+            print("UPDATE")
             if self.renderedModel then
                 local old_cf = self.renderedModel.PrimaryPart.CFrame
-                self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/200, 0))
+                self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/100, 0))
             end
             RunService.Heartbeat:Wait()
         end
+        i = i + 1
     end)()
 end
 
