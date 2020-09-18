@@ -15,6 +15,7 @@ function Service:Load()
     local maid = self._maid
     self:HookPlayerAction(function(plr)
         local event = plr.CharacterAdded:Connect(function()
+            currentPlayerTitles[plr] = nil
             self:GiveTitle(plr)
         end)
         local totalOresMined = self.Services.PlayerData:GetStore(plr, "TotalOresMined")
