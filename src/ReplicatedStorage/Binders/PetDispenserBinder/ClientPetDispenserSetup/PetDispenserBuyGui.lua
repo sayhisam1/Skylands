@@ -5,14 +5,13 @@ local AnimatedContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.
 
 local IconFrame = require(ReplicatedStorage.Objects.Shared.UIComponents.IconFrame)
 local ShadowedText = require(ReplicatedStorage.Objects.Shared.UIComponents.ShadowedText)
-local ViewportContainer = require(ReplicatedStorage.Objects.Shared.UIComponents.ViewportContainer)
 
 local gui = Roact.Component:extend("PetDispenser")
 gui.defaultProps = {
     [AnimatedContainer.Damping] = .7,
     [AnimatedContainer.Frequency] = 2,
     [AnimatedContainer.Targets] = {
-        Size = UDim2.new(1, 0, .5, 0)
+        Size = UDim2.new(.24, 0, 0, 0)
     }
 }
 
@@ -25,22 +24,19 @@ function gui.getDerivedStateFromProps(nextProps, lastState)
 end
 
 function gui:render()
-    local petChoices = require(self.props.Dispenser:FindFirstChild("PetProbabilities")):GetNormalizedProbabilities()
-    local choices = {}
-    for k, v in pairs(petChoices) do
-        choices[#choices+1] = {
-            Pet = k,
-            Probability = v
-        }
-    end
-    table.sort(choices, function(a,b)
-        return a.Probability > b.Probability
-    end)
+    local choices = self.props.Choices
     for i, curr in pairs(choices) do
         local k = curr.Pet
-        local v = curr.Probability
+        local v = curr.Rarity
+        if not k then
+            continue
+        end
         local petName = k:GetAttribute("DisplayName")
-        local component = k:MakePetViewport(
+        local component = Roact.createElement(k:GetPetViewportElement(), {
+            BackgroundColor3 = Color3.fromRGB(143, 203, 255),
+            LayoutOrder = i,
+            UIAspect = Roact.createElement("UIAspectRatioConstraint")
+        },
             {
                 PetName = Roact.createElement(
                     ShadowedText,
@@ -59,11 +55,11 @@ function gui:render()
                         ZIndex = 1
                     }
                 ),
-                Probability = Roact.createElement(
+                Rarity = Roact.createElement(
                     ShadowedText,
                     {
                         Font = Enum.Font.GothamBold,
-                        Text = string.format("%3.1f%%", v * 100),
+                        Text = string.format("%3.1f%%", v),
                         TextScaled = true,
                         BackgroundTransparency = 1,
                         TextColor3 = Color3.new(1, 1, 1),
@@ -76,8 +72,7 @@ function gui:render()
                         ZIndex = 1
                     }
                 ),
-                UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint")
-            }, Color3.fromRGB(143, 203, 255)
+            }
         )
         choices[i] = component
     end
@@ -91,43 +86,21 @@ function gui:render()
             [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets],
             AnchorPoint = Vector2.new(.5, .5),
             Size = UDim2.new(0, 0, 0, 0),
-            Position = UDim2.new(.5, 0, .5, 0),
+            Position = UDim2.new(.5, 0, .4, 0),
             BackgroundTransparency = 1,
             ZIndex = 10000
         },
         {
-            Background = Roact.createElement(
-                "ImageLabel",
-                {
-                    AnchorPoint = Vector2.new(.5, .5),
-                    Position = UDim2.new(.5, 0, .5, 0),
-                    Size = UDim2.new(1, 0, 1, 0),
-                    BackgroundColor3 = Color3.fromRGB(135, 198, 254),
-                    BorderSizePixel = 0,
-                    ZIndex = 9,
-                    ScaleType = Enum.ScaleType.Tile,
-                    TileSize = UDim2.new(0, 64, 0, 64),
-                    Image = "rbxassetid://4651117489",
-                    ImageColor3 = Color3.fromRGB(135, 198, 254)
-                },
-                {
-                    UICorner = Roact.createElement(
-                        "UICorner",
-                        {
-                            CornerRadius = UDim.new(.06, 0)
-                        }
-                    )
-                }
-            ),
             CloseButton = Roact.createElement(
                 "ImageButton",
                 {
                     Size = UDim2.new(.1, 0, .1, 0),
                     Position = UDim2.new(1, 0, 0, 0),
                     AnchorPoint = Vector2.new(1, 0),
-                    ZIndex = 100,
+                    ZIndex = 10011,
                     Image = "http://www.roblox.com/asset/?id=5617680082",
                     BackgroundTransparency = 1,
+                    Modal = true,
                     [Roact.Event.MouseButton1Down] = function()
                         self:setState(
                             {
@@ -138,6 +111,8 @@ function gui:render()
                                 [AnimatedContainer.Frequency] = 4
                             }
                         )
+                        wait(.6)
+                        self.props.CloseCallback()
                     end
                 },
                 {
@@ -145,72 +120,212 @@ function gui:render()
                 }
             ),
             GemCost = Roact.createElement(
-                IconFrame,
+                "Frame",
                 {
-                    Size = UDim2.new(.35, 0, .3, 0),
-                    Position = UDim2.new(0.15, 0, .65, 0),
-                    Image = "rbxassetid://5629921147"
+                    Size = UDim2.new(.5, 0, .3, 0),
+                    Position = UDim2.new(-.5, -5, .1, 0),
+                    BackgroundColor3 = Color3.fromRGB(135, 198, 254),
+                    ClipsDescendants = true,
+                    ZIndex = 3,
                 },
                 {
-                    ShadowText = Roact.createElement(
-                        ShadowedText,
+                    IconFrame = Roact.createElement(IconFrame,
+                    {
+                        Size = UDim2.new(.7, 0, .7, 0),
+                        Position = UDim2.new(.5, 0 ,.5 ,0),
+                        AnchorPoint = Vector2.new(.5, .5),
+                        Image = "rbxassetid://5629921147",
+                        BackgroundTransparency = 1,
+                        BackgroundColor3 = Color3.fromRGB(135, 198, 254),
+                        ZIndex = 4,
+                    },
+                    {
+                        ShadowText = Roact.createElement(
+                            ShadowedText,
+                            {
+                                Font = Enum.Font.GothamBold,
+                                Text = string.format("%s", NumberToStr(self.props.GemCost)),
+                                TextScaled = true,
+                                BackgroundTransparency = 1,
+                                TextColor3 = Color3.fromRGB(248, 110, 110),
+                                TextStrokeColor3 = Color3.fromRGB(248, 110, 110),
+                                TextStrokeTransparency = 0,
+                                Size = UDim2.new(1, 0, 1, 0),
+                                Position = UDim2.new(0, 0, 0, 0),
+                                ShadowTextColor3 = Color3.fromRGB(190, 11, 11),
+                                ShadowOffset = UDim2.new(0.02, 0, 0.02, 0),
+                                ZIndex = 10
+                            }
+                        )
+                    }),
+                    UICorner = Roact.createElement("UICorner", {
+                        CornerRadius = UDim.new(.1, 0),
+                    })
+                }
+            ),
+            Tray = Roact.createElement(
+                "Frame",
+                {
+                    Size = UDim2.new(1, 0, .4, 0),
+                    Position = UDim2.new(0, 0, 1, 5),
+                    BackgroundTransparency = 1
+                },
+                {
+                    UIListLayout = Roact.createElement(
+                        "UIListLayout",
                         {
-                            Font = Enum.Font.GothamBold,
-                            Text = string.format("%s", NumberToStr(self.props.Dispenser:GetAttribute("GemCost"))),
-                            TextScaled = true,
-                            BackgroundTransparency = 1,
-                            TextColor3 = Color3.fromRGB(248, 110, 110),
-                            TextStrokeColor3 = Color3.fromRGB(255, 255, 255),
-                            TextStrokeTransparency = 0,
+                            FillDirection = Enum.FillDirection.Horizontal,
+                            Padding = UDim.new(0, 10),
+                            HorizontalAlignment = Enum.HorizontalAlignment.Center
+                        }
+                    ),
+                    Auto = Roact.createElement(
+                        "ImageButton",
+                        {
+                            BackgroundColor3 = Color3.fromRGB(135, 198, 254),
                             Size = UDim2.new(1, 0, 1, 0),
-                            Position = UDim2.new(0, 0, 0, 0),
-                            ShadowTextColor3 = Color3.fromRGB(255, 255, 255),
-                            ShadowOffset = UDim2.new(0.02, 0, 0.02, 0),
-                            ZIndex = 10
-                        }
-                    )
-                }
-            ),
-            BuyButton = Roact.createElement(
-                "TextButton",
-                {
-                    Font = Enum.Font.GothamBold,
-                    Text = "Buy",
-                    TextScaled = true,
-                    BackgroundColor3 = Color3.fromRGB(53, 115, 248),
-                    BorderSizePixel = 0,
-                    TextColor3 = Color3.new(1, 1, 1),
-                    TextStrokeTransparency = 1,
-                    Size = UDim2.new(.3, 0, .3, 0),
-                    Position = UDim2.new(0.6, 0, .65, 0),
-                    AnchorPoint = Vector2.new(0, 0),
-                    ZIndex = 1001,
-                    [Roact.Event.MouseButton1Down] = function()
-                        local nc = self.props.Dispenser:GetNetworkChannel()
-                        nc:Publish("TRY_BUY")
-                    end
-                },
-                {
-                    UICorner = Roact.createElement(
-                        "UICorner",
+                            [Roact.Event.MouseButton1Down] = self.props.AutoCallback,
+                            Modal = true,
+                        },
                         {
-                            CornerRadius = UDim.new(.2, 0)
+                            UICorner = Roact.createElement(
+                                "UICorner",
+                                {
+                                    CornerRadius = UDim.new(0, 5)
+                                }
+                            ),
+                            UIAspectRatio = Roact.createElement("UIAspectRatioConstraint"),
+                            Letter = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .8, 0),
+                                    TextScaled = true,
+                                    Text = "T",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            ),
+                            Label = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .2, 0),
+                                    Position = UDim2.new(0, 0, .97, 0),
+                                    AnchorPoint = Vector2.new(0, 1),
+                                    TextScaled = true,
+                                    Text = "AUTO",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            )
+                        }
+                    ),
+                    B = Roact.createElement(
+                        "ImageButton",
+                        {
+                            BackgroundColor3 = Color3.fromRGB(135, 198, 254),
+                            Size = UDim2.new(1, 0, 1, 0),
+                            [Roact.Event.MouseButton1Down] = self.props.OpenThreeCallback,
+                            Modal = true,
+                        },
+                        {
+                            UICorner = Roact.createElement(
+                                "UICorner",
+                                {
+                                    CornerRadius = UDim.new(0, 5)
+                                }
+                            ),
+                            UIAspectRatio = Roact.createElement("UIAspectRatioConstraint"),
+                            Letter = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .8, 0),
+                                    TextScaled = true,
+                                    Text = "R",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            ),
+                            Label = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .2, 0),
+                                    Position = UDim2.new(0, 0, .97, 0),
+                                    AnchorPoint = Vector2.new(0, 1),
+                                    TextScaled = true,
+                                    Text = "OPEN 3",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            )
+                        }
+                    ),
+                    C = Roact.createElement(
+                        "ImageButton",
+                        {
+                            BackgroundColor3 = Color3.fromRGB(135, 198, 254),
+                            Size = UDim2.new(1, 0, 1, 0),
+                            [Roact.Event.MouseButton1Down] = self.props.OpenOneCallback,
+                            Modal = true,
+                        },
+                        {
+                            UICorner = Roact.createElement(
+                                "UICorner",
+                                {
+                                    CornerRadius = UDim.new(0, 5)
+                                }
+                            ),
+                            UIAspectRatio = Roact.createElement("UIAspectRatioConstraint"),
+                            Letter = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .8, 0),
+                                    TextScaled = true,
+                                    Text = "E",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            ),
+                            Label = Roact.createElement(
+                                "TextLabel",
+                                {
+                                    Size = UDim2.new(1, 0, .2, 0),
+                                    Position = UDim2.new(0, 0, .97, 0),
+                                    AnchorPoint = Vector2.new(0, 1),
+                                    TextScaled = true,
+                                    Text = "Open 1",
+                                    ZIndex = 1002,
+                                    BackgroundTransparency = 1,
+                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                    Font = Enum.Font.GothamBlack
+                                }
+                            )
                         }
                     )
                 }
             ),
-            Frame = Roact.createElement(
+            Pets = Roact.createElement(
                 "ImageLabel",
                 {
-                    Size = UDim2.new(.8, 0, .5, 0),
-                    Position = UDim2.new(.5, 0, .1, 0),
-                    AnchorPoint = Vector2.new(.5, 0),
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Position = UDim2.new(.5, 0, .5, 0),
+                    AnchorPoint = Vector2.new(.5, .5),
                     BackgroundTransparency = 1,
                     ZIndex = 10002,
                     ScaleType = Enum.ScaleType.Tile,
                     TileSize = UDim2.new(0, 64, 0, 64),
                     Image = "rbxassetid://4651117489",
-                    ImageColor3 = Color3.fromRGB(164, 213, 255)
+                    ImageColor3 = Color3.fromRGB(135, 198, 254),
+                    ClipsDescendants = true
                 },
                 {
                     UICorner = Roact.createElement(
@@ -219,50 +334,27 @@ function gui:render()
                             CornerRadius = UDim.new(.06, 0)
                         }
                     ),
-                    ScrollingFrame = Roact.createElement(
-                        "ScrollingFrame",
+                    UIGrid = Roact.createElement(
+                        "UIGridLayout",
                         {
-                            Size = UDim2.new(1, 0, 1, 0),
-                            BackgroundTransparency = 1,
-                            BorderSizePixel = 0,
-                            CanvasSize = UDim2.new(0, 0, 3, 0)
-                        },
-                        {
-                            UIGrid = Roact.createElement(
-                                "UIGridLayout",
-                                {
-                                    CellSize = UDim2.new(0, 100, 0, 100),
-                                    CellPadding = UDim2.new(0, 10, 0, 10),
-                                    SortOrder = Enum.SortOrder.LayoutOrder
-                                }
-                            ),
-                            choices
+                            CellSize = UDim2.new(.3, 0, .3, 0),
+                            CellPadding = UDim2.new(0, 10, 0, 10),
+                            SortOrder = Enum.SortOrder.LayoutOrder
                         }
-                    )
+                    ),
+                    choices
                 }
             ),
             UIAspectRatioConstraint = Roact.createElement(
                 "UIAspectRatioConstraint",
                 {
-                    AspectRatio = 1.618
+                    AspectRatio = 1.433,
+                    DominantAxis = Enum.DominantAxis.Width,
+                    AspectType = Enum.AspectType.ScaleWithParentSize
                 }
             )
         }
     )
 end
 
-return function(root, dispenser)
-    local handle =
-        Roact.mount(
-        Roact.createElement(
-            gui,
-            {
-                Dispenser = dispenser
-            }
-        ),
-        root
-    )
-    return function()
-        Roact.unmount(handle)
-    end
-end
+return gui

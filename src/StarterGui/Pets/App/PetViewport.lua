@@ -34,7 +34,7 @@ function PetViewport:render()
                 Size = UDim2.new(1, 0, .4, 0),
                 Position = UDim2.new(.5, 0, 0, 0),
                 AnchorPoint = Vector2.new(.5, 0),
-                BackgroundTransparency = 1,
+                BackgroundTransparency = 1
             },
             {
                 PetName = Roact.createElement(
@@ -72,7 +72,12 @@ function PetViewport:render()
                         Rotation = -20
                     }
                 ),
-                PetViewport = pet:MakePetViewport(nil, Color3.fromRGB(97, 140, 177))
+                PetViewport = Roact.createElement(
+                    pet:GetPetViewportElement(),
+                    {
+                        BackgroundColor3 = Color3.fromRGB(97, 140, 177)
+                    }
+                )
             }
         )
         children["Button"] =

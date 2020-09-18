@@ -55,7 +55,14 @@ function PetInventoryButton:render()
                 }
             )
         end
-        children[#children + 1] = pet:MakePetViewport(viewportChildren, Color3.fromRGB(97, 140, 177))
+        children[#children + 1] =
+            Roact.createElement(
+            pet:GetPetViewportElement(),
+            {
+                BackgroundColor3 = Color3.fromRGB(97, 140, 177)
+            },
+            viewportChildren
+        )
     end
 
     return Roact.createElement(

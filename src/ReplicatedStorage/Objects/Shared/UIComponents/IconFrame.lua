@@ -8,7 +8,8 @@ function IconFrame:render()
     return Roact.createElement(
         "Frame",
         {
-            BackgroundTransparency = 1,
+            BackgroundTransparency = self.props.BackgroundTransparency or 1,
+            BackgroundColor3 = self.props.BackgroundColor3,
             Size = self.props.Size,
             Position = self.props.Position,
             Rotation = self.props.Rotation,
@@ -22,7 +23,7 @@ function IconFrame:render()
                 {
                     FillDirection = Enum.FillDirection.Horizontal,
                     SortOrder = Enum.SortOrder.LayoutOrder,
-                    HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
                     VerticalAlignment = Enum.VerticalAlignment.Center
                 }
             ),
