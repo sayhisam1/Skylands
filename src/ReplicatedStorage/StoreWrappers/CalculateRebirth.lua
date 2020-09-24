@@ -13,4 +13,9 @@ module.CalculateMultipliers = function(n)
     return multipliers
 end
 
+module.CalculateTickets = function(n)
+    n = n + 1
+    return 100
+end
+
 return module
