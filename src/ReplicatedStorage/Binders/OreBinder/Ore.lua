@@ -81,6 +81,7 @@ function Ore:Mine(plr, damage)
             if self:GetAttribute("GemValue") then
                 local plrGems = Services.PlayerData:GetStore(plr, "Gems")
                 local value = self:GetAttribute("GemValue")
+                value = value * Multipliers.GetPlayerMultiplier(plr, "Gems")
                 plrGems:dispatch(
                     {
                         type = "Increment",
