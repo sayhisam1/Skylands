@@ -106,8 +106,10 @@ return function(dispenser)
 		local cost
 		if gemCost then
 			currencyImage = "rbxassetid://5629921147"
+			cost = gemCost
 		elseif ticketCost then
 			currencyImage = "rbxassetid://5707328166"
+			cost = ticketCost
 		elseif devproductId then
 			cost = MarketplaceService:GetProductInfo(devproductId, "Product").PriceInRobux
 			currencyImage = "rbxassetid://2572473536"
