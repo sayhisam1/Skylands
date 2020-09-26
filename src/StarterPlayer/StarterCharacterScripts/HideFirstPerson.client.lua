@@ -9,7 +9,7 @@ RunService.Heartbeat:Connect(
         if camdist < 3 and not isHidden then
             isHidden = true
             for _, v in pairs(character:GetDescendants()) do
-                if v:IsA("ParticleEmitter") then
+                if v:IsA("ParticleEmitter") and not v.Parent.Name:match("Portal") then
                     v.Enabled = false
                     v:Clear()
                 elseif v:IsA("BillboardGui") then

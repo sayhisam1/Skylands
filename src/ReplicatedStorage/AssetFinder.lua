@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
+local Promise = require(ReplicatedStorage.Lib.Promise)
 local ASSET_TEMP_DIR
 if RunService:IsServer() or not RunService:IsRunning() then
     if not ServerStorage:FindFirstChild("TEMPORARY_ASSETS") then
@@ -70,7 +71,7 @@ local PetBinder = require(ReplicatedStorage.Binders.PetBinder)
 function AssetFinder.FindPet(name)
     local asset = PETS:FindFirstChild(name, not RunService:IsRunning())
     if not asset then
-        error("Couldn't find pet " .. name)
+        error("Couldn't find pet " .. name, 2)
     end
     asset = asset:Clone()
     asset.Parent = ASSET_TEMP_DIR

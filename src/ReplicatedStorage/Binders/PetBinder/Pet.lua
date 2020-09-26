@@ -25,6 +25,8 @@ function Pet.new(instance)
         end
     )
 
+    self.PetClass = instance.Name
+    self:SetAttribute("PetClass", self.PetClass)
     self:Setup()
 
     return self

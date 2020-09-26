@@ -119,7 +119,7 @@ function gui:render()
                     UIAspectRatio = Roact.createElement("UIAspectRatioConstraint")
                 }
             ),
-            GemCost = Roact.createElement(
+            Cost = Roact.createElement(
                 "Frame",
                 {
                     Size = UDim2.new(.5, 0, .3, 0),
@@ -134,7 +134,7 @@ function gui:render()
                         Size = UDim2.new(.7, 0, .7, 0),
                         Position = UDim2.new(.5, 0 ,.5 ,0),
                         AnchorPoint = Vector2.new(.5, .5),
-                        Image = "rbxassetid://5629921147",
+                        Image = self.props.CurrencyImage,
                         BackgroundTransparency = 1,
                         BackgroundColor3 = Color3.fromRGB(135, 198, 254),
                         ZIndex = 4,
@@ -144,7 +144,7 @@ function gui:render()
                             ShadowedText,
                             {
                                 Font = Enum.Font.GothamBold,
-                                Text = string.format("%s", NumberToStr(self.props.GemCost)),
+                                Text = string.format("%s", NumberToStr(self.props.Cost)),
                                 TextScaled = true,
                                 BackgroundTransparency = 1,
                                 TextColor3 = Color3.fromRGB(248, 110, 110),

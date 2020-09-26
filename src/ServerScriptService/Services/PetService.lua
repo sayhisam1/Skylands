@@ -141,33 +141,54 @@ function Service:ValidatePlayer(plr)
     end
 end
 
-function Service:CreatePetData(petName)
-    assert(petName and typeof(petName) == "string", "Invalid pet name!")
-    local pet = AssetFinder.FindPet(petName)
-    assert(pet, "Invalid pet!")
+function Service:CreatePetData(pet)
+    assert(pet, "No pet provided!")
+    if typeof(pet) == 'userdata' and pet:IsA("Model") then
+        pet = pet.Name
+    end
+    if typeof(pet) == 'table' then
+        pet = pet.PetClass
+    end
+    assert(typeof(pet) == "string", "Invalid pet name "..pet)
+    assert(AssetFinder.FindPet(pet), "Invalid pet!")
 
     local data = {
-        PetClass = petName,
+        PetClass = pet,
         Id = HttpService:GenerateGUID(false)
     }
     return data
 end
 
 function Service:GivePlayerPet(plr, petName)
+    self:GivePlayerPets(plr, {petName})
+end
+
+function Service:GivePlayerPets(plr, pets)
     assert(plr and plr:IsA("Player"), "Invalid player")
-    local maxPetStorageSlots = self.Services.PlayerData:GetStore(plr, "MaxPetStorageSlots"):getState()
-    local currentPetCount = self.TableUtil.len(self.Services.PlayerData:GetStore(plr, "Pets"):getState())
-    if currentPetCount >= maxPetStorageSlots then
-        error(plr.Name.."has too many pets!")
+    assert(pets and typeof(pets) == 'table', "Invalid pets!")
+    local petsStore = self.Services.PlayerData:GetStore(plr, "Pets")
+    self:AssertCanAddPets(plr, #pets)
+    local petDatas = self.TableUtil.map(pets, function(_, v)
+        return self:CreatePetData(v)
+    end)
+    for _, petData in pairs(petDatas) do
+        petsStore:dispatch(
+            {
+                type = "AddPet",
+                Data = petData
+            }
+        )
     end
-    local petData = self:CreatePetData(petName)
-    local store = self.Services.PlayerData:GetStore(plr, "Pets")
-    store:dispatch(
-        {
-            type = "AddPet",
-            Data = petData
-        }
-    )
+end
+
+function Service:AssertCanAddPets(plr, n)
+    local petsStore = self.Services.PlayerData:GetStore(plr, "Pets")
+    local maxPetStorageSlots = self.Services.PlayerData:GetStore(plr, "MaxPetStorageSlots"):getState()
+    local currentPetCount = self.TableUtil.len(petsStore:getState()) + n
+
+    if currentPetCount > maxPetStorageSlots then
+        error({code = self.Enums.Errors.NotEnoughPetSlots}, 2)
+    end
 end
 
 function Service:Unload()

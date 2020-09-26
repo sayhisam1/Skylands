@@ -21,8 +21,17 @@ Service.GUI_GROUPS = {
     Shop = {
         "Shop"
     },
+    RobuxStore = {
+        "RobuxStore"
+    },
     Pets = {
         "Pets"
+    },
+    PetInventoryFull = {
+        "PetInventoryFull"
+    },
+    OutOfGems = {
+        "OutOfGems"
     },
     Rebirth = {
         "Rebirth"
@@ -146,6 +155,22 @@ function Service:SetGuiGroupVisible(group, visible, ...)
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.EmotesMenu, visible)
         UserInputService.ModalEnabled = visible
     end
+end
+
+function Service:PromptPetInventoryFull()
+    coroutine.wrap(function()
+        self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, true)
+        wait(2)
+        self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, false)
+    end)()
+end
+
+function Service:PromptOutOfGems()
+    coroutine.wrap(function()
+        self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, true)
+        wait(2)
+        self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, false)
+    end)()
 end
 
 return Service

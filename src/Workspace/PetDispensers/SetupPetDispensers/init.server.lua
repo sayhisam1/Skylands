@@ -23,8 +23,11 @@ setup:AddRequiredChild(
 )
 setup:AddSetupTask(
 	function(dispenser)
-		if not dispenser:FindFirstChild("GemCost") then
-			error("No GemCost found!")
+		local gemCost = dispenser:FindFirstChild("GemCost")
+		local devproductId = dispenser:FindFirstChild("DevproductId")
+		local ticketCost = dispenser:FindFirstChild("TicketCost")
+		if not gemCost and not devproductId and not ticketCost then
+			error("No GemCost or DevproductId or TicketCost found!")
 		end
 		if not dispenser:FindFirstChild("PetProbabilities") then
 			error("No PetProbabilities found!")

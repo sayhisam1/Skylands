@@ -8,5 +8,6 @@ return function(context, plr, storename, val)
 	if type(output) == 'table' then
 		output = DataDump.dd(output)
 	end
+	output = tostring(output)
 	return output
 end

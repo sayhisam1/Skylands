@@ -17,5 +17,5 @@ return function(pet)
 			maid:GiveTask(Multipliers.AddPlayerMultiplier(petPlayer, m, mult))
 		end
 	end
-	pet:SetupAbilities(petPlayer)
+	-- pet:SetupAbilities(petPlayer)
 end

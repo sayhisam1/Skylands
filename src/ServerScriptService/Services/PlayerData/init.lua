@@ -262,11 +262,14 @@ function Service:ResetPlayerDataKey(plr, key)
     assert(plr:IsA("Player"), "Invalid player!")
     assert(KEYS[key], "Invalid key!")
     local store = self:GetStore(plr, key)
-    local default_val = KEYS[key].DEFAULT_VALUE
+    local reset_val = KEYS[key].DEFAULT_VALUE
+    if KEYS[key].Reset then
+        reset_val = KEYS[key].Reset(plr)
+    end
     store:dispatch(
         {
             type = "Set",
-            Value = default_val
+            Value = reset_val
         }
     )
 end

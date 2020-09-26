@@ -22,7 +22,7 @@ return function(pet)
 		function(character, player)
 			local welding = pet:GetAttribute("PetWeld") or script.Parent.PetWeld
 			require(welding)(pet, character)
-			pet:SetupAbilities(player)
+			-- pet:SetupAbilities(player)
 		end
 	):catch(function(...)
 		pet:Log(3, "[CRITICAL] Failed client setup with error:\n", ...)

@@ -68,6 +68,16 @@ setup:AddSetupTask(
 
 setup:AddSetupTask(
 	function(pet)
+		for _, v in pairs(pet:GetDescendants()) do
+			if v:IsA("ParticleEffect") and v.Parent.Name:match("Portal") then
+				v.Enabled = false
+			end
+		end
+	end
+)
+
+setup:AddSetupTask(
+	function(pet)
 		pet.Parent = script.Parent
 	end
 )
