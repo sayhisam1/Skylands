@@ -60,6 +60,8 @@ function PetDispenser:TryPurchase(plr, n)
         PetService:AssertCanAddPets(plr, n)
         if devproductId then
             MarketplaceService:PromptProductPurchase(plr, devproductId, false)
+            -- HACK: Kill promise chain via error (should be handled by robux prompt instead)
+            return reject("Robux purchase")
         else
             if gemCost then
                 local gemStore = PlayerData:GetStore(plr, "Gems")
