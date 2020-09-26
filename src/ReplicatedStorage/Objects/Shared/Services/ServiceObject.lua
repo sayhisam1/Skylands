@@ -119,7 +119,7 @@ end
 
 function Service:HookPlayerAction(func)
     for _, plr in pairs(Players:GetPlayers()) do
-        func(plr)
+        coroutine.wrap(func)(plr)
     end
     self._maid:GiveTask(Players.PlayerAdded:Connect(func))
     self._maid:GiveTask(Players.PlayerRemoving:Connect(function(plr)
