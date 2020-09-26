@@ -1,4 +1,5 @@
 -- PET MENU --
+local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Services = require(ReplicatedStorage.Services)
 local GuiController = Services.GuiController
@@ -84,6 +85,9 @@ function gui:render()
                     BackgroundColor3 = Color3.fromRGB(110, 160, 204),
                     TextGetter = function(state)
                         return string.format("%d/%d", state.NumPets, state.MaxPetStorageSlots)
+                    end,
+                    [Roact.Event.MouseButton1Click] = function()
+                        MarketplaceService:PromptProductPurchase(game.Players.LocalPlayer, 1087600055, false)
                     end
                 }
             ),

@@ -258,20 +258,38 @@ function Service:GetStore(plr, key)
     return promise:expect()
 end
 
+local resetHooks = {}
+
+function Service:RegisterResetHook(key, func)
+    assert(KEYS[key], "Invalid key!")
+    assert(typeof(func) == 'function', "Invalid callback!")
+    if not resetHooks[key] then
+        resetHooks[key] = {}
+    end
+    resetHooks[key][#resetHooks[key] + 1] = func
+end
+
 function Service:ResetPlayerDataKey(plr, key)
     assert(plr:IsA("Player"), "Invalid player!")
     assert(KEYS[key], "Invalid key!")
     local store = self:GetStore(plr, key)
+    local old_val = store:getState()
     local reset_val = KEYS[key].DEFAULT_VALUE
     if KEYS[key].Reset then
         reset_val = KEYS[key].Reset(plr)
     end
+
     store:dispatch(
         {
             type = "Set",
             Value = reset_val
         }
     )
+    if resetHooks[key] then
+        for _, callback in pairs(resetHooks[key]) do
+            callback(plr, store, old_val)
+        end
+    end
 end
 
 function Service:ResetPlayerData(plr)

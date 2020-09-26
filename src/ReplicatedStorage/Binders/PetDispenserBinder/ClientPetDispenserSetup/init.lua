@@ -20,6 +20,7 @@ local GetPrimaryPart = require(ReplicatedStorage.Objects.Promises.GetPrimaryPart
 local GetPlayerCharacterWorkspace = require(ReplicatedStorage.Objects.Promises.GetPlayerCharacterWorkspace)
 local CameraModel = require(ReplicatedStorage.Objects.Shared.CameraModel)
 local RescaleModel = require(ReplicatedStorage.Lib.RescaleModel)
+local ClientPlayerData = Services.ClientPlayerData
 
 local ASSETS = ReplicatedStorage:WaitForChild("Assets")
 local PortalSound = ASSETS:WaitForChild("PortalSound")
@@ -70,12 +71,21 @@ return function(dispenser)
 			return
 		end
 		if auto then
-			autoMode = true
-			makeStopAutoGui()
+			if not ClientPlayerData:GetStore("IsAutoHatchEnabled"):getState() then
+				MarketplaceService:PromptGamePassPurchase(game.Players.LocalPlayer, 11685523)
+				return
+			else
+				autoMode = true
+				makeStopAutoGui()
+			end
 		end
 		if n == 1 then
 			nc:Publish("TRY_BUY")
 		elseif n == 3 then
+			if not ClientPlayerData:GetStore("IsTripleHatchEnabled"):getState() then
+				MarketplaceService:PromptGamePassPurchase(game.Players.LocalPlayer, 11824598)
+				return
+			end
 			nc:Publish("TRY_BUY_THREE")
 		end
 	end
@@ -112,7 +122,7 @@ return function(dispenser)
 			cost = ticketCost
 		elseif devproductId then
 			cost = MarketplaceService:GetProductInfo(devproductId, "Product").PriceInRobux
-			currencyImage = "rbxassetid://2572473536"
+			currencyImage = "rbxgameasset://Images/image2"
 		end
 		local el =
 			Roact.createElement(
@@ -251,16 +261,18 @@ return function(dispenser)
 						end
 					)
 				end
-				-- HACK: enable portal effects on pet
-				for _, v in pairs(pet:GetDescendants()) do
-					if v:IsA("ParticleEffect") and v.Parent.Name:match("Portal") then
-						v.Enabled = true
-					end
-				end
+
 				local portalSound = PortalSound
 				portalSound:Play()
 				local camModel = CameraModel.new(Workspace.Camera, pet)
 				renderMaid:GiveTask(camModel)
+				-- HACK: enable portal effects on pet
+				for _, v in pairs(camModel._instance:GetDescendants()) do
+					if v:IsA("ParticleEffect") then
+						v.Enabled = true
+						v:Emit(5)
+					end
+				end
 				camModel:Render(CFrame.new(offset, 0, -7) * CFrame.Angles(0, math.pi, 0))
 				local petRescaler = RescaleModel.ModelRescaler.new(camModel._instance)
 				for i = .01, 1, .02 do

@@ -22,31 +22,9 @@ function Service:Load()
                     if part.Parent:FindFirstChild("Humanoid") then
                         local plr = Players:GetPlayerFromCharacter(part.Parent)
                         if plr then
-                            local totalBackpackValue = self.Services.PlayerData:GetStore(plr, "BackpackGoldValue")
-                            local plrGold = self.Services.PlayerData:GetStore(plr, "Gold")
-                            local plrBackpackSlots = self.Services.PlayerData:GetStore(plr, "OreCount")
-                            if plrBackpackSlots:getState() == 0 then
-                                return
+                            if self:SellBackpack(plr) then
+                                network_channel:PublishPlayer(plr, "COIN_RAIN")
                             end
-                            plrGold:dispatch(
-                                {
-                                    type = "Increment",
-                                    Amount = math.ceil(totalBackpackValue:getState())
-                                }
-                            )
-                            totalBackpackValue:dispatch(
-                                {
-                                    type = "Set",
-                                    Value = 0
-                                }
-                            )
-                            plrBackpackSlots:dispatch(
-                                {
-                                    type = "Set",
-                                    Value = 0
-                                }
-                            )
-                            network_channel:PublishPlayer(plr, "COIN_RAIN")
                         end
                     end
                 end
@@ -98,6 +76,33 @@ function Service:Unload()
     self._maid:Destroy()
 end
 
+function Service:SellBackpack(plr)
+    local totalBackpackValue = self.Services.PlayerData:GetStore(plr, "BackpackGoldValue")
+    local plrGold = self.Services.PlayerData:GetStore(plr, "Gold")
+    local plrBackpackSlots = self.Services.PlayerData:GetStore(plr, "OreCount")
+    if plrBackpackSlots:getState() == 0 then
+        return
+    end
+    plrGold:dispatch(
+        {
+            type = "Increment",
+            Amount = math.ceil(totalBackpackValue:getState())
+        }
+    )
+    totalBackpackValue:dispatch(
+        {
+            type = "Set",
+            Value = 0
+        }
+    )
+    plrBackpackSlots:dispatch(
+        {
+            type = "Set",
+            Value = 0
+        }
+    )
+    return true
+end
 function Service:_identifyAssetType(instance)
     for _, v in pairs(Backpacks) do
         if v == instance then

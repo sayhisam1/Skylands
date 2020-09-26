@@ -28,6 +28,12 @@ function Service:Load()
         end
     end
     self:HookPlayerAction(setupPlayer)
+    self.Services.PlayerData:RegisterResetHook("OwnedBackpacks", function(plr, store, prev)
+        local IsVipStore = PlayerData:GetStore(plr, "IsVip")
+        if IsVipStore:getState() then
+            self:GiveVip(plr)
+        end
+    end)
 end
 
 function Service:GiveVip(plr)

@@ -70,9 +70,7 @@ function PetIndicatorButton:render()
                     [Roact.Event.MouseLeave] = function(ref)
                         ref:TweenSize(UDim2.new(.2, 0, .6, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Linear, .1, true)
                     end,
-                    [Roact.Event.MouseButton1Click] = function(ref)
-                        self.props.onClick(ref)
-                    end
+                    [Roact.Event.MouseButton1Click] = self.props[Roact.Event.MouseButton1Click]
                 },
                 {
                     UICorner = Roact.createElement(

@@ -24,6 +24,9 @@ Service.GUI_GROUPS = {
     RobuxStore = {
         "RobuxStore"
     },
+    Boosts = {
+        "Boosts"
+    },
     Pets = {
         "Pets"
     },

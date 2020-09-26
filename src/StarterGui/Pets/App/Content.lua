@@ -1,3 +1,4 @@
+local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact = require(ReplicatedStorage.Lib.Roact)
@@ -64,6 +65,9 @@ function PetContentComponent:render()
                             Image = "rbxassetid://5644766906",
                             TextGetter = function(state)
                                 return string.format("%d/%d", state.NumSelectedPets, state.MaxSelectedPets)
+                            end,
+                            [Roact.Event.MouseButton1Click] = function()
+                                MarketplaceService:PromptGamePassPurchase(game.Players.LocalPlayer, 11928461)
                             end
                         }
                     ),

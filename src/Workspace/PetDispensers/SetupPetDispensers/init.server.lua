@@ -34,6 +34,15 @@ setup:AddSetupTask(
 		end
 	end
 )
+
+setup:AddSetupTask(
+	function(dispenser)
+		if not dispenser:FindFirstChild("CameraPart") then
+			error("No CameraPart found!")
+		end
+	end
+)
+
 setup:AddSetupTask(
 	function(dispenser)
 		CollectionService:AddTag(dispenser, Enums.Tags.PetDispenser)

@@ -5,18 +5,7 @@ local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject)
 local DEPENDENCIES = {"PlayerData"}
 Service:AddDependencies(DEPENDENCIES)
 
-local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
-
 local PRODUCTS = {}
-
-
-TableUtil.foreachi(script.Products:GetChildren(), function(i, v)
-    PRODUCTS[v.Name] = require(v)
-end)
-
-TableUtil.foreachi(script.Gamepasses:GetChildren(), function(i, v)
-    PRODUCTS[v.Name] = require(v)
-end)
 
 function Service:Load()
     MarketplaceService.ProcessReceipt = function(receiptInfo)
@@ -35,7 +24,7 @@ function Service:Load()
             return Enum.ProductPurchaseDecision.NotProcessedYet
         end
        local stat, err = pcall(function()
-            productHandler(plr)
+            productHandler(plr, receiptInfo)
         end)
         if not stat then
             return Enum.ProductPurchaseDecision.NotProcessedYet

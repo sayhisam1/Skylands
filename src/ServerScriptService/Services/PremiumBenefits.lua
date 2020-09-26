@@ -28,12 +28,17 @@ function Service:Load()
             end
         )
     )
+    self.Services.PlayerData:RegisterResetHook("OwnedBackpacks", function(plr, store, prev)
+        if plr.MembershipType == Enum.MembershipType.Premium then
+            self:GivePremium(plr)
+        end
+    end)
 end
 
 function Service:GivePremium(plr)
     self:Log(3, "Giving vip to ", plr)
     local vipPick = AssetFinder.FindPickaxe("VIPPickaxe")
-    local vipBackapck = AssetFinder.FindBackpack("VIPBackpack")
+    local vipBackapck = AssetFinder.FindBackpack("PremiumBackpack")
     local Shop = self.Services.Shop
     Shop:AddAsset(plr, vipPick)
     Shop:AddAsset(plr, vipBackapck)
