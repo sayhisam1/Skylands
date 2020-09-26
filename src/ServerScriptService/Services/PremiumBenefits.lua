@@ -36,8 +36,8 @@ function Service:Load()
 end
 
 function Service:GivePremium(plr)
-    self:Log(3, "Giving vip to ", plr)
-    local vipPick = AssetFinder.FindPickaxe("VIPPickaxe")
+    self:Log(3, "Giving premium to ", plr)
+    local vipPick = AssetFinder.FindPickaxe("Premium Pickaxe")
     local vipBackapck = AssetFinder.FindBackpack("PremiumBackpack")
     local Shop = self.Services.Shop
     Shop:AddAsset(plr, vipPick)
