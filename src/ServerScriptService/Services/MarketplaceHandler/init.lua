@@ -46,7 +46,7 @@ end
 
 function Service:RegisterHandler(productId, func)
     productId = tostring(productId)
-    assert(not PRODUCTS[productId], "Handler already exists!")
+    assert(not PRODUCTS[productId], "Handler for id "..tostring(productId).." already exists!")
     self:Log(3, "Register handler", productId)
     PRODUCTS[productId] = func
 end
