@@ -59,13 +59,14 @@ return function(tool)
             assert(ore, "Unabled to reference ore " .. part:GetFullName())
             local critChance = tool:GetAttribute("CritChance")
             local critPercentage = math.random()
+            local damage = tool:GetAttribute("Damage") * Multipliers.GetPlayerMultiplier(player, "Damage")
             effect:PlaySound(tool:FindFirstChild("HitSound"), {Position = ore:GetCFrame().Position, IgnoredPlayers = {player}})
             if critPercentage <= critChance then
                 effect:PlaySound(tool:FindFirstChild("CriticalHitSound"), {Position = ore:GetCFrame().Position, IgnoredPlayers = {player}})
                 effect:PlaySound(tool:FindFirstChild("CriticalHitSound"), {OnlyPlayers = {player}})
-                ore:Mine(caller, tool:GetAttribute("Damage") * 2)
+                ore:Mine(caller, damage * 2)
             else
-                ore:Mine(caller, tool:GetAttribute("Damage"))
+                ore:Mine(caller, damage)
             end
         end
     )
