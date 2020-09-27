@@ -37,6 +37,17 @@ if IsServer then
             )
         end
     end
+
+    function module.RemovePlayerMultiplier(player, id)
+        local store = PlayerData:GetStore(player, "ActiveMultipliers")
+        id = id or HttpService:GenerateGUID(false)
+        store:dispatch(
+            {
+                type = "RemoveMultiplier",
+                Id = id,
+            }
+        )
+    end
 end
 
 if IsClient then

@@ -47,6 +47,7 @@ return function(tool)
 								goldValue = goldValue * Multipliers.GetMultiplier("Gold")
 
 								local gemValue = ore:GetAttribute("GemValue") or 0
+								gemValue = gemValue * Multipliers.GetMultiplier("Gems")
 								BlockIndicatorRender(name, nameColor, health, totalHealth, goldValue, gemValue)
 							else
 								SelectionBox.Adornee = nil

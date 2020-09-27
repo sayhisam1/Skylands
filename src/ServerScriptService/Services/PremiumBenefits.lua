@@ -42,6 +42,16 @@ function Service:GivePremium(plr)
     local Shop = self.Services.Shop
     Shop:AddAsset(plr, vipPick)
     Shop:AddAsset(plr, vipBackapck)
+    local HasRedeemedPremiumBoosts = self.Services.PlayerData:GetStore(plr, "HasRedeemedPremiumBoosts")
+    if not HasRedeemedPremiumBoosts:getState() then
+        for i = 1, 3, 1 do
+            self.Services.Boosts:AddRandomBoost(plr, 5)
+        end
+        HasRedeemedPremiumBoosts:dispatch({
+            type="Set",
+            Value=true
+        })
+    end
 end
 
 function Service:Unload()

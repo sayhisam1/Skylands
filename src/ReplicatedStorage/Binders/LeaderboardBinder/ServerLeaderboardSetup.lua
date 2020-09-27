@@ -6,7 +6,7 @@ local UPDATE_INTERVAL = 60
 return function(leaderboard)
     assert(RunService:IsServer(), "Can only be called on client!")
     local leaderboardCategory = leaderboard:GetAttribute("LeaderboardCategory")
-    local data = DataStoreService:GetOrderedDataStore(leaderboardCategory)
+    local data = DataStoreService:GetOrderedDataStore(leaderboardCategory, "LIVE_DATA")
     local nc = leaderboard:GetNetworkChannel()
     local pageCache = {}
     local currPage = nil

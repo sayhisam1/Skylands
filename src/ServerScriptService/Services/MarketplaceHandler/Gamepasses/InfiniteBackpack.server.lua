@@ -30,16 +30,18 @@ end)
 PlayerData:RegisterResetHook("OwnedBackpacks", function(plr, store, prev)
     local ownsGamepass = Promise.new(function(resolve, reject, onCancel)
         return resolve(MarketplaceService:UserOwnsGamePassAsync(plr.UserId, gamepassId))
-    end):andThen(function()
-        setupPlayer(plr)
+    end):andThen(function(hasPack)
+        if hasPack then
+            setupPlayer(plr)
+        end
     end)
 end)
 
 PlayerData:RegisterResetHook("SelectedBackpack", function(plr, store, prev)
     local ownsGamepass = Promise.new(function(resolve, reject, onCancel)
         return resolve(MarketplaceService:UserOwnsGamePassAsync(plr.UserId, gamepassId))
-    end):andThen(function()
-        if prev == "Infinity Pack" then
+    end):andThen(function(hasPack)
+        if hasPack and prev == "Infinity Pack" then
             store:dispatch({
                 type="Set",
                 Value = "Infinity Pack"

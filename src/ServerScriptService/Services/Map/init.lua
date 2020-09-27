@@ -30,7 +30,12 @@ function Service:Load()
     coroutine.wrap(
         function()
             while self:GetLoadId() == currId do
-                self:ReloadQuarry()
+                local stat, err
+                while not stat do
+                    stat, err = pcall(function()
+                        self:ReloadQuarry()
+                    end)
+                end
                 wait(QUARRY_RESPAWN_TIMER)
             end
         end
@@ -43,10 +48,15 @@ end
 
 local quarry
 function Service:ReloadQuarry()
-    self:Log(2, "Loading quarry!")
+    self:Log(3, "Loading quarry!")
     self._maid:Destroy()
     for _, v in pairs(game.Players:GetChildren()) do
-        v:LoadCharacter()
+        local stat, erro = pcall(function()
+            v:LoadCharacter()
+        end)
+        if not stat then
+            self:Log(3, erro)
+        end
     end
     quarry = Quarry.new(LAYER_PRESETS, QUARRY_BOTTOM_LEFT_POS, QUARRY_LENGTH, QUARRY_WIDTH)
     self._maid:GiveTask(quarry)

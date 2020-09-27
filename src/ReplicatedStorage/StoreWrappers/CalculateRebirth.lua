@@ -6,7 +6,6 @@ module.CalculateCost = function(n)
 end
 
 module.CalculateMultipliers = function(n)
-    n = n + 1
     local multipliers = {
         Gold = 1 + (.5 * n)
     }

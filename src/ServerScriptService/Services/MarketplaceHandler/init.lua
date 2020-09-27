@@ -27,6 +27,7 @@ function Service:Load()
             productHandler(plr, receiptInfo)
         end)
         if not stat then
+            self:Log(3, "Failed with error", err)
             return Enum.ProductPurchaseDecision.NotProcessedYet
         end
         return Enum.ProductPurchaseDecision.PurchaseGranted

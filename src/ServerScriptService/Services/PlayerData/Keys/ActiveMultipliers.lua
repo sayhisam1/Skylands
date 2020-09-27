@@ -8,7 +8,7 @@ return {
         elseif action.type == "AddMultiplier" then
             assert(action.Category, "Invalid multiplier category!")
             assert(action.Id, "Invalid multiplier id!")
-            assert(typeof(action.Multiplier) == "number", "Invalid multiplier!")
+            assert(typeof(action.Multiplier) == "number", "Invalid multiplier "..tostring(action.Multiplier))
             local multiplierCategory = action.Category
             local multiplierId = action.Id
             local multiplier = action.Multiplier

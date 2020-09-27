@@ -2,7 +2,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
-local DEPENDENCIES = {"PlayerData", "InitializeBinders", "Shop"}
+local DEPENDENCIES = {"PlayerData", "InitializeBinders", "Shop", "Boosts"}
 Service:AddDependencies(DEPENDENCIES)
 
 local AssetFinder = require(ReplicatedStorage.AssetFinder)
@@ -43,6 +43,17 @@ function Service:GiveVip(plr)
     local Shop = self.Services.Shop
     Shop:AddAsset(plr, vipPick)
     Shop:AddAsset(plr, vipBackapck)
+    local hasRedeemedVipBoosts = self.Services.PlayerData:GetStore(plr, "HasRedeemedVipBoosts")
+    if not hasRedeemedVipBoosts:getState() then
+        for i = 1, 10, 1 do
+            self.Services.Boosts:AddRandomBoost(plr, 25)
+        end
+        hasRedeemedVipBoosts:dispatch({
+            type="Set",
+            Value=true
+        })
+    end
+
     local VipPetAwarded = self.Services.PlayerData:GetStore(plr, "VipPetAwarded")
     if not VipPetAwarded:getState() then
         self.Services.PetService:GivePlayerPet(plr, "CrystalRegular")

@@ -37,7 +37,7 @@ local ORDERED_DATASTORE_KEYS =
     end
 )
 
-DataStore2.Combine("BETA_DATA", unpack(TableUtil.keys(DATASTORE_KEYS)))
+DataStore2.Combine("LIVE_DATA", unpack(TableUtil.keys(DATASTORE_KEYS)))
 
 local playerData = {}
 function Service:Load()
@@ -114,8 +114,10 @@ function Service:Load()
         function()
             while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
                 for _, plr in pairs(Players:GetPlayers()) do
-                    self:UpdateTimePlayed(plr)
-                    self:SaveData(plr)
+                    coroutine.wrap(function()
+                        self:UpdateTimePlayed(plr)
+                        self:SaveData(plr)
+                    end)()
                     wait(1)
                 end
             end
@@ -133,7 +135,7 @@ function Service:SaveData(plr)
     end
     local leaderboardHidden = self:GetStore(plr, "LeaderboardHidden"):getState()
     for k, v in pairs(ORDERED_DATASTORE_KEYS) do
-        local ds = DataStoreService:GetOrderedDataStore(k)
+        local ds = DataStoreService:GetOrderedDataStore(k, "LIVE_DATA")
         if not leaderboardHidden then
             local store = self:GetStore(plr, k)
             local val = store:getState()
