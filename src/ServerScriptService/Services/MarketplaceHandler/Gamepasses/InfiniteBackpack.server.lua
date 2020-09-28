@@ -5,6 +5,7 @@ local Services = require(ReplicatedStorage.Services)
 local PlayerData = Services.PlayerData
 local Promise = require(ReplicatedStorage.Lib.Promise)
 local AssetFinder = require(ReplicatedStorage.AssetFinder)
+local TableUtil = require(ReplicatedStorage.Utils.TableUtil)
 
 local gamepassId = 11685532
 local INFINITE_BACKPACK = AssetFinder.FindBackpack("Infinity Pack")
@@ -14,11 +15,31 @@ local function setupPlayer(plr)
     Shop:AddAsset(plr, INFINITE_BACKPACK)
 end
 
-Players.PlayerAdded:Connect(function(plr)
-	local hasPass = MarketplaceService:UserOwnsGamePassAsync(plr.UserId, gamepassId)
+local function playerAdded(plr)
+    local hasPass = MarketplaceService:UserOwnsGamePassAsync(plr.UserId, gamepassId)
 	if hasPass then
         setupPlayer(plr)
+    else
+        -- remove inf backpack from ppl who got it from bug
+        local ownedBackpacks = PlayerData:GetStore(plr, "OwnedBackpacks")
+        PlayerData:Log(3, "INFINITY BACKPACK", ownedBackpacks:getState())
+        if TableUtil.contains(ownedBackpacks:getState(), "Infinity Pack") then
+            warn(plr, "removing infinite backpack!")
+            ownedBackpacks:dispatch({
+                type="RemoveItem",
+                Item="Infinity Pack"
+            })
+
+            PlayerData:ResetPlayerDataKey(plr, "SelectedBackpack")
+        end
 	end
+end
+
+for _,v in pairs(Players:GetPlayers()) do
+    playerAdded(v)
+end
+Players.PlayerAdded:Connect(function(plr)
+    playerAdded(plr)
 end)
 
 MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, purchasedPassID, purchaseSuccess)
