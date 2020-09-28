@@ -12,7 +12,6 @@ PetDispenser.ClassName = script.Name
 function PetDispenser.new(instance)
     assert(type(instance) == "userdata" and instance:IsA("Model"), "Invalid PetDispenser!")
     local self = setmetatable(InstanceWrapper.new(instance), PetDispenser)
-    self:Log(3, "Created pet dispenser")
     self:Setup()
     return self
 end

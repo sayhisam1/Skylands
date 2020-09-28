@@ -70,7 +70,6 @@ function Service:Load()
 
     self:HookPlayerAction(
         function(plr)
-            self:Log(3, "Player joined", plr.Name)
             local promises = {}
             for key, v in pairs(KEYS) do
                 promises[#promises + 1] = Promise.new(function(resolve)
@@ -175,7 +174,6 @@ function Service:InitializeStore(plr, key)
     end
 
     if not playerData[plr.UserId][key] then
-        self:Log(3, "Initialize store", plr, key)
         local keyData = KEYS[key]
         local reducer = keyData.Reducer
         local defaultValue = keyData.DEFAULT_VALUE

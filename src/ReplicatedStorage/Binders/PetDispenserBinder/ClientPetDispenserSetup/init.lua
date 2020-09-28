@@ -26,7 +26,6 @@ local ASSETS = ReplicatedStorage:WaitForChild("Assets")
 local PortalSound = ASSETS:WaitForChild("PortalSound")
 return function(dispenser)
 	assert(RunService:IsClient(), "Can only be called on client!")
-	dispenser:Log(3, "Setting up..")
 
 	local nc = dispenser:GetNetworkChannel()
 	local running = false
