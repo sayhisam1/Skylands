@@ -1,3 +1,4 @@
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 return function()
@@ -11,6 +12,9 @@ return function()
     -- require(isplayer).Check = function(object)
     --     return (typeof(object) == "Instance" and object.ClassName == "Player") or object.ClassName == "Player"
     -- end
+    if RunService:IsClient() then
+        return
+    end
     describe(
         "ore mine test",
         function()
@@ -23,9 +27,7 @@ return function()
                         clone:SetPrimaryPartCFrame(CFrame.new(10 * i, 1E5, 10 * i))
                         clone.Parent = Workspace
                         local ore = OreBinder:Bind(clone)
-                        ore:Log(3, "MINING SMALL")
                         ore:Mine(plr, 1)
-                        ore:Log(3, "MINING BIG")
                         ore:Mine(plr, math.huge)
                         ore:Destroy()
                         plr:Destroy()
