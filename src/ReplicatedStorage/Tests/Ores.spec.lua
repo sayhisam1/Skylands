@@ -15,7 +15,7 @@ return function()
         "ore mine test",
         function()
             for i, v in ipairs(ORES:GetChildren()) do
-                itSKIP(
+                it(
                     "should mine " .. v.Name,
                     function()
                         local plr = MockPlayer()
