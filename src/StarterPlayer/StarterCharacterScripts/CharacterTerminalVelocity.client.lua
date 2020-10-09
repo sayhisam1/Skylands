@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local MAX_VELOCITY = -1000
+local MAX_VELOCITY = -400
 local player = game.Players.LocalPlayer
 
 local char = player.Character
