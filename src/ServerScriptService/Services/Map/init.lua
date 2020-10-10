@@ -5,9 +5,9 @@ local DEPENDENCIES = {"EffectsService"}
 Service:AddDependencies(DEPENDENCIES)
 
 local Quarry = require(ReplicatedStorage.Objects.Mining.Quarry)
-local QUARRY_BOTTOM_LEFT_POS = Vector3.new(0, 50003.5, 0)
-local QUARRY_LENGTH = 10
-local QUARRY_WIDTH = 10
+local QUARRY_CENTER = Vector3.new(35, 50003.5, 35)
+local QUARRY_LENGTH = 100
+local QUARRY_WIDTH = 100
 
 local QUARRY_RESPAWN_TIMER = 45 * 60
 local LAYER_PRESETS = {}
@@ -58,7 +58,7 @@ function Service:ReloadQuarry()
             self:Log(3, erro)
         end
     end
-    quarry = Quarry.new(LAYER_PRESETS, QUARRY_BOTTOM_LEFT_POS, QUARRY_LENGTH, QUARRY_WIDTH)
+    quarry = Quarry.new(LAYER_PRESETS, QUARRY_CENTER, QUARRY_LENGTH, QUARRY_WIDTH)
     self._maid:GiveTask(quarry)
     for i = 1, QUARRY_LENGTH do
         for j = 1, QUARRY_WIDTH do

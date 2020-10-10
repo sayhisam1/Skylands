@@ -13,13 +13,13 @@ local BLOCK_SIZE = 7
 Quarry.__index = Quarry
 Quarry.ClassName = script.Name
 
-function Quarry.new(layer_probabilities, bottom_left_pos, length, width)
+function Quarry.new(layer_probabilities, center_pos, length, width)
     local self = setmetatable(BaseObject.new(), Quarry)
 
     self._layerProbabilities = layer_probabilities
     self._length = length
     self._width = width
-    self._bottomLeftPos = bottom_left_pos
+    self._centerPos = center_pos
     self._spawnedCoords = {} -- Mark ores as spawned to prevent duplicate spawning
 
     return self
@@ -55,17 +55,20 @@ function Quarry:GenerateOre(depth, x, z)
     end
     -- spawn wall of quarry
     local new_instance
-    if x < 1 or x > self._length or z < 1 or z > self._width then
-        if depth <= 1 then
-            return
+    -- skip first two "expansions"
+    local generator = self:_getLayerProbability(depth)
+    local selected_ore = generator:Sample(1)[1]
+    if depth < 5 then
+        local CENTER_X = self._length/2
+        local CENTER_Z = self._width/2
+        if x <= CENTER_X - 5 or x > CENTER_X + 5 or z <= CENTER_Z - 5 or z > CENTER_Z + 5 then
+            selected_ore = WALL_MATERIAL
         end
-        new_instance = WALL_MATERIAL:Clone()
-    else
-        local generator = self:_getLayerProbability(depth)
-        local selected_ore = generator:Sample(1)[1]
-        new_instance = selected_ore:Clone()
+    elseif x < 1 or x > self._length or z < 1 or z > self._width then
+        selected_ore = WALL_MATERIAL
     end
 
+    new_instance = selected_ore:Clone()
     local pos = self:GetAbsoluteCoordinates(depth, x, z)
     new_instance:SetPrimaryPartCFrame(CFrame.new(pos))
     new_instance.Parent = SPAWNED_ORES
@@ -117,9 +120,9 @@ function Quarry:GetAbsoluteCoordinates(depth, x, z)
     -- HACK: need to offset coordinates by 1 since lua is stupid
     x = x - 1
     z = z - 1
-    local layer_corner = self._bottomLeftPos - Vector3.new(0, depth * BLOCK_SIZE, 0)
-    local curr_bottom_left = layer_corner + Vector3.new(x, 0, z) * BLOCK_SIZE
-    local block_center = curr_bottom_left + Vector3.new(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) * .5
+    local depth_coord = self._centerPos - Vector3.new(0, depth * BLOCK_SIZE, 0)
+    local ore_coordinate = depth_coord + Vector3.new(x - self._length/2, 0, z - self._width/2) * BLOCK_SIZE
+    local block_center = ore_coordinate + Vector3.new(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) * .5
     return block_center
 end
 
