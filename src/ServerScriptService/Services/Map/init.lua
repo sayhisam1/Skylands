@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Service = require(ReplicatedStorage.Objects.Shared.Services.ServiceObject).new(script.Name)
 
 local DEPENDENCIES = {"EffectsService"}
@@ -46,6 +47,15 @@ function Service:Unload()
     self._maid:Destroy()
 end
 
+local pocket_dimension = nil
+function Service:GetPocketDimension()
+    return pocket_dimension
+end
+
+function Service:SetPocketDimension(dimension)
+    pocket_dimension = dimension
+end
+
 local quarry
 function Service:ReloadQuarry()
     self:Log(3, "Loading quarry!")
@@ -60,9 +70,12 @@ function Service:ReloadQuarry()
     end
     quarry = Quarry.new(LAYER_PRESETS, QUARRY_CENTER, QUARRY_LENGTH, QUARRY_WIDTH)
     self._maid:GiveTask(quarry)
-    for i = 1, QUARRY_LENGTH do
-        for j = 1, QUARRY_WIDTH do
+    local MID_X = QUARRY_LENGTH/2
+    local MID_Z = QUARRY_WIDTH/2
+    for i = MID_X-5, MID_X+5 do
+        for j = MID_Z-5, MID_Z+5 do
             quarry:GenerateOre(1, i, j)
+            RunService.Heartbeat:Wait()
         end
     end
 end
