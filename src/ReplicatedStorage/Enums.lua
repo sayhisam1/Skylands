@@ -8,6 +8,7 @@ return {
         Pickaxe = "PICKAXE",
         Backpack = "BACKPACK",
         Pet = "PET",
+        Teleporter = "TELEPORTER",
         PetDispenser = "PET_DISPENSER",
         Title = "TITLE",
         Chest = "CHEST",
