@@ -31,3 +31,6 @@
 [submodule "module/Rain"]
 	path = module/Rain
 	url = https://github.com/buildthomas/Rain
+[submodule "module/RbxCameraShaker"]
+	path = module/RbxCameraShaker
+	url = https://github.com/Sleitnick/RbxCameraShaker
