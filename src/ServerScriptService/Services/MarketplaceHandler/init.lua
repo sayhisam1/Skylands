@@ -23,9 +23,13 @@ function Service:Load()
         if not productHandler then
             return Enum.ProductPurchaseDecision.NotProcessedYet
         end
-       local stat, err = pcall(function()
-            productHandler(plr, receiptInfo)
-        end)
+        local stat,
+            err =
+            pcall(
+            function()
+                productHandler(plr, receiptInfo)
+            end
+        )
         if not stat then
             self:Log(3, "Failed with error", err)
             return Enum.ProductPurchaseDecision.NotProcessedYet
@@ -36,7 +40,7 @@ end
 
 function Service:RegisterHandler(productId, func)
     productId = tostring(productId)
-    assert(not PRODUCTS[productId], "Handler for id "..tostring(productId).." already exists!")
+    assert(not PRODUCTS[productId], "Handler for id " .. tostring(productId) .. " already exists!")
     PRODUCTS[productId] = func
 end
 

@@ -53,10 +53,14 @@ return function(dispenser)
 					autoMode = false
 				end,
 				TextColor3 = Color3.new(1, 1, 1)
-			}, {
-				UICorner = Roact.createElement("UICorner", {
-					CornerRadius = UDim.new(.1, 0)
-				})
+			},
+			{
+				UICorner = Roact.createElement(
+					"UICorner",
+					{
+						CornerRadius = UDim.new(.1, 0)
+					}
+				)
 			}
 		)
 

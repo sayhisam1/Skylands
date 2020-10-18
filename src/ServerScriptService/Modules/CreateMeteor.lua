@@ -14,7 +14,7 @@ return function(name, health, goldval, gemval)
         MakeRobloxVal("GemValue", gemval)
     }
     local meteor = METEOR:Clone()
-    for _,v in pairs(values) do
+    for _, v in pairs(values) do
         v.Parent = meteor
     end
     meteor.Parent = ServerStorage

@@ -51,7 +51,8 @@ Service.GUI_GROUPS = {
     Core = {}
 }
 
-local Sidebar, PetAbilities = nil, nil
+local Sidebar,
+    PetAbilities = nil, nil
 
 function Service:Load()
     local maid = self._maid
@@ -74,9 +75,12 @@ function Service:Load()
     )
 
     local store_nc = self:GetServerNetworkChannel("Shop")
-    store_nc:Subscribe("COIN_RAIN", function()
-        CoinRain:Run(game.Players.LocalPlayer)
-    end)
+    store_nc:Subscribe(
+        "COIN_RAIN",
+        function()
+            CoinRain:Run(game.Players.LocalPlayer)
+        end
+    )
 
     local function resetGuis()
         for _, v in pairs(self.GUI_GROUPS) do
@@ -161,19 +165,23 @@ function Service:SetGuiGroupVisible(group, visible, ...)
 end
 
 function Service:PromptPetInventoryFull()
-    coroutine.wrap(function()
-        self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, true)
-        wait(2)
-        self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, false)
-    end)()
+    coroutine.wrap(
+        function()
+            self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, true)
+            wait(2)
+            self:SetGuiGroupVisible(self.GUI_GROUPS.PetInventoryFull, false)
+        end
+    )()
 end
 
 function Service:PromptOutOfGems()
-    coroutine.wrap(function()
-        self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, true)
-        wait(2)
-        self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, false)
-    end)()
+    coroutine.wrap(
+        function()
+            self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, true)
+            wait(2)
+            self:SetGuiGroupVisible(self.GUI_GROUPS.OutOfGems, false)
+        end
+    )()
 end
 
 return Service

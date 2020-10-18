@@ -28,18 +28,21 @@ function Service:Load()
         end
     end
     self:HookPlayerAction(setupPlayer)
-    self.Services.PlayerData:RegisterResetHook("OwnedBackpacks", function(plr, store, prev)
-        local IsVipStore = PlayerData:GetStore(plr, "IsVip")
-        if IsVipStore:getState() then
-            self:GiveVip(plr)
+    self.Services.PlayerData:RegisterResetHook(
+        "OwnedBackpacks",
+        function(plr, store, prev)
+            local IsVipStore = PlayerData:GetStore(plr, "IsVip")
+            if IsVipStore:getState() then
+                self:GiveVip(plr)
+            end
         end
-    end)
+    )
 end
 
 function Service:GiveVip(plr)
     self:Log(3, "Giving vip to ", plr)
     local vipPick = AssetFinder.FindPickaxe("VIPPickaxe")
-    local vipBackapck= AssetFinder.FindBackpack("VIPBackpack")
+    local vipBackapck = AssetFinder.FindBackpack("VIPBackpack")
     local Shop = self.Services.Shop
     Shop:AddAsset(plr, vipPick)
     Shop:AddAsset(plr, vipBackapck)
@@ -48,19 +51,23 @@ function Service:GiveVip(plr)
         for i = 1, 10, 1 do
             self.Services.Boosts:AddRandomBoost(plr, 25)
         end
-        hasRedeemedVipBoosts:dispatch({
-            type="Set",
-            Value=true
-        })
+        hasRedeemedVipBoosts:dispatch(
+            {
+                type = "Set",
+                Value = true
+            }
+        )
     end
 
     local VipPetAwarded = self.Services.PlayerData:GetStore(plr, "VipPetAwarded")
     if not VipPetAwarded:getState() then
         self.Services.PetService:GivePlayerPet(plr, "CrystalRegular")
-        VipPetAwarded:dispatch({
-            type="Set",
-            Value=true
-        })
+        VipPetAwarded:dispatch(
+            {
+                type = "Set",
+                Value = true
+            }
+        )
     end
 end
 

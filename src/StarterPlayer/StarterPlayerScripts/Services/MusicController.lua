@@ -45,7 +45,7 @@ function Service:Load()
     local settingStore = ClientPlayerData:GetStore("Settings")
     local init = settingStore:getState()
     if init then
-        init = init['Music']
+        init = init["Music"]
         if init then
             MUSIC_SOUND_GROUP.Volume = 1
         else
@@ -53,14 +53,16 @@ function Service:Load()
         end
     end
 
-    settingStore.changed:connect(function(new)
-        local music = new['Music']
-        if music then
-            MUSIC_SOUND_GROUP.Volume = 1
-        else
-            MUSIC_SOUND_GROUP.Volume = 0
+    settingStore.changed:connect(
+        function(new)
+            local music = new["Music"]
+            if music then
+                MUSIC_SOUND_GROUP.Volume = 1
+            else
+                MUSIC_SOUND_GROUP.Volume = 0
+            end
         end
-    end)
+    )
 end
 
 function Service:Unload()

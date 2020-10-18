@@ -143,13 +143,13 @@ end
 
 function Service:CreatePetData(pet)
     assert(pet, "No pet provided!")
-    if typeof(pet) == 'userdata' and pet:IsA("Model") then
+    if typeof(pet) == "userdata" and pet:IsA("Model") then
         pet = pet.Name
     end
-    if typeof(pet) == 'table' then
+    if typeof(pet) == "table" then
         pet = pet.PetClass
     end
-    assert(typeof(pet) == "string", "Invalid pet name "..pet)
+    assert(typeof(pet) == "string", "Invalid pet name " .. pet)
     assert(AssetFinder.FindPet(pet), "Invalid pet!")
 
     local data = {
@@ -165,12 +165,16 @@ end
 
 function Service:GivePlayerPets(plr, pets)
     assert(plr and plr:IsA("Player"), "Invalid player")
-    assert(pets and typeof(pets) == 'table', "Invalid pets!")
+    assert(pets and typeof(pets) == "table", "Invalid pets!")
     local petsStore = self.Services.PlayerData:GetStore(plr, "Pets")
     self:AssertCanAddPets(plr, #pets)
-    local petDatas = self.TableUtil.map(pets, function(_, v)
-        return self:CreatePetData(v)
-    end)
+    local petDatas =
+        self.TableUtil.map(
+        pets,
+        function(_, v)
+            return self:CreatePetData(v)
+        end
+    )
     for _, petData in pairs(petDatas) do
         petsStore:dispatch(
             {

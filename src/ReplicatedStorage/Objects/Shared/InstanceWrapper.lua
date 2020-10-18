@@ -61,9 +61,11 @@ end
 
 function InstanceWrapper:WaitForChildPromise(child)
     local promise = WaitForChildPromise(self:GetInstance(), child)
-    self._maid:GiveTask(function()
-        promise:cancel()
-    end)
+    self._maid:GiveTask(
+        function()
+            promise:cancel()
+        end
+    )
     return promise
 end
 

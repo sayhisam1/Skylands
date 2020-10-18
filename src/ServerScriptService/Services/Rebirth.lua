@@ -35,10 +35,12 @@ function Service:Load()
                 self.Services.PlayerData:ResetPlayerDataKey(plr, "OwnedBackpacks")
                 self.Services.PlayerData:ResetPlayerDataKey(plr, "SelectedBackpack")
                 local rebirthTickets = self.Services.PlayerData:GetStore(plr, "RebirthTickets")
-                rebirthTickets:dispatch({
-                    type = "Increment",
-                    Amount = CalculateRebirth.CalculateTickets(rebirths:getState())
-                })
+                rebirthTickets:dispatch(
+                    {
+                        type = "Increment",
+                        Amount = CalculateRebirth.CalculateTickets(rebirths:getState())
+                    }
+                )
                 rebirths:dispatch(
                     {
                         type = "Increment",

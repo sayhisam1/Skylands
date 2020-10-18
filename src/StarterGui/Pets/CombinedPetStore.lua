@@ -48,7 +48,7 @@ local reducer =
             -- update selected pets
             newState.NumPets = TableUtil.len(pets)
             newState.SelectedPets =
-            TableUtil.map(
+                TableUtil.map(
                 pets,
                 function(k, v)
                     if v.Selected then

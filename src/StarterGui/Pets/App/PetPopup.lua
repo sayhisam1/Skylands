@@ -11,7 +11,8 @@ local gui = Roact.Component:extend("Shop")
 
 function gui:render()
     local children = TableUtil.shallow(self.props[Roact.Children])
-    children["UIAspectRatio"] = Roact.createElement(
+    children["UIAspectRatio"] =
+        Roact.createElement(
         "UIAspectRatioConstraint",
         {
             AspectRatio = 1.39

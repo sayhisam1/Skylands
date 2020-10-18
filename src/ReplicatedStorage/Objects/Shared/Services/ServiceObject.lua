@@ -122,9 +122,13 @@ function Service:HookPlayerAction(func)
         coroutine.wrap(func)(plr)
     end
     self._maid:GiveTask(Players.PlayerAdded:Connect(func))
-    self._maid:GiveTask(Players.PlayerRemoving:Connect(function(plr)
-        self._maid[plr] = nil
-    end))
+    self._maid:GiveTask(
+        Players.PlayerRemoving:Connect(
+            function(plr)
+                self._maid[plr] = nil
+            end
+        )
+    )
 end
 ------------------------------
 --// OVERLOADED FUNCTIONS \\--

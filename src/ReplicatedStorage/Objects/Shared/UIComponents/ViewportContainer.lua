@@ -44,7 +44,7 @@ ViewportContainer.defaultProps = {
     AnchorPoint = Vector2.new(.5, .5),
     ShadowOffset = UDim2.new(.1, 0, .1, 0),
     BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-    BorderSizePixel = 0,
+    BorderSizePixel = 0
 }
 
 function ViewportContainer:init()
@@ -116,20 +116,21 @@ function ViewportContainer:didMount()
     viewportUpdate(self)
     self.running = true
     local i = 0
-    coroutine.wrap(function()
-        while self.running do
-            if i%3 ==0 then
-                i=0
-                if self.renderedModel then
-                    local old_cf = self.renderedModel.PrimaryPart.CFrame
-                    self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi/100, 0))
+    coroutine.wrap(
+        function()
+            while self.running do
+                if i % 3 == 0 then
+                    i = 0
+                    if self.renderedModel then
+                        local old_cf = self.renderedModel.PrimaryPart.CFrame
+                        self.renderedModel:SetPrimaryPartCFrame(old_cf * CFrame.Angles(0, math.pi / 100, 0))
+                    end
                 end
+                i = i + 1
+                RunService.Heartbeat:Wait()
             end
-            i = i + 1
-            RunService.Heartbeat:Wait()
-
         end
-    end)()
+    )()
 end
 
 function ViewportContainer:didUpdate()

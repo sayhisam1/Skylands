@@ -19,7 +19,7 @@ return function(target)
             MaxSelectedPets = 24,
             Pets = {
                 [1001] = clank2
-            },
+            }
         },
         {}
     )

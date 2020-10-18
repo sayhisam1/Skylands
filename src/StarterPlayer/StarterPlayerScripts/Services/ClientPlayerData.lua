@@ -28,12 +28,14 @@ function Service:Load()
     )
 
     local currId = self:GetLoadId()
-    coroutine.wrap(function()
-        while not dataReceived and self:GetLoadId() == currId do
-            server_comm_channel:Publish("GET")
-            wait(5)
+    coroutine.wrap(
+        function()
+            while not dataReceived and self:GetLoadId() == currId do
+                server_comm_channel:Publish("GET")
+                wait(5)
+            end
         end
-    end)()
+    )()
 end
 
 function Service:Unload()

@@ -34,18 +34,20 @@ return function(leaderboard)
                                 Players:GetUserThumbnailAsync(tonumber(curr.key), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
                             newText.CharacterPic.Image = headshot
                         end
-                    ):catch(function()
-
-                    end)
+                    ):catch(
+                        function()
+                        end
+                    )
 
                     Promise.new(
                         function(resolve)
                             local name = Players:GetNameFromUserIdAsync(tonumber(curr.key))
                             newText.PlayerName.Text = name
                         end
-                    ):catch(function()
-
-                    end)
+                    ):catch(
+                        function()
+                        end
+                    )
                     local formatter = (leaderboard:GetAttribute("Formatter") and require(leaderboard:GetAttribute("Formatter"))) or NumberToStr
                     newText.Value.Text = formatter(curr.value)
                     newText.LayoutOrder = i

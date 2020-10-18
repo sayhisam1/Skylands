@@ -24,7 +24,7 @@ local titles = AssetSetup.RecursiveFilterIgnoreRoot(script.Parent, "Folder")
 setup:Setup(titles)
 
 local dummies = AssetSetup.RecursiveFilter(script.Parent, "Model")
-for _,v in pairs(dummies) do
+for _, v in pairs(dummies) do
 	v:Destroy()
 end
 

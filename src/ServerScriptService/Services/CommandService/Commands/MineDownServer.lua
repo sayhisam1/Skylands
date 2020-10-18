@@ -14,7 +14,7 @@ return function(context, depth)
 				local ore = OreBinder:GetNearestOreNeighbor(blockPos)
 				if ore then
 					ore:Destroy()
-					if i%10 == 0 then
+					if i % 10 == 0 then
 						RunService.Heartbeat:Wait()
 					end
 				end

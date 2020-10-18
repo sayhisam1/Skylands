@@ -13,6 +13,6 @@ return {
 			Type = "string",
 			Name = "Store Name",
 			Description = "Store to dump"
-		},
+		}
 	}
 }

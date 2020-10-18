@@ -44,7 +44,7 @@ return function(tool)
         require(ReplicatedStorage.Objects.Combat.Effects.Yielding.ChannelYieldingEffect).new(
         communicationChannel,
         "HIT",
-        1/60,
+        1 / 60,
         function(effect, caller, part, pos)
             assert(player == caller, "Called by unexpected player!")
             if not part then

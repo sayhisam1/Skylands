@@ -57,12 +57,14 @@ function Service:AddBoost(plr, category, time, mult)
     self:Log(3, "Adding boost", plr, category, time, mult)
     local PlayerData = self.Services.PlayerData
     local ActiveBoosts = PlayerData:GetStore(plr, "ActiveBoosts")
-    ActiveBoosts:dispatch({
-        type = "AddBoostTime",
-        Category = category,
-        Time = time,
-        Multiplier = mult
-    })
+    ActiveBoosts:dispatch(
+        {
+            type = "AddBoostTime",
+            Category = category,
+            Time = time,
+            Multiplier = mult
+        }
+    )
 
     self:ApplyBoosts(plr)
 end
@@ -71,20 +73,20 @@ function Service:AddRandomBoost(plr, time)
     local choices = {
         {
             Category = "Gold",
-            Multiplier = 2,
+            Multiplier = 2
         },
         {
             Category = "Gems",
-            Multiplier = 2,
+            Multiplier = 2
         },
         {
             Category = "Speed",
-            Multiplier = 2,
+            Multiplier = 2
         },
         {
             Category = "Damage",
-            Multiplier = 3,
-        },
+            Multiplier = 3
+        }
     }
 
     local rand = choices[math.random(#choices)]

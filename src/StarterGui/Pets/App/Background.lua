@@ -16,7 +16,7 @@ return function()
                     ScaleType = Enum.ScaleType.Tile,
                     TileSize = UDim2.new(0, 64, 0, 64),
                     Image = "rbxassetid://4651117489",
-                    ImageColor3 = Color3.fromRGB(135, 198, 254),
+                    ImageColor3 = Color3.fromRGB(135, 198, 254)
                 },
                 {
                     UICorner = Roact.createElement(

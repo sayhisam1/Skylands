@@ -1,4 +1,4 @@
-return function (attribute_name, value)
+return function(attribute_name, value)
     local attribute
     if typeof(value) == "number" then
         attribute = Instance.new("NumberValue")

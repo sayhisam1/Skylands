@@ -13,7 +13,7 @@ return {
         Title = "TITLE",
         Chest = "CHEST",
         Leaderboard = "LEADERBOARD",
-        DevproductBuyGui = "DEVPRODUCT_BUY",
+        DevproductBuyGui = "DEVPRODUCT_BUY"
     },
     Errors = {
         NotEnoughGems = "Not enough gems!",
@@ -21,6 +21,6 @@ return {
         NotEnoughGold = "Not enough gold!",
         NotEnoughPetSlots = "Not enough pet slots!",
         NotEnoughSelectedPetSlots = "Not enough selected pet slots!",
-        NotEnoughRebirths = "Not enough rebirths!",
+        NotEnoughRebirths = "Not enough rebirths!"
     }
 }

@@ -59,8 +59,8 @@ function Quarry:GenerateOre(depth, x, z)
     local generator = self:_getLayerProbability(depth)
     local selected_ore = generator:Sample(1)[1]
     if depth < 5 then
-        local CENTER_X = self._length/2
-        local CENTER_Z = self._width/2
+        local CENTER_X = self._length / 2
+        local CENTER_Z = self._width / 2
         if x <= CENTER_X - 5 or x > CENTER_X + 5 or z <= CENTER_Z - 5 or z > CENTER_Z + 5 then
             selected_ore = WALL_MATERIAL
         end
@@ -121,7 +121,7 @@ function Quarry:GetAbsoluteCoordinates(depth, x, z)
     x = x - 1
     z = z - 1
     local depth_coord = self._centerPos - Vector3.new(0, depth * BLOCK_SIZE, 0)
-    local ore_coordinate = depth_coord + Vector3.new(x - self._length/2, 0, z - self._width/2) * BLOCK_SIZE
+    local ore_coordinate = depth_coord + Vector3.new(x - self._length / 2, 0, z - self._width / 2) * BLOCK_SIZE
     local block_center = ore_coordinate + Vector3.new(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE) * .5
     return block_center
 end

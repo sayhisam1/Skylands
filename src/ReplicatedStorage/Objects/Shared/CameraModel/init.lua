@@ -24,12 +24,15 @@ function CameraModel:Render(offset)
     assert(typeof(offset) == "CFrame", "Invalid offset!")
     local inst = self._instance
     inst.Parent = self._camera
-    self._maid["Heartbeat"] = RunService.Heartbeat:Connect(function()
-        local cam_cf = self._camera.CFrame
-        local inst_cf = cam_cf * offset
-        inst_cf = CFrame.new(inst_cf.Position, cam_cf.Position)
-        inst:SetPrimaryPartCFrame(inst_cf)
-    end)
+    self._maid["Heartbeat"] =
+        RunService.Heartbeat:Connect(
+        function()
+            local cam_cf = self._camera.CFrame
+            local inst_cf = cam_cf * offset
+            inst_cf = CFrame.new(inst_cf.Position, cam_cf.Position)
+            inst:SetPrimaryPartCFrame(inst_cf)
+        end
+    )
 end
 
 return CameraModel

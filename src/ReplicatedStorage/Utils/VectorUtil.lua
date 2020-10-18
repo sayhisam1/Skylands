@@ -41,7 +41,7 @@ function module.GetCubeNeighbors(n, vec, mult)
 	local i = 0
 	local len = #list
 	return function()
-		i = i+1
+		i = i + 1
 		if i <= len then
 			return i, vec + (list[i] * mult)
 		end
@@ -73,7 +73,7 @@ local function getMemoizedManhattan(n)
 		for x = -n, n do
 			for y = -n, n do
 				for z = -n, n do
-					if module.Metrics.MANHATTAN(Vector3.new(x,y,z), ORIGIN) == n then
+					if module.Metrics.MANHATTAN(Vector3.new(x, y, z), ORIGIN) == n then
 						list[#list + 1] = Vector3.new(x, y, z)
 					end
 				end

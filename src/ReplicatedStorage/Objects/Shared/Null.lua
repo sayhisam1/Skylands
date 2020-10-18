@@ -12,9 +12,6 @@ tbl = {
         return val or tbl
     end
 }
-setmetatable(
-    tbl,
-    tbl
-)
+setmetatable(tbl, tbl)
 
 return tbl

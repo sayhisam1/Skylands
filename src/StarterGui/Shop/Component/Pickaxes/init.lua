@@ -29,9 +29,14 @@ function PickaxeMenu:render()
             CFrame = self.props.shopkeepOverlayController:GetCameraCFrame(Vector3.new(-3.5, 0, -5.5))
         }
     )
-    spr.target(shopkeepOverlay, .4, 2, {
-        Position = UDim2.new(0.45, 0, 0, 0)
-    })
+    spr.target(
+        shopkeepOverlay,
+        .4,
+        2,
+        {
+            Position = UDim2.new(0.45, 0, 0, 0)
+        }
+    )
     shopkeepCamTween:Play()
     self.props.shopkeepOverlayController:PlayAnimation(shopkeepAnimation)
 

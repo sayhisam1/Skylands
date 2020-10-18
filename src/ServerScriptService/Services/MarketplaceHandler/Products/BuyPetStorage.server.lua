@@ -5,10 +5,15 @@ local PlayerData = Services.PlayerData
 
 local productId = 1087600055
 
-MarketplaceHandler:RegisterHandler(productId, function(plr)
-    local MaxPetStorageSlots = PlayerData:GetStore(plr, "MaxPetStorageSlots")
-    MaxPetStorageSlots:dispatch({
-        type="Increment",
-        Amount = 24
-    })
-end)
+MarketplaceHandler:RegisterHandler(
+    productId,
+    function(plr)
+        local MaxPetStorageSlots = PlayerData:GetStore(plr, "MaxPetStorageSlots")
+        MaxPetStorageSlots:dispatch(
+            {
+                type = "Increment",
+                Amount = 24
+            }
+        )
+    end
+)

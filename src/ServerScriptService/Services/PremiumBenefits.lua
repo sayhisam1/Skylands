@@ -28,11 +28,14 @@ function Service:Load()
             end
         )
     )
-    self.Services.PlayerData:RegisterResetHook("OwnedBackpacks", function(plr, store, prev)
-        if plr.MembershipType == Enum.MembershipType.Premium then
-            self:GivePremium(plr)
+    self.Services.PlayerData:RegisterResetHook(
+        "OwnedBackpacks",
+        function(plr, store, prev)
+            if plr.MembershipType == Enum.MembershipType.Premium then
+                self:GivePremium(plr)
+            end
         end
-    end)
+    )
 end
 
 function Service:GivePremium(plr)
@@ -47,10 +50,12 @@ function Service:GivePremium(plr)
         for i = 1, 3, 1 do
             self.Services.Boosts:AddRandomBoost(plr, 5)
         end
-        HasRedeemedPremiumBoosts:dispatch({
-            type="Set",
-            Value=true
-        })
+        HasRedeemedPremiumBoosts:dispatch(
+            {
+                type = "Set",
+                Value = true
+            }
+        )
     end
 end
 

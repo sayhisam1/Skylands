@@ -72,24 +72,29 @@ function Service:Load()
         function(plr)
             local promises = {}
             for key, v in pairs(KEYS) do
-                promises[#promises + 1] = Promise.new(function(resolve)
-                    local store = self:InitializeStore(plr, key)
-                    resolve(store)
-                end)
-            end
-            Promise.all(promises):andThen(function()
-                local lastVisitTime = self:GetStore(plr, "LastVisitTime")
-                lastVisitTime:dispatch(
-                    {
-                        type = "Set",
-                        Value = tick()
-                    }
+                promises[#promises + 1] =
+                    Promise.new(
+                    function(resolve)
+                        local store = self:InitializeStore(plr, key)
+                        resolve(store)
+                    end
                 )
-                local DataLoaded = Instance.new("BoolValue")
-                DataLoaded.Name = "DataLoaded"
-                DataLoaded.Value = true
-                DataLoaded.Parent = plr
-            end)
+            end
+            Promise.all(promises):andThen(
+                function()
+                    local lastVisitTime = self:GetStore(plr, "LastVisitTime")
+                    lastVisitTime:dispatch(
+                        {
+                            type = "Set",
+                            Value = tick()
+                        }
+                    )
+                    local DataLoaded = Instance.new("BoolValue")
+                    DataLoaded.Name = "DataLoaded"
+                    DataLoaded.Value = true
+                    DataLoaded.Parent = plr
+                end
+            )
             self:UpdateTimePlayed(plr)
         end
     )
@@ -113,10 +118,12 @@ function Service:Load()
         function()
             while self:GetLoadId() == loadId and wait(DATA_SAVE_TIMER) do
                 for _, plr in pairs(Players:GetPlayers()) do
-                    coroutine.wrap(function()
-                        self:UpdateTimePlayed(plr)
-                        self:SaveData(plr)
-                    end)()
+                    coroutine.wrap(
+                        function()
+                            self:UpdateTimePlayed(plr)
+                            self:SaveData(plr)
+                        end
+                    )()
                     wait(1)
                 end
             end
@@ -207,11 +214,13 @@ function Service:InitializeStore(plr, key)
         end
 
         if not plr:IsA("MockPlayer") then
-            self._maid:GiveTask(playerData[plr.UserId][key].changed:connect(
-                function(new, old)
-                    updateClient(new)
-                end
-            ))
+            self._maid:GiveTask(
+                playerData[plr.UserId][key].changed:connect(
+                    function(new, old)
+                        updateClient(new)
+                    end
+                )
+            )
         end
 
         if keyData.Stateful then
@@ -246,15 +255,18 @@ end
 function Service:GetStore(plr, key)
     assert(plr and plr:IsA("Player"), "Not a player!")
     assert(KEYS[key], string.format("%s is not a valid key!", key))
-    local promise = Promise.new(function(resolve)
-        while not playerData[plr.UserId] do
-            RunService.Heartbeat:Wait()
+    local promise =
+        Promise.new(
+        function(resolve)
+            while not playerData[plr.UserId] do
+                RunService.Heartbeat:Wait()
+            end
+            while not playerData[plr.UserId][key] do
+                RunService.Heartbeat:Wait()
+            end
+            resolve(playerData[plr.UserId][key])
         end
-        while not playerData[plr.UserId][key] do
-            RunService.Heartbeat:Wait()
-        end
-        resolve(playerData[plr.UserId][key])
-    end)
+    )
     return promise:expect()
 end
 
@@ -262,7 +274,7 @@ local resetHooks = {}
 
 function Service:RegisterResetHook(key, func)
     assert(KEYS[key], "Invalid key!")
-    assert(typeof(func) == 'function', "Invalid callback!")
+    assert(typeof(func) == "function", "Invalid callback!")
     if not resetHooks[key] then
         resetHooks[key] = {}
     end
@@ -308,10 +320,12 @@ function Service:UpdateTimePlayed(plr)
     end
     local diff = math.floor(t - lastTimePlayedUpdate[plr])
     local store = self:GetStore(plr, "TotalTimePlayed")
-    store:dispatch({
-        type="Increment",
-        Amount = diff,
-    })
+    store:dispatch(
+        {
+            type = "Increment",
+            Amount = diff
+        }
+    )
     lastTimePlayedUpdate[plr] = t
 end
 

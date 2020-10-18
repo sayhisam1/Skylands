@@ -30,9 +30,11 @@ function gui:render()
         GuiController:SetGuiGroupVisible(GuiController.GUI_GROUPS["Pets"], false)
     end
     local makePopup = function(popup)
-        self:setState({
-            ActivePopup = popup
-        })
+        self:setState(
+            {
+                ActivePopup = popup
+            }
+        )
     end
     return Roact.createElement(
         AnimatedContainer,
@@ -47,8 +49,7 @@ function gui:render()
             AnchorPoint = Vector2.new(.5, .5),
             Size = UDim2.new(0, 0, 0, 0),
             Position = UDim2.new(1.7, 0, .5, 0),
-            BackgroundTransparency = 1,
-
+            BackgroundTransparency = 1
         },
         {
             UIAspectRatio = Roact.createElement(
@@ -96,7 +97,7 @@ function gui:render()
                 {
                     Position = UDim2.new(.03, 0, .17, 0),
                     Size = UDim2.new(.94, 0, .79, 0),
-                    makePopup = makePopup,
+                    makePopup = makePopup
                 }
             ),
             CloseButton = Roact.createElement(
@@ -114,7 +115,7 @@ function gui:render()
                     UIAspectRatio = Roact.createElement("UIAspectRatioConstraint")
                 }
             ),
-            ActivePopup = self.state.ActivePopup,
+            ActivePopup = self.state.ActivePopup
         }
     )
 end

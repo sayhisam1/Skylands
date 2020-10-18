@@ -25,9 +25,14 @@ function MainMenu:render()
             CFrame = self.props.shopkeepOverlayController:GetCameraCFrame(Vector3.new(0, 2, -3), Vector3.new(0, 2, 0))
         }
     )
-    spr.target(shopkeepOverlay, .4, 2, {
-        Position = UDim2.new(0.25, 0, .1, 0)
-    })
+    spr.target(
+        shopkeepOverlay,
+        .4,
+        2,
+        {
+            Position = UDim2.new(0.25, 0, .1, 0)
+        }
+    )
     shopkeepCamTween:Play()
     self.props.shopkeepOverlayController:PlayAnimation(shopkeepAnimation)
 

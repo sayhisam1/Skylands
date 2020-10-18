@@ -44,7 +44,7 @@ if IsServer then
         store:dispatch(
             {
                 type = "RemoveMultiplier",
-                Id = id,
+                Id = id
             }
         )
     end

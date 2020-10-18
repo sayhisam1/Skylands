@@ -24,9 +24,11 @@ return function(pet)
 			require(welding)(pet, character)
 			-- pet:SetupAbilities(player)
 		end
-	):catch(function(...)
-		pet:Log(3, "[CRITICAL] Failed client setup with error:\n", ...)
-	end)
+	):catch(
+		function(...)
+			pet:Log(3, "[CRITICAL] Failed client setup with error:\n", ...)
+		end
+	)
 
 	pet._maid:GiveTask(
 		function()

@@ -13,21 +13,29 @@ local GetPrimaryPart = require(ReplicatedStorage.Objects.Promises.GetPrimaryPart
 local currentPlayerTitles = {}
 function Service:Load()
     local maid = self._maid
-    self:HookPlayerAction(function(plr)
-        local event = plr.CharacterAdded:Connect(function()
-            currentPlayerTitles[plr] = nil
+    self:HookPlayerAction(
+        function(plr)
+            local event =
+                plr.CharacterAdded:Connect(
+                function()
+                    currentPlayerTitles[plr] = nil
+                    self:GiveTitle(plr)
+                end
+            )
+            local totalOresMined = self.Services.PlayerData:GetStore(plr, "TotalOresMined")
+            local event2 =
+                totalOresMined.changed:connect(
+                function(new, old)
+                    self:GiveTitle(plr)
+                end
+            )
+            maid[plr] = function()
+                event:Disconnect()
+                event2:disconnect()
+            end
             self:GiveTitle(plr)
-        end)
-        local totalOresMined = self.Services.PlayerData:GetStore(plr, "TotalOresMined")
-        local event2 = totalOresMined.changed:connect(function(new, old)
-            self:GiveTitle(plr)
-        end)
-        maid[plr] = function()
-            event:Disconnect()
-            event2:disconnect()
         end
-        self:GiveTitle(plr)
-    end)
+    )
 end
 
 function Service:GiveTitle(plr)
@@ -38,20 +46,24 @@ function Service:GiveTitle(plr)
         return
     end
     currentPlayerTitles[plr] = title
-    local promise = GetPlayerCharacterWorkspace(plr):andThen(function(char)
-        local _, primaryPart = GetPrimaryPart(char):awaitStatus()
-        for _, v in pairs(char:GetDescendants()) do
-            if CollectionService:HasTag(v, self.Enums.Tags.Title) then
-                v:Destroy()
+    local promise =
+        GetPlayerCharacterWorkspace(plr):andThen(
+        function(char)
+            local _,
+                primaryPart = GetPrimaryPart(char):awaitStatus()
+            for _, v in pairs(char:GetDescendants()) do
+                if CollectionService:HasTag(v, self.Enums.Tags.Title) then
+                    v:Destroy()
+                end
             end
+            local head = char:FindFirstChild("Head")
+            local newGui = title:Clone()
+            local playername = newGui.Playername
+            playername.Text = plr.Name
+            newGui.Adornee = head
+            newGui.Parent = primaryPart
         end
-        local head = char:FindFirstChild("Head")
-        local newGui = title:Clone()
-        local playername = newGui.Playername
-        playername.Text = plr.Name
-        newGui.Adornee = head
-        newGui.Parent = primaryPart
-    end)
+    )
 end
 
 return Service

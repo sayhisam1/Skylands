@@ -117,12 +117,14 @@ return function(tool)
 				local action = tool:GetAttribute("MineAction") or script.Parent.DefaultMine
 				action = require(action)(tool)
 				if pickaxeAttackContext:CanMakeAttack(action) then
-					action.Stopped:Connect(function()
-						if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
-							RunService.Heartbeat:Wait()
-							toolInstance:Activate()
+					action.Stopped:Connect(
+						function()
+							if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+								RunService.Heartbeat:Wait()
+								toolInstance:Activate()
+							end
 						end
-					end)
+					)
 					pickaxeAttackContext:MakeAttack(action)
 				end
 			end

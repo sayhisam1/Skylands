@@ -76,13 +76,16 @@ function PetContentComponent:render()
                         {
                             Size = UDim2.new(.25, 0, .2, 0),
                             Position = UDim2.new(0.3, 0, 0.01, 0),
-                            BackgroundTransparency = 1,
+                            BackgroundTransparency = 1
                         },
                         {
-                            Roact.createElement(PageSelector, {
-                                setCurrentPage = setCurrentPage,
-                                CurrentPage = self.state.currentPage
-                            })
+                            Roact.createElement(
+                                PageSelector,
+                                {
+                                    setCurrentPage = setCurrentPage,
+                                    CurrentPage = self.state.currentPage
+                                }
+                            )
                         }
                     ),
                     PetList = Roact.createElement(
@@ -118,11 +121,11 @@ function PetContentComponent:render()
                             [AnimatedContainer.Frequency] = self.state[AnimatedContainer.Frequency] or 2,
                             [AnimatedContainer.Targets] = self.state[AnimatedContainer.Targets] or
                                 {
-                                    Size = self.state.renderedPet and UDim2.new(.32, 0, .9, 0) or UDim2.new(0,0,0,0),
+                                    Size = self.state.renderedPet and UDim2.new(.32, 0, .9, 0) or UDim2.new(0, 0, 0, 0)
                                 },
                             Position = UDim2.new(.65, 0, .05, 0),
                             Size = self.state.renderedPet and UDim2.new(0, 0, 0, 0) or UDim2.new(.32, 0, .9, 0),
-                            BackgroundTransparency = 1,
+                            BackgroundTransparency = 1
                         },
                         {
                             Viewport = Roact.createElement(

@@ -21,7 +21,7 @@ end
 table.sort(
     LAYER_PRESETS,
     function(a, b)
-        assert(a.Depth ~= b.Depth or a == b, "Duplicate depth "..a.Depth)
+        assert(a.Depth ~= b.Depth or a == b, "Duplicate depth " .. a.Depth)
         return a.Depth < b.Depth
     end
 )
@@ -31,11 +31,16 @@ function Service:Load()
     coroutine.wrap(
         function()
             while self:GetLoadId() == currId do
-                local stat, err
+                local stat,
+                    err
                 while not stat do
-                    stat, err = pcall(function()
-                        self:ReloadQuarry()
-                    end)
+                    stat,
+                        err =
+                        pcall(
+                        function()
+                            self:ReloadQuarry()
+                        end
+                    )
                 end
                 wait(QUARRY_RESPAWN_TIMER)
             end
@@ -61,19 +66,23 @@ function Service:ReloadQuarry()
     self:Log(3, "Loading quarry!")
     self._maid:Destroy()
     for _, v in pairs(game.Players:GetChildren()) do
-        local stat, erro = pcall(function()
-            v:LoadCharacter()
-        end)
+        local stat,
+            erro =
+            pcall(
+            function()
+                v:LoadCharacter()
+            end
+        )
         if not stat then
             self:Log(3, erro)
         end
     end
     quarry = Quarry.new(LAYER_PRESETS, QUARRY_CENTER, QUARRY_LENGTH, QUARRY_WIDTH)
     self._maid:GiveTask(quarry)
-    local MID_X = QUARRY_LENGTH/2
-    local MID_Z = QUARRY_WIDTH/2
-    for i = MID_X-5, MID_X+5 do
-        for j = MID_Z-5, MID_Z+5 do
+    local MID_X = QUARRY_LENGTH / 2
+    local MID_Z = QUARRY_WIDTH / 2
+    for i = MID_X - 5, MID_X + 5 do
+        for j = MID_Z - 5, MID_Z + 5 do
             quarry:GenerateOre(1, i, j)
             RunService.Heartbeat:Wait()
         end

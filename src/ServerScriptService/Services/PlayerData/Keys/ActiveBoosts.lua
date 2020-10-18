@@ -20,7 +20,7 @@ return {
             if not newState[boostCategory] then
                 newState[boostCategory] = {
                     RemainingTime = 0,
-                    Multiplier = boostMultiplier,
+                    Multiplier = boostMultiplier
                 }
             end
             newState[boostCategory].RemainingTime = newState[boostCategory].RemainingTime + boostTime
@@ -35,7 +35,7 @@ return {
             if not newState[boostCategory] then
                 newState[boostCategory] = {
                     RemainingTime = 0,
-                    Multiplier = 1,
+                    Multiplier = 1
                 }
             end
             newState[boostCategory].RemainingTime = math.max(0, newState[boostCategory].RemainingTime - boostTime)

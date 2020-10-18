@@ -12,9 +12,12 @@ function Backpack.new(instance)
     assert(type(instance) == "userdata" and instance:IsA("Model"), "Invalid Backpack!")
     local self = setmetatable(InstanceWrapper.new(instance), Backpack)
 
-    self._maid["SetupHook"] = instance.AncestryChanged:Connect(function()
-        self:Setup()
-    end)
+    self._maid["SetupHook"] =
+        instance.AncestryChanged:Connect(
+        function()
+            self:Setup()
+        end
+    )
 
     self:Setup()
     return self
