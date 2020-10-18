@@ -4,7 +4,7 @@ return function(num)
     local hours = math.floor(minutes / 60)
     local days = math.floor(hours / 24)
     minutes = minutes % 60
-    hours = hours % 60
+    hours = hours % 24
     if days > 0 then
         return string.format("%dD %dH %dMin.", days, hours, minutes)
     elseif hours > 0 then
