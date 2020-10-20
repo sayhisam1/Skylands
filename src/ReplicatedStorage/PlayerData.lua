@@ -147,7 +147,7 @@ if RunService:IsServer() then
                             Ropost.publish(
                                 {
                                     channel = "PlayerData",
-                                    topic = string.format("%s.%s", storeName, "Request"),
+                                    topic = string.format("%s.%s", storeName, "Sync"),
                                     data = store:getState()
                                 }
                             )
