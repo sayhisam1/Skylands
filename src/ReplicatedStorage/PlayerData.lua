@@ -46,13 +46,12 @@ if RunService:IsServer() then
                 end
             )
         until ok or (wait(10) and false)
-
-        store:dispatch({type = "Set", value = initialState})
         store.changed:connect(
             function(new)
                 ds:Set(new)
             end
         )
+        store:dispatch({type = "Set", value = initialState or defaultValue})
         return store
     end
 
