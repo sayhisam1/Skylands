@@ -185,6 +185,15 @@ newTable.map = function(tbl, lambda)
 	return newtbl
 end
 
+newTable.transform = function(tbl, lambda)
+	local newtbl = {}
+	for k, v in pairs(tbl) do
+		local nk, nv = lambda(k, v)
+		newtbl[nk] = nv
+	end
+	return newtbl
+end
+
 return setmetatable(
 	newTable,
 	{

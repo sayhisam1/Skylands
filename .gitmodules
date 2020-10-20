@@ -34,3 +34,6 @@
 [submodule "module/RbxCameraShaker"]
 	path = module/RbxCameraShaker
 	url = https://github.com/Sleitnick/RbxCameraShaker
+[submodule "module/Ropost"]
+	path = module/Ropost
+	url = https://github.com/sayhisam1/Ropost

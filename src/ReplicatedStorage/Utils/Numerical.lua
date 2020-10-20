@@ -42,7 +42,7 @@ function module.randSpherical()
 end
 
 -- returns a parabola generator from start -> end, given acceleration
-function module.BallisticMotion(s, e, accel)
+function module.ballisticMotion(s, e, accel)
 	local d = e - s
 	-- d(t) = v_i*t + 1/2*a*t^2
 	-- need to find vi s.t. d(1) + s = e

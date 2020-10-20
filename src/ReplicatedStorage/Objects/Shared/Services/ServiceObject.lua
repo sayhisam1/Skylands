@@ -5,19 +5,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local RunService = game:GetService("RunService")
-local IsServer = RunService:IsServer()
-local IsClient = RunService:IsClient()
-
 local HttpService = game:GetService("HttpService")
-
--- Setup remote directories
-local REMOTE_DIR_NAME = "_serverRemotes"
-local REMOTE_DIR = ReplicatedStorage:WaitForChild(REMOTE_DIR_NAME)
-
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
-local Channel = require(ReplicatedStorage.Objects.Shared.Channel)
-local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
 local Service =
     setmetatable(
@@ -53,19 +42,8 @@ function Service.new(name)
     self:Log(1, "CREATING NEW SERVICE", name)
     self.Name = name
     self.Dependencies = {}
-    self._channel = Channel.new(name) -- Instantiate a Channel to allow for event driven communication between services
     self._loaded = false
 
-    if IsServer then
-        local event = REMOTE_DIR:FindFirstChild(self.Name) or Instance.new("RemoteEvent")
-        event.Name = self.Name
-        event.Parent = REMOTE_DIR
-        self._networkchannel = NetworkChannel.new(self.Name, event)
-        self._maid:GiveTask(self._networkchannel)
-    end
-    if IsClient then
-        self._serverChannels = {}
-    end
     return self
 end
 
@@ -82,35 +60,6 @@ end
 
 function Service:GetChannel()
     return self._channel
-end
-
-function Service:GetNetworkChannel()
-    assert(IsServer, "Can only get network channel from server!")
-    return self._networkchannel
-end
-
--- Republishes all received data from a network channel under a given topic to the service's channel
-function Service:ForwardNetworkTopicToChannel(network_channel, topic)
-    self._maid:GiveTask(
-        network_channel:Subscribe(
-            topic,
-            function(...)
-                self:GetChannel():Publish(topic, ...)
-            end
-        )
-    )
-end
-
-function Service:GetServerNetworkChannel(server_service_name)
-    assert(type(server_service_name) == "string", "Invalid server service name!")
-    assert(IsClient, "Can only get server network channels on the client!")
-    if self._serverChannels[server_service_name] then
-        return self._serverChannels[server_service_name]
-    end
-    local event = REMOTE_DIR:WaitForChild(server_service_name)
-    local channel = NetworkChannel.new(server_service_name, event)
-    self._serverChannels[server_service_name] = channel
-    return channel
 end
 
 function Service:GetLoadId()
@@ -134,8 +83,10 @@ end
 --// OVERLOADED FUNCTIONS \\--
 ------------------------------
 function Service:Load()
+    self:Log(1, "Load function not overlaoded!")
 end
 function Service:Unload()
+    self:Log(1, "Unload function not overlaoded!")
 end
 
 ---------------------------

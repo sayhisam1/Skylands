@@ -37,18 +37,27 @@ end
 function AssetSetup:Setup(assets)
     self:Log(1, "Setting up", assets)
     local errors = {}
+    local successful = {}
     for _, asset in pairs(assets) do
         self:Log(1, "\tAsset:", asset)
-        for _, task in pairs(self._tasks) do
-            local status,
-                res = pcall(task, asset)
-            if not status then
-                errors[asset.Name] = res
-                break
+        if successful[asset.Name] then
+            errors[asset.Name] = "Duplicate name!"
+        else
+            successful[asset.Name] = asset
+            for _, task in pairs(self._tasks) do
+                local status,
+                    res = pcall(task, asset)
+                if not status then
+                    errors[asset.Name] = res
+                    successful[asset.Name] = nil
+                    break
+                end
             end
         end
     end
     self:Log(3, "Done loading assets!")
+
+    -- Asynchronously error for assets
     local be = Instance.new("BindableEvent")
     for name, msg in pairs(errors) do
         local conn = be.Event:Connect(error)
@@ -56,6 +65,8 @@ function AssetSetup:Setup(assets)
         conn:Disconnect()
     end
     be:Destroy()
+
+    return successful
 end
 
 function AssetSetup.RecursiveFilter(root, type, ignored_types, ret)

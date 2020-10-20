@@ -1,9 +1,8 @@
 {
     "files.trimTrailingWhitespace": true,
     "files.trimFinalNewlines": true,
-    "lua.format.lineWidth": 150,
+    "lua.format.lineWidth": 300,
     "lua.luacheckPath": "",
-    "lua.format.linebreakMultipleAssignments": true,
     "Lua.diagnostics.ignore": [
         "Playername",
         "Camera"

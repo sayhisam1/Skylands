@@ -1,7 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local BaseObject = require(ReplicatedStorage.Objects.BaseObject)
-local NetworkChannel = require(ReplicatedStorage.Objects.Shared.NetworkChannel)
 
 local WaitForChildPromise = require(ReplicatedStorage.Objects.Promises.WaitForChildPromise)
 local MakeRobloxVal = require(ReplicatedStorage.Utils.MakeRobloxVal)
@@ -121,31 +120,6 @@ function InstanceWrapper:RunModule(module_name, ...)
             return res
         end
     end
-end
-
-function InstanceWrapper:GetNetworkChannel()
-    if not self._instance or self._destroyed then
-        return
-    end
-    if not self._remoteEvent then
-        if RunService:IsClient() then
-            self._remoteEvent = self:WaitForChildPromise("COMM_EVENT"):expect()
-        else
-            if self:FindFirstChild("COMM_EVENT") then
-                self._remoteEvent = self:FindFirstChild("COMM_EVENT")
-            else
-                local re = Instance.new("RemoteEvent")
-                re.Name = "COMM_EVENT"
-                re.Parent = self:GetInstance()
-                self._remoteEvent = re
-            end
-        end
-    end
-    if not self._networkChannel then
-        self._networkChannel = NetworkChannel.new(self.Name, self._remoteEvent)
-        self._maid:GiveTask(self._networkChannel)
-    end
-    return self._networkChannel
 end
 
 return InstanceWrapper

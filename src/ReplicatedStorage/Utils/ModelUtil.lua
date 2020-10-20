@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Welding = require(ReplicatedStorage.Utils.Welding)
+local WeldingUtil = require(ReplicatedStorage.Utils.WeldingUtil)
 local module = {}
 
 function module.GetCentermostPart(model)
@@ -33,7 +33,7 @@ function module.WeldTogether(model)
     assert(model:IsA("Model") and model.PrimaryPart, "Need to pass a model with primary part!")
     for _, v in pairs(model:GetDescendants()) do
         if v:IsA("BasePart") and v ~= model.PrimaryPart then
-            Welding.weldTogether(model.PrimaryPart, v)
+            WeldingUtil.weldTogether(model.PrimaryPart, v)
         end
     end
 end
@@ -53,4 +53,5 @@ function module.SetCanCollide(model, cancollide)
         end
     end
 end
+
 return module
