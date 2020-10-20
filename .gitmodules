@@ -37,6 +37,6 @@
 [submodule "module/Ropost"]
 	path = module/Ropost
 	url = https://github.com/sayhisam1/Ropost
-[submodule "module/Fabric"]
-	path = module/Fabric
+[submodule "Fabric"]
+	path = Fabric
 	url = https://github.com/evaera/Fabric
