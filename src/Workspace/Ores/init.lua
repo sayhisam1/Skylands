@@ -2,10 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local AssetBinder = require(ReplicatedStorage.Objects.Shared.AssetBinder)
 local AssetSetup = require(ReplicatedStorage.Objects.AssetSetup)
 
-local ORE_MODULES_DIR = Instance.new("Folder")
-ORE_MODULES_DIR.Name = "_ORE_MODULES"
-ORE_MODULES_DIR.Parent = ReplicatedStorage
-
 local setup = AssetSetup.new("Ores", script:GetChildren())
 
 setup:AddSetupTask(

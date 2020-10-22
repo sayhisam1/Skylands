@@ -1,5 +1,3 @@
-local HttpService = game:GetService("HttpService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 return function()
     local obj = newproxy(true)
@@ -7,7 +5,7 @@ return function()
     MockPlayer.__index = MockPlayer
     MockPlayer.ClassName = "Player"
     MockPlayer.UserId = -1337
-    MockPlayer.Character = ReplicatedStorage:FindFirstChild("sayhisam1"):Clone()
+    MockPlayer.Character = nil
     MockPlayer.Parent = Players
     MockPlayer.AncestryChanged = {
         Connect = function()
