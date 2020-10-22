@@ -40,3 +40,6 @@
 [submodule "Fabric"]
 	path = Fabric
 	url = https://github.com/evaera/Fabric
+[submodule "module/t"]
+	path = module/t
+	url = https://github.com/osyrisrblx/t
